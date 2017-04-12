@@ -1,4 +1,4 @@
-class DeployVM:
+class DeployVm:
     def name(self, name):
         self.name = name
         return self
