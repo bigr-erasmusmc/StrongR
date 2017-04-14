@@ -9,4 +9,4 @@ class DeployVmHandler():
         if command.cores > 0: kwargs['cpu'] = command.cores
 
         client = salt.cloud.CloudClient('/etc/salt/cloud')
-        return client.create(names=[command.name], profile='salt-minion', **kwargs)
+        return client.create(names=[command.name], provider='surfsara-hpc-cloud', profile='salt-minion', **kwargs)
