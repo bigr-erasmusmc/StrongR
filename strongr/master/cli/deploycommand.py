@@ -12,16 +12,22 @@ class DeployCommand(Command):
     """
 
     def ask(self, question, default):
-        # since CLEO has a bug that causes it not to return default values we need a wrapper that does exactly that
+        # since cleo has a bug that causes it not to return default values we need a wrapper that does exactly that
         output = super(DeployCommand, self).ask(question)
         if output is None:
             output = default
         return output
 
     def handle(self):
-        cores = self.ask('How many processing cores should the VM have? (Default 1): ', 1)
-        ram = self.ask('How much memory in GiB should the VM have? (Default 4): ', 4)
+        cores = int(self.ask('How many processing cores should the VM have? (Default 1): ', 1))
+        ram = int(self.ask('How much memory in GiB should the VM have? (Default 4): ', 4))
         name = self.ask('What is the name of the VM? (Default generated): ', str(uuid.uuid4()))
+
+        if not (cores > 0 and ram > 0 and len(name) > 0):
+            # TODO: put something sensible in here, this is just a placeholder
+            self.error('Invalid input')
+            return
+
 
         deployVmCommand = DeployVm().name(name).cores(cores).ram(ram)
 
@@ -36,6 +42,6 @@ class DeployCommand(Command):
         cloudService = cloudServices.getCloudServiceByName(cloudProviderName)
         commandBus = cloudService.getCommandBus()
 
-        self.info('Deploying VM {0} cores={1} ram={2}GiB...'.format(name, cores, ram))
+        self.info('Deploying VM {0} cores={1} ram={2}GiB'.format(name, cores, ram))
 
         commandBus.handle(deployVmCommand)
