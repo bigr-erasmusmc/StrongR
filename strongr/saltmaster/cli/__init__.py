@@ -1,3 +1,1 @@
-from .confighelpercommand import ConfigHelperCommand
-from .opennebulaconfighelper import OpenNebulaConfigHelper
 from .deployopennebulacommand import DeployOpenNebulaCommand
