@@ -1,1 +1,2 @@
-from .deploycommand import DeployCommand
+from .deploysinglecommand import DeploySingleCommand
+from .runshellcodecommand import RunShellCodeCommand

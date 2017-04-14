@@ -1,9 +1,9 @@
 from cleo import Application
 
-from cli import DeployCommand
+from cli import DeploySingleCommand
 
 application = Application()
-application.add(DeployCommand())
+application.add(DeploySingleCommand())
 
 if __name__ == '__main__':
     application.run()
