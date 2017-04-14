@@ -9,8 +9,6 @@ class DeployVmHandler():
         if command.cores > 0: kwargs['cpu'] = command.cores
 
         command.name = re.sub(r'[^a-zA-Z0-9]*', '', command.name)
-        print(command.name)
-        return
 
         client = salt.cloud.CloudClient('/etc/salt/cloud')
         vm = client.profile(names=[command.name], profile='salt-minion', **kwargs)

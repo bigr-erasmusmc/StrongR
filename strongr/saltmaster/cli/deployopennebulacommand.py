@@ -11,10 +11,22 @@ class DeployOpenNebulaCommand(Command):
     deploy:opennebula
     """
 
+    def ask(self, question, default):
+        # since CLEO has a bug that causes it not to return default values we need a wrapper that does exactly that
+        output = super(DeployOpenNebulaCommand, self).ask(question)
+        if output is None:
+            output = default
+        return output
+
     def handle(self):
         cores = self.ask('How many processing cores should the VM have? (Default 1): ', 1)
         ram = self.ask('How much memory in GiB should the VM have? (Default 4): ', 4)
         name = self.ask('What is the name of the VM? (Default generated): ', uuid.uuid4())
+
+        print(cores)
+        print(ram)
+        print(name)
+        return
 
         deployVmCommand = DeployVm().name(name).cores(cores).ram(ram)
 
