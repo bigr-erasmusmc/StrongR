@@ -23,11 +23,6 @@ class DeployOpenNebulaCommand(Command):
         ram = self.ask('How much memory in GiB should the VM have? (Default 4): ', 4)
         name = self.ask('What is the name of the VM? (Default generated): ', uuid.uuid4())
 
-        print(cores)
-        print(ram)
-        print(name)
-        return
-
         deployVmCommand = DeployVm().name(name).cores(cores).ram(ram)
 
         cloudServices = CloudServices()
