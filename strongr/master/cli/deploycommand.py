@@ -21,7 +21,7 @@ class DeployCommand(Command):
     def handle(self):
         cores = self.ask('How many processing cores should the VM have? (Default 1): ', 1)
         ram = self.ask('How much memory in GiB should the VM have? (Default 4): ', 4)
-        name = self.ask('What is the name of the VM? (Default generated): ', uuid.uuid4())
+        name = self.ask('What is the name of the VM? (Default generated): ', str(uuid.uuid4()))
 
         deployVmCommand = DeployVm().name(name).cores(cores).ram(ram)
 
