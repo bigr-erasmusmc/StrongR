@@ -3,10 +3,10 @@ import re
 
 class DeployVmHandler():
     def __call__(self, command):
-        kwargs = {}
+        overrides = {}
 
-        if command.ram > 0: kwargs['memory'] = command.ram * 1024
-        if command.cores > 0: kwargs['cpu'] = command.cores
+        if command.ram > 0: overrides['memory'] = command.ram * 1024
+        if command.cores > 0: overrides['cpu'] = command.cores
 
         client = salt.cloud.CloudClient('/etc/salt/cloud')
-        return client.create(names=[command.name], provider='surfsara-hpc-cloud', profile='salt-minion', **kwargs)
+        return client.profile(names=[command.name], profile='salt-minion', vm_overrides=overrides)
