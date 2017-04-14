@@ -2,13 +2,11 @@ import salt.cloud
 
 class DeployVmHandler():
     def __call__(self, command):
-        configuration = command.configuration
-
         kwargs = {}
 
-        if configuration.ram > 0: kwargs['memory'] = configuration.ram * 1024
-        if configuration.cores > 0: kwargs['cpu'] = configuration.cores
+        if command.ram > 0: kwargs['memory'] = command.ram * 1024
+        if command.cores > 0: kwargs['cpu'] = command.cores
 
         client = salt.cloud.CloudClient('/etc/salt/cloud')
-        names = ["thomas-new-testvm-" + str(i+1) for i in range(0,4)]
-        vms = client.profile(names=names, profile='salt-minion', parallel=True, **kwargs)
+        vm = client.profile(names=command.name, profile='salt-minion', **kwargs)
+        print(vm)

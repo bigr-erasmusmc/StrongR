@@ -1,4 +1,5 @@
 class DeployVm:
+    # TODO: we should do propper input checking
     def name(self, name):
         self.name = name
         return self

@@ -26,13 +26,11 @@ class BaseCloudService():
         for handler in handlers:
             self.injectHandler(handler, handlers[handler])
 
-    def getCommandBus(self):
+    def getCommandBus(self, middlewares=None):
         extractor = ClassNameExtractor()
-        print(extractor)
         locator = LazyLoadingInMemoryLocator(self.handlers)
-        print(locator)
         inflector = CallableInflector()
-        print(inflector)
         handler = CommandHandler(extractor, locator, inflector)
-        print(handler)
+        if middlewares != None:
+            return CommandBus(middlewares + [handler])
         return CommandBus([handler])
