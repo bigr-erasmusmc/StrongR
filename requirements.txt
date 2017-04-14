@@ -1,4 +1,4 @@
 cleo==0.5.0
-cmndr==1.0.1
+cmndr==1.0.4
 dependency_injector==3.4.1
 setuptools==25.1.1
