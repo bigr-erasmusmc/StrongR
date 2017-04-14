@@ -35,4 +35,7 @@ class DeployCommand(Command):
 
         cloudService = cloudServices.getCloudServiceByName(cloudProviderName)
         commandBus = cloudService.getCommandBus()
+
+        self.info('Deploying VM {0} cores={1} ram={2}GiB...'.format(name, cores, ram))
+
         commandBus.handle(deployVmCommand)
