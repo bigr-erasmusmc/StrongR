@@ -1,5 +1,7 @@
-import salt.cloud
+import salt.client
 
 class RunShellCodeHandler():
     def __call__(self, command):
-        print(command)
+        local = salt.client.LocalClient()
+        result = local.cmd(vm, 'cmd.run', [cmd])
+        return result

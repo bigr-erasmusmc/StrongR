@@ -5,7 +5,7 @@ from commands import ListDeployedVms
 
 class ListDeployedVmsCommand(Command):
     """
-    Runs shellcode on a VM in the cloud.
+    List VMs deployed in the cloud.
 
     list:deployedvms
     """
