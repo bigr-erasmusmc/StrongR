@@ -3,7 +3,7 @@ from cleo import Command
 from services import CloudServices
 from commands import ListDeployedVms
 
-class ListDeployedVmsCommand:
+class ListDeployedVmsCommand(Command):
     """
     Runs shellcode on a VM in the cloud.
 
