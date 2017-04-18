@@ -1,5 +1,4 @@
 import salt.cloud
-import re
 
 class DeployVmHandler():
     def __call__(self, command):

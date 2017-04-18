@@ -1,0 +1,2 @@
+class DeployVms(list):
+    pass
