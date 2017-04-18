@@ -1,6 +1,7 @@
 from .wrapper import Command
 from services import CloudServices
 from commands import DeployVm
+from commands import DeployVms
 
 import uuid
 
@@ -8,7 +9,7 @@ class DeployManyCommand(Command):
     """
     Deploys VM's in the cloud in a parallel way. A first step towards elasticity.
 
-    deploy:single
+    deploy:many
     """
     def handle(self):
         cores = int(self.ask('How many processing cores should the VM\'s have? (default 1): ', 1))
@@ -37,4 +38,4 @@ class DeployManyCommand(Command):
 
         self.info('Deploying {0} VM\'s with cores={1} ram={2}GiB'.format(len(deployVmCommands), cores, ram))
 
-        print(commandBus.handle(deployVmCommands))
+        print(commandBus.handle(deployVms))
