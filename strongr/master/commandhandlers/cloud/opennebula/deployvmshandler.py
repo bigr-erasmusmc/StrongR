@@ -16,4 +16,4 @@ class DeployVmsHandler:
             overrides['vcpu'] = commands[0].cores
 
         client = salt.cloud.CloudClient('/etc/salt/cloud')
-        return client.profile(names=[names], profile='salt-minion', vm_overrides=overrides, parallel=True)
+        return client.profile(names=names, profile='salt-minion', vm_overrides=overrides, parallel=True)
