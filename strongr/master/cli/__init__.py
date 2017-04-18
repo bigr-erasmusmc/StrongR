@@ -1,2 +1,3 @@
 from .deploysinglecommand import DeploySingleCommand
 from .runshellcodecommand import RunShellCodeCommand
+from .listdeployedvmscommand import ListDeployedVmsCommand
