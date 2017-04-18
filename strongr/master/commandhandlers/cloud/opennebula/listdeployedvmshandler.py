@@ -7,8 +7,9 @@ class ListDeployedVmsHandler():
         rs = client.query()
 
         for provider in rs:
+            print(provider)
+            print(rs[provider])
             for location in rs[provider].keys():
-                print(provider)
                 print(location)
                 names.extend(list(rs[provider][location].keys()))
         return names
