@@ -8,5 +8,6 @@ class ListDeployedVmsHandler():
 
         for provider in rs:
             for location in rs[provider].keys():
+                print(rs[provider][location].keys())
                 names.extend(list(rs[provider][location].keys()))
         return names
