@@ -23,7 +23,7 @@ class DeployManyCommand(Command):
 
         deployVms = DeployVms()
         while amount > 0:
-            deployVmCommand = DeployVm().name(str(uuid.uuid4())).cores(cores).ram(ram)
+            deployVmCommand = DeployVm(name=str(uuid.uuid4()), cores=cores, ram=ram)
             deployVms.append(deployVmCommand)
             amount -= 1
 

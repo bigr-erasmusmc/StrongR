@@ -19,7 +19,7 @@ class RunShellCodeCommand(Command):
         if not host:
             host = '*'
 
-        runShellCode = RunShellCode().host(host).sh(cmd)
+        runShellCode = RunShellCode(host=host, sh=cmd)
 
         cloudServices = CloudServices()
         cloudNames = cloudServices.getCloudNames()

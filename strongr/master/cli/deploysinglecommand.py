@@ -21,7 +21,7 @@ class DeploySingleCommand(Command):
             return
 
 
-        deployVmCommand = DeployVm().name(name).cores(cores).ram(ram)
+        deployVmCommand = DeployVm(name=name, cores=cores, ram=ram)
 
         cloudServices = CloudServices()
         cloudNames = cloudServices.getCloudNames()

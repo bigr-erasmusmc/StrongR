@@ -1,8 +1,4 @@
 class RunShellCode:
-    def sh(self, sh):
+    def __init__(self, sh, host):
         self.sh = sh
-        return self
-
-    def host(self, host):
         self.host = host
-        return self
