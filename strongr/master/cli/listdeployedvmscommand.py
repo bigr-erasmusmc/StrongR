@@ -1,4 +1,4 @@
-from cleo import Command
+from .wrapper import Command
 
 from services import CloudServices
 from commands import ListDeployedVms
@@ -7,17 +7,13 @@ class ListDeployedVmsCommand(Command):
     """
     List VMs deployed in the cloud.
 
-    list:deployedvms
+    deploy:list
     """
 
     def handle(self):
         cloudServices = CloudServices()
         cloudNames = cloudServices.getCloudNames()
-        # for some reason cleo can not handle arrays with 1 el
-        if len(cloudNames) > 1:
-            cloudProviderName = self.choice('Please select a cloud provider (default {0})'.format(cloudNames[0]), cloudNames, 0)
-        else:
-            cloudProviderName = cloudNames[0]
+        cloudProviderName = self.choice('Please select a cloud provider (default {0})'.format(cloudNames[0]), cloudNames, 0)
 
         cloudService = cloudServices.getCloudServiceByName(cloudProviderName)
         commandBus = cloudService.getCommandBus()

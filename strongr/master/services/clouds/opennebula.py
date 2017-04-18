@@ -2,7 +2,8 @@ from .basecloudservice import BaseCloudService
 
 from commandhandlers.cloud.opennebula import DeployVmHandler
 from commandhandlers.cloud.opennebula import ListDeployedVmsHandler
-from commandhandlers.cloud.opennebula import  RunShellCodeHandler
+from commandhandlers.cloud.opennebula import RunShellCodeHandler
+from commandhandlers.cloud.opennebula import DeployVmsHandler
 
 from commands import DeployVm
 from commands import ListDeployedVms

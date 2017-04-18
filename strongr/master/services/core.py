@@ -7,4 +7,4 @@ class Core(containers.DeclarativeContainer):
     """IoC container of core component providers."""
 
     config = providers.Configuration('config')
-    logger = providers.Singleton(logging.Logger, name='strongr-saltmaster')
+    logger = providers.Singleton(logging.Logger, name='strongr-master')
