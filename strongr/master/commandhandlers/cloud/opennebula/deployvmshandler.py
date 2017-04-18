@@ -1,3 +1,5 @@
+import salt.cloud
+
 class DeployVmsHandler:
     def __call__(self, command):
         names = []

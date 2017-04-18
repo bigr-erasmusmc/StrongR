@@ -16,5 +16,5 @@ class OpenNebula(BaseCloudService):
             DeployVmHandler: DeployVm.__name__, \
             ListDeployedVmsHandler: ListDeployedVms.__name__, \
             RunShellCodeHandler: RunShellCode.__name__, \
-            ListDeployedVmsHandler: DeployVms.__name__
+            DeployVmsHandler: DeployVms.__name__
         })

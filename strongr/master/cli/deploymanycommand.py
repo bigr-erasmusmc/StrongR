@@ -21,13 +21,11 @@ class DeployManyCommand(Command):
             self.error('Invalid input')
             return
 
-        deployVmCommands = []
+        deployVms = DeployVms()
         while amount > 0:
             deployVmCommand = DeployVm().name(str(uuid.uuid4())).cores(cores).ram(ram)
-            deployVmCommands.append(deployVmCommand)
+            deployVms.append(deployVmCommand)
             amount -= 1
-
-        deployVms = DeployVms().vms(deployVmCommands)
 
         cloudServices = CloudServices()
         cloudNames = cloudServices.getCloudNames()
@@ -36,6 +34,6 @@ class DeployManyCommand(Command):
         cloudService = cloudServices.getCloudServiceByName(cloudProviderName)
         commandBus = cloudService.getCommandBus()
 
-        self.info('Deploying {0} VM\'s with cores={1} ram={2}GiB'.format(len(deployVmCommands), cores, ram))
+        self.info('Deploying {0} VM\'s with cores={1} ram={2}GiB'.format(len(deployVms), cores, ram))
 
         print(commandBus.handle(deployVms))
