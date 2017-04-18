@@ -4,6 +4,9 @@ class ListDeployedVmsHandler():
     def __call__(self, command):
         client = salt.cloud.CloudClient('/etc/salt/cloud')
         names = []
-        for cloudEnv in client.query().keys():
-            names.append(list(cloudEnv.keys()))
+        rs = client.query()
+
+        for provider in rs:
+            for location in rs[provider].keys():
+                names.append(list(rs[provider][location].keys()))
         return names
