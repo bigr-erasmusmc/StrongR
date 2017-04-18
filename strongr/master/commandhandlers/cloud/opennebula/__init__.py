@@ -1,2 +1,3 @@
 from .deployvmhandler import DeployVmHandler
 from .runshellcodehandler import RunShellCodeHandler
+from .listdeployedvmshandler import ListDeployedVmsHandler

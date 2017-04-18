@@ -7,7 +7,7 @@ class DeployVmHandler():
 
         if command.ram > 0: overrides['memory'] = command.ram * 1024
 
-        if command.cores > 0: 
+        if command.cores > 0:
             overrides['cpu'] = command.cores
             overrides['vcpu'] = command.cores
 
