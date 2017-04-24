@@ -1,14 +1,15 @@
 from .wrapper import Command
 
-from services import CloudServices
-from commands import ListDeployedVms
-
 class ListDeployedVmsCommand(Command):
     """
     List VMs deployed in the cloud.
 
     deploy:list
     """
+
+    def __init__(self, coreContainer):
+        self._coreContainer = coreContainer
+        super(ListDeployedVmsCommand, self).__init__()
 
     def handle(self):
         cloudServices = CloudServices()

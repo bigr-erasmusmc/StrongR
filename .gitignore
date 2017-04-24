@@ -2,6 +2,8 @@
 *.swp
 *.swo
 
+# project-specific
+strongr/master/config.js
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

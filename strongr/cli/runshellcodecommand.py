@@ -1,7 +1,7 @@
 from .wrapper import Command
 
-from services import CloudServices
-from commands import RunShellCode
+from strongr.services import CloudServices
+from strongr.commands import RunShellCode
 
 class RunShellCodeCommand(Command):
     """

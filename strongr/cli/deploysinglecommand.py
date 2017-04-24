@@ -1,6 +1,6 @@
 from .wrapper import Command
-from services import CloudServices
-from commands import DeployVm
+from strongr.services import CloudServices
+from strongr.commands import DeployVm
 
 import uuid
 
@@ -10,7 +10,16 @@ class DeploySingleCommand(Command):
 
     deploy:single
     """
+
+    def __init__(self, coreContainer):
+        self._coreContainer = coreContainer
+        super(DeploySingleCommand, self).__init__()
+
     def handle(self):
+        services = self._coreContainer.services()
+        cloudServices = services.cloudServices()
+        commandFactory = services.commandFactory()
+
         cores = int(self.ask('How many processing cores should the VM have? (default 1): ', 1))
         ram = int(self.ask('How much memory in GiB should the VM have? (default 4): ', 4))
         name = self.ask('What is the name of the VM? (default generated): ', str(uuid.uuid4()))
@@ -21,9 +30,8 @@ class DeploySingleCommand(Command):
             return
 
 
-        deployVmCommand = DeployVm(name=name, cores=cores, ram=ram)
+        deployVmCommand = commandFactory.newDeployVmCommand(name=name, cores=cores, ram=ram)
 
-        cloudServices = CloudServices()
         cloudNames = cloudServices.getCloudNames()
         cloudProviderName = self.choice('Please select a cloud provider (default {0})'.format(cloudNames[0]), cloudNames, 0)
 
