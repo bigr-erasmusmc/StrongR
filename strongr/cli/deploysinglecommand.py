@@ -1,6 +1,4 @@
 from .wrapper import Command
-from strongr.services import CloudServices
-from strongr.commands import DeployVm
 
 import uuid
 
@@ -10,13 +8,8 @@ class DeploySingleCommand(Command):
 
     deploy:single
     """
-
-    def __init__(self, coreContainer):
-        self._coreContainer = coreContainer
-        super(DeploySingleCommand, self).__init__()
-
     def handle(self):
-        services = self._coreContainer.services()
+        services = self.getServicesContainer()
         cloudServices = services.cloudServices()
         commandFactory = services.commandFactory()
 

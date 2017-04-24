@@ -1,6 +1,6 @@
-from strongr.commands import DeployVm, DeployVms, ListDeployedVms, RunShellCode
+from strongr.domain.commands import DeployVm, DeployVms, ListDeployedVms, RunShellCode
 
-from strongr.exceptions import InvalidParameterException
+from strongr.domain.exceptions import InvalidParameterException
 
 class CommandFactory:
     """ This factory instantiates command objects to be sent to a commandbus. """

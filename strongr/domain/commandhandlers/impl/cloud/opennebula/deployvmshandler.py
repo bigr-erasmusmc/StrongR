@@ -1,6 +1,8 @@
+from strongr.domain.commandhandlers.abstract.cloud import AbstractDeployVmsHandler
+
 import salt.cloud
 
-class DeployVmsHandler:
+class DeployVmsHandler(AbstractDeployVmsHandler):
     def __call__(self, commands):
         names = []
         for deployCommand in commands:

@@ -6,17 +6,15 @@ class ListDeployedVmsCommand(Command):
 
     deploy:list
     """
-
-    def __init__(self, coreContainer):
-        self._coreContainer = coreContainer
-        super(ListDeployedVmsCommand, self).__init__()
-
     def handle(self):
-        cloudServices = CloudServices()
+        services = self.getServicesContainer()
+        cloudServices = services.cloudServices()
+        commandFactory = services.commandFactory()
+
         cloudNames = cloudServices.getCloudNames()
         cloudProviderName = self.choice('Please select a cloud provider (default {0})'.format(cloudNames[0]), cloudNames, 0)
 
         cloudService = cloudServices.getCloudServiceByName(cloudProviderName)
         commandBus = cloudService.getCommandBus()
-        listDeployedVms = ListDeployedVms()
+        listDeployedVms = commandFactory.newListDeployedVmsCommand()
         print(commandBus.handle(listDeployedVms))

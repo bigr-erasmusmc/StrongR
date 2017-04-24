@@ -8,13 +8,8 @@ class DeployManyCommand(Command):
 
     deploy:many
     """
-
-    def __init__(self, coreContainer):
-        self._coreContainer = coreContainer
-        super(DeployManyCommand, self).__init__()
-
     def handle(self):
-        services = self._coreContainer.services()
+        services = self.getServicesContainer()
         cloudServices = services.cloudServices()
         commandFactory = services.commandFactory()
 
@@ -29,7 +24,7 @@ class DeployManyCommand(Command):
 
         deployVmList = []
         while amount > 0:
-            deployVmCommand = DeployVm(name=str(uuid.uuid4()), cores=cores, ram=ram)
+            deployVmCommand = commandFactory.newDeployVmCommand(name=str(uuid.uuid4()), cores=cores, ram=ram)
             deployVmList.append(deployVmCommand)
             amount -= 1
         deployVms = commandFactory.newDeployVmsCommand(deployVmList)

@@ -1,6 +1,8 @@
+from strongr.domain.commandhandlers.abstract.cloud import AbstractListDeployedVmsHandler
+
 import salt.cloud
 
-class ListDeployedVmsHandler():
+class ListDeployedVmsHandler(AbstractListDeployedVmsHandler):
     def __call__(self, command):
         client = salt.cloud.CloudClient('/etc/salt/cloud')
         names = []

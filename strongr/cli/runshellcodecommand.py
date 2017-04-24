@@ -1,8 +1,5 @@
 from .wrapper import Command
 
-from strongr.services import CloudServices
-from strongr.commands import RunShellCode
-
 class RunShellCodeCommand(Command):
     """
     Runs shellcode on a VM in the cloud.
@@ -11,17 +8,19 @@ class RunShellCodeCommand(Command):
         {--r|remote=? : If set, runs the code on the specified host}
         {cmd* : shellcode to be run on the specified host(s)}
     """
-
     def handle(self):
+        services = self.getServicesContainer()
+        cloudServices = services.cloudServices()
+        commandFactory = services.commandFactory()
+
         host = self.option('remote')
         cmd = self.argument('cmd')
 
         if not host:
             host = '*'
 
-        runShellCode = RunShellCode(host=host, sh=cmd)
+        runShellCode = commandFactory.newRunShellCodeCommand(host=host, sh=cmd)
 
-        cloudServices = CloudServices()
         cloudNames = cloudServices.getCloudNames()
         cloudProviderName = self.choice('Please select a cloud provider (default {0})'.format(cloudNames[0]), cloudNames, 0)
 

@@ -5,6 +5,9 @@ class PatchedCommand(Command):
         self._coreContainer = coreContainer
         super(PatchedCommand, self).__init__()
 
+    def getServicesContainer(self):
+        return self._coreContainer.services()
+
     def getContainer(self):
         return self._coreContainer
 

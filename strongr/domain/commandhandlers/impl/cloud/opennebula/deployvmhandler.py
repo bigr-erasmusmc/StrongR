@@ -1,6 +1,8 @@
+from strongr.domain.commandhandlers.abstract.cloud import AbstractDeployVmHandler
+
 import salt.cloud
 
-class DeployVmHandler():
+class DeployVmHandler(AbstractDeployVmHandler):
     def __call__(self, command):
         overrides = {}
 
