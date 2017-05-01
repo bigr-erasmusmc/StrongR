@@ -1,4 +1,4 @@
-from .clouds import OpenNebula
+from .cloud import OpenNebula
 
 # cloud service factory
 class CloudServices():

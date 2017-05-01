@@ -6,9 +6,9 @@ from cmndr.handlers.inflectors import CallableInflector
 from cmndr.handlers.locators import LazyLoadingInMemoryLocator
 from cmndr.handlers.nameextractors import ClassNameExtractor
 
-from strongr.domain.commandhandlers.abstract.cloud import AbstractDeployVmHandler, AbstractDeployVmsHandler, \
+from strongr.cloudDomain.handler.abstract.cloud import AbstractDeployVmHandler, AbstractDeployVmsHandler, \
                                                         AbstractListDeployedVmsHandler, AbstractRunShellCodeHandler
-from strongr.domain.commands import DeployVm, DeployVms, ListDeployedVms, RunShellCode
+from strongr.cloudDomain.command import DeployVm, DeployVms, ListDeployedVms, RunShellCode
 
 
 class AbstractCloudService():

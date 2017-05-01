@@ -1,1 +1,2 @@
+from .isnotcallableexception import IsNotCallableException
 from .invalidparameterexception import InvalidParameterException

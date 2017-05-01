@@ -6,7 +6,7 @@ class PatchedCommand(Command):
         super(PatchedCommand, self).__init__()
 
     def getServicesContainer(self):
-        return self._coreContainer.services()
+        return self._coreContainer.domains().cloudDomain()
 
     def getContainer(self):
         return self._coreContainer

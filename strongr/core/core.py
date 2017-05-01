@@ -3,11 +3,11 @@ import dependency_injector.providers as providers
 
 import logging
 
-from .services import Services
+from .domains import Domains
 
 class Core(containers.DeclarativeContainer):
     """IoC container of core component providers."""
     config = providers.Configuration('config')
     logger = providers.Singleton(logging.Logger, name='strongr-master')
 
-    services = providers.Factory(Services)
+    domains = providers.Factory(Domains)

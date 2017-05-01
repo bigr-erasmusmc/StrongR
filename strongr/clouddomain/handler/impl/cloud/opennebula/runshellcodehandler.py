@@ -1,4 +1,4 @@
-from strongr.domain.commandhandlers.abstract.cloud import AbstractRunShellCodeHandler
+from strongr.cloudDomain.handler.abstract.cloud import AbstractRunShellCodeHandler
 
 import salt.client
 

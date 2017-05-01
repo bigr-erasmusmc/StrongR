@@ -9,7 +9,7 @@ class ListDeployedVmsCommand(Command):
     def handle(self):
         services = self.getServicesContainer()
         cloudServices = services.cloudServices()
-        commandFactory = services.commandFactory()
+        commandFactory = services.cloudCommandFactory()
 
         cloudNames = cloudServices.getCloudNames()
         cloudProviderName = self.choice('Please select a cloud provider (default {0})'.format(cloudNames[0]), cloudNames, 0)

@@ -11,7 +11,7 @@ class RunShellCodeCommand(Command):
     def handle(self):
         services = self.getServicesContainer()
         cloudServices = services.cloudServices()
-        commandFactory = services.commandFactory()
+        commandFactory = services.cloudCommandFactory()
 
         host = self.option('remote')
         cmd = self.argument('cmd')

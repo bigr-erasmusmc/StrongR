@@ -5,9 +5,9 @@ from strongr.cli import ListDeployedVmsCommand
 from strongr.cli import RunShellCodeCommand
 from strongr.cli import DeployManyCommand
 
-from strongr.containers import CoreContainer
+from strongr.core import Core
 
-coreContainer = CoreContainer()
+coreContainer = Core()
 
 application = Application()
 application.add(DeploySingleCommand(coreContainer))

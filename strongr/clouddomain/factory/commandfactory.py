@@ -1,9 +1,9 @@
-from strongr.domain.commands import DeployVm, DeployVms, ListDeployedVms, RunShellCode
+from strongr.cloudDomain.command import DeployVm, DeployVms, ListDeployedVms, RunShellCode
 
-from strongr.domain.exceptions import InvalidParameterException
+from strongr.core.exception import InvalidParameterException
 
 class CommandFactory:
-    """ This factory instantiates command objects to be sent to a commandbus. """
+    """ This factory instantiates command objects to be sent to a cloud commandbus. """
 
     def newDeployVmCommand(self, name, cores, ram):
         """ Generates a new DeployVm command
