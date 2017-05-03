@@ -1,9 +1,38 @@
-from strongr.cloudDomain.command import DeployVm, DeployVms, ListDeployedVms, RunShellCode
+from strongr.clouddomain.command import DeployVm, DeployVms, ListDeployedVms, RunShellCode, LaunchAppContainer
 
 from strongr.core.exception import InvalidParameterException
 
 class CommandFactory:
     """ This factory instantiates command objects to be sent to a cloud commandbus. """
+
+    def newLaunchAppContainerCommand(self, host, image, ram, swap, affinity):
+        """ Generates a new LaunchAppContainer command
+
+        :param host: The hostname where the container should be deployed
+        :type host: string
+        :param image: The imagename for the container
+        :type image: string
+        :param ram: how much ram should be allocated for the container
+        :type ram: int
+        :param swap: how much swap should be allocated for the container
+        :type swap: int
+        :param affinity: the processing core affinity, this is passed along to docker --cpuset-cpus=""
+        :type ram: string
+
+        :returns: A LaunchAppContainer command object
+        :rtype: LaunchAppContainer
+        """
+        if not len(host) > 0:
+            raise InvalidParameterException('Host invalid')
+        elif not len(image) > 0:
+            raise InvalidParameterException('Image invalid')
+        elif not ram > 0:
+            raise InvalidParameterException('Ram should be higher than 0')
+        elif not swap >= -1:
+            raise InvalidParameterException('Ram should be higher than 0')
+
+        return DeployVm(name=name, cores=cores, ram=ram)
+        pass
 
     def newDeployVmCommand(self, name, cores, ram):
         """ Generates a new DeployVm command

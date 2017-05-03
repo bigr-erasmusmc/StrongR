@@ -1,4 +1,4 @@
-from strongr.cloudDomain.handler.abstract.cloud import AbstractListDeployedVmsHandler
+from strongr.clouddomain.handler.abstract.cloud import AbstractListDeployedVmsHandler
 
 import salt.cloud
 

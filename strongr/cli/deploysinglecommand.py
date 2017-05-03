@@ -33,4 +33,4 @@ class DeploySingleCommand(Command):
 
         self.info('Deploying VM {0} cores={1} ram={2}GiB'.format(name, cores, ram))
 
-        print(commandBus.handle(deployVmCommand))
+        commandBus.handle(deployVmCommand)

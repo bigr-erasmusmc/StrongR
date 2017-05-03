@@ -1,9 +1,11 @@
 from .cloud import OpenNebula
+from .cloud import MockCloud
 
 # cloud service factory
 class CloudServices():
     _clouds = [ \
-        OpenNebula
+        OpenNebula,
+        MockCloud
     ]
 
     _instances = {}

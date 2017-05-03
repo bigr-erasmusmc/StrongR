@@ -37,4 +37,4 @@ class DeployManyCommand(Command):
 
         self.info('Deploying {0} VM\'s with cores={1} ram={2}GiB'.format(len(deployVms), cores, ram))
 
-        print(commandBus.handle(deployVms))
+        commandBus.handle(deployVms)

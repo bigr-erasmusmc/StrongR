@@ -1,7 +1,6 @@
 from abc import ABCMeta, abstractmethod
-from multiprocessing import Pool
 
-#from strongr.core import Core
+from strongr import core
 
 class CallableCommandHandler:
     __metaclass__ = ABCMeta
@@ -10,6 +9,9 @@ class CallableCommandHandler:
     def __call__(self, command):
         pass
 
-    def asyncDomainEventOnLambdaReturn(self, event, lambdaFunction, args=None):
-        pool = Pool(processes=1)
-        result = pool.apply_async(lambdaFunction, args, callback)
+    def executeAndPublishDomainEvent(self, event, callable, **kwargs):
+        callable(*kwargs)
+        self.publishDomainEvent(event)
+
+    def publishDomainEvent(self, event):
+        core.Core.domainEventsPublisher().publish(event)

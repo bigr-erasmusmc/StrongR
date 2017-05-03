@@ -1,4 +1,6 @@
-from strongr.cloudDomain.handler.abstract.cloud import AbstractDeployVmHandler
+from strongr.clouddomain.handler.abstract.cloud import AbstractDeployVmHandler
+
+from strongr.clouddomain.event import NewVmDeployed
 
 import salt.cloud
 
@@ -13,4 +15,18 @@ class DeployVmHandler(AbstractDeployVmHandler):
             overrides['vcpu'] = command.cores
 
         client = salt.cloud.CloudClient('/etc/salt/cloud')
-        return client.profile(names=[command.name], profile='salt-minion', vm_overrides=overrides)
+
+        newVmDeployedEvent = NewVmDeployed()
+        dummyClient = DummyClient()
+        self.executeAndPublishDomainEvent(\
+                event=newVmDeployedEvent,\
+                callable=dummyClient.profile,\
+                names=[command.name],\
+                profile='salt-minion',\
+                vm_overrides=overrides\
+            )
+
+
+class DummyClient:
+    def profile(self, *args):
+        pass

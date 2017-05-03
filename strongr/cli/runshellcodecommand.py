@@ -27,4 +27,4 @@ class RunShellCodeCommand(Command):
         cloudService = cloudServices.getCloudServiceByName(cloudProviderName)
         commandBus = cloudService.getCommandBus()
 
-        print(commandBus.handle(runShellCode))
+        commandBus.handle(runShellCode)

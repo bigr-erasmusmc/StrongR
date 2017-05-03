@@ -17,4 +17,4 @@ class ListDeployedVmsCommand(Command):
         cloudService = cloudServices.getCloudServiceByName(cloudProviderName)
         commandBus = cloudService.getCommandBus()
         listDeployedVms = commandFactory.newListDeployedVmsCommand()
-        print(commandBus.handle(listDeployedVms))
+        commandBus.handle(listDeployedVms)
