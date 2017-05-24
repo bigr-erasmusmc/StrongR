@@ -1,0 +1,2 @@
+class DoDelayedTasks:
+    pass
