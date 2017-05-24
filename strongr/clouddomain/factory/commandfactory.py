@@ -17,7 +17,7 @@ class CommandFactory:
         :param swap: how much swap should be allocated for the container
         :type swap: int
         :param affinity: the processing core affinity, this is passed along to docker --cpuset-cpus=""
-        :type ram: string
+        :type affinity: string
 
         :returns: A LaunchAppContainer command object
         :rtype: LaunchAppContainer
@@ -29,10 +29,11 @@ class CommandFactory:
         elif not ram > 0:
             raise InvalidParameterException('Ram should be higher than 0')
         elif not swap >= -1:
-            raise InvalidParameterException('Ram should be higher than 0')
+            raise InvalidParameterException('Swap should be -1 or higher')
+        elif not len(affinity) > 0:
+            raise InvalidParameterException('Affinity invalid')
 
-        return DeployVm(name=name, cores=cores, ram=ram)
-        pass
+        return LaunchAppContainer(host=host, image=image, ram=ram, swap=swap, affinity=affinity)
 
     def newDeployVmCommand(self, name, cores, ram):
         """ Generates a new DeployVm command

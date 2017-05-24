@@ -8,12 +8,14 @@ from cmndr.handlers.nameextractors import ClassNameExtractor
 
 from strongr.clouddomain.handler.abstract.cloud import AbstractDeployVmHandler, AbstractDeployVmsHandler, \
                                                         AbstractListDeployedVmsHandler, AbstractRunShellCodeHandler
-from strongr.clouddomain.command import DeployVm, DeployVms, ListDeployedVms, RunShellCode
 
+from strongr.clouddomain.command import DeployVm, DeployVms, RunShellCode
+from strongr.clouddomain.query import ListDeployedVms
 
 class AbstractCloudService():
     __metaclass__ = ABCMeta
-    handlers = {}
+    _commands = {}
+    _queries = {}
 
 
     _mappings = {
@@ -24,35 +26,42 @@ class AbstractCloudService():
     }
 
     def __init__(self):
-        self.setup()
+        for handler in self.getCommands():
+            command = self._getCommandForHandler(handler)
+            self._commands[handler] = command
+        for handler in self.getQueryHandlers():
+            command = self._getCommandForHandler(handler)
+            self._queries[handler] = command
+
 
     @abstractmethod
-    def setup(self):
+    def getCommandHandlers(self):
         return
+
+    @abstractmethod
+    def getQueryHandlers(self):
+        pass
 
     def _getCommandForHandler(self, handler):
         for mappedHandler in self._mappings:
             if issubclass(handler, mappedHandler):
                 command = self._mappings[mappedHandler]
-                # remove from self._mappings so that a with multiple inheritance can work
+                # remove from self._mappings so that a handler with multiple inheritance can work
                 del self._mappings[mappedHandler]
                 return command
         return None
 
-    def injectHandler(self, handler):
-        command = self._getCommandForHandler(handler)
-        if command is not None:
-            self.handlers[handler] = command
-
-    def injectHandlers(self, handlers):
-        for handler in handlers:
-            self.injectHandler(handler)
-
-    def getCommandBus(self, middlewares=None):
+    def _makeBus(self, handlers, middlewares=None):
         extractor = ClassNameExtractor()
-        locator = LazyLoadingInMemoryLocator(self.handlers)
+        locator = LazyLoadingInMemoryLocator(handlers)
         inflector = CallableInflector()
         handler = CommandHandler(extractor, locator, inflector)
         if middlewares != None:
             return CommandBus(middlewares + [handler])
         return CommandBus([handler])
+
+    def getCommandBus(self, middlewares=None):
+        return self._makeBus(self._commands, middlewares)
+
+    def getQueryBus(self, middlewares=None):
+        return self._makeBus(self._queries, middlewares)

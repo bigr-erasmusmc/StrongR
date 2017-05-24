@@ -1,8 +1,9 @@
 import dependency_injector.containers as containers
 import dependency_injector.providers as providers
 
-from .domain import CloudDomain
+from .domain import CloudDomain, SchedulerDomain
 
 class Domains(containers.DeclarativeContainer):
     """IoC container of domains."""
     cloudDomain = providers.Factory(CloudDomain)
+    schedulerDomain = providers.Factory(SchedulerDomain)

@@ -4,5 +4,8 @@ from strongr.clouddomain.handler.impl.cloud.opennebula import DeployVmHandler, L
 from strongr.clouddomain.command import DeployVm, ListDeployedVms, RunShellCode, DeployVms
 
 class OpenNebula(AbstractCloudService):
-    def setup(self):
-        self.injectHandlers([DeployVmHandler, ListDeployedVmsHandler, RunShellCodeHandler, DeployVmsHandler])
+    def getCommandHandlers(self):
+        return [DeployVmHandler, RunShellCodeHandler, DeployVmsHandler]
+
+    def getQueryHandlers(self):
+        return [ListDeployedVmsHandler]

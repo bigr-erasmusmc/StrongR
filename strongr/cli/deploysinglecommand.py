@@ -9,7 +9,7 @@ class DeploySingleCommand(Command):
     deploy:single
     """
     def handle(self):
-        services = self.getServicesContainer()
+        services = self.cloudDomain().getServicesContainer()
         cloudServices = services.cloudServices()
         commandFactory = services.cloudCommandFactory()
 

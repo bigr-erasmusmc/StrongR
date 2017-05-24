@@ -16,7 +16,5 @@ application.add(RunShellCodeCommand(coreContainer))
 application.add(DeployManyCommand(coreContainer))
 
 
-Core.domainEventsPublisher().subscribe(Core.domains().cloudDomain().events()['NewVmDeployed'], lambda x: print("It works!"))
-
 if __name__ == '__main__':
     application.run()

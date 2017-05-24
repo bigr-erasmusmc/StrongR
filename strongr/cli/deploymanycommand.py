@@ -9,7 +9,7 @@ class DeployManyCommand(Command):
     deploy:many
     """
     def handle(self):
-        services = self.getServicesContainer()
+        services = self.cloudDomain().getServicesContainer()
         cloudServices = services.cloudServices()
         commandFactory = services.cloudCommandFactory()
 

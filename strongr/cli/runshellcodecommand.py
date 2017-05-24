@@ -9,7 +9,7 @@ class RunShellCodeCommand(Command):
         {cmd* : shellcode to be run on the specified host(s)}
     """
     def handle(self):
-        services = self.getServicesContainer()
+        services = self.cloudDomain().getServicesContainer()
         cloudServices = services.cloudServices()
         commandFactory = services.cloudCommandFactory()
 

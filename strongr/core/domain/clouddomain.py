@@ -10,7 +10,3 @@ class CloudDomain(containers.DeclarativeContainer):
     """IoC container of service providers."""
     cloudServices = providers.Singleton(CloudServices)
     cloudCommandFactory = providers.Singleton(CommandFactory)
-
-    events = providers.Object({\
-        "NewVmDeployed": NewVmDeployed \
-        })

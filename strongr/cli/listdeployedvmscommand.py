@@ -7,7 +7,7 @@ class ListDeployedVmsCommand(Command):
     deploy:list
     """
     def handle(self):
-        services = self.getServicesContainer()
+        services = self.cloudDomain().getServicesContainer()
         cloudServices = services.cloudServices()
         commandFactory = services.cloudCommandFactory()
 
