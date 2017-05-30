@@ -26,7 +26,7 @@ class AbstractCloudService():
     }
 
     def __init__(self):
-        for handler in self.getCommands():
+        for handler in self.getCommandHandlers():
             command = self._getCommandForHandler(handler)
             self._commands[handler] = command
         for handler in self.getQueryHandlers():

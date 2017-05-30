@@ -10,7 +10,8 @@ from .domains import Domains
 
 from .domaineventspublisher import DomainEventsPublisher
 
-from .keyvaluestore import InMemoryStore
+#from .keyvaluestore import InMemoryStore
+from .cache import Cache
 
 class Core(containers.DeclarativeContainer):
     """IoC container of core component providers."""
@@ -20,6 +21,7 @@ class Core(containers.DeclarativeContainer):
     domains = providers.Factory(Domains)
     domainEventsPublisher = providers.Singleton(DomainEventsPublisher)
 
-    keyValueStore = providers.Singleton(InMemoryStore)
+    #keyValueStore = providers.Singleton(InMemoryStore)
+    cache = providers.Singleton(Cache)
 
     #threadPool = ThreadPoolExecutor(max_workers=3)

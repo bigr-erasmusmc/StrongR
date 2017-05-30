@@ -1,4 +1,4 @@
-from strongr.schedulerdomain.query import RequestScheduledTasks
+from strongr.schedulerdomain.query import RequestScheduledTasks, RequestTaskInfo
 
 from strongr.core.exception import InvalidParameterException
 
@@ -12,3 +12,14 @@ class QueryFactory:
         :rtype: RequestScheduledTasks
         """
         return RequestScheduledTasks()
+
+    def newRequestTaskInfo(self, taskid):
+        """ Generates a new RequestTaskInfo query
+
+        :param taskid: the taskid
+        :type taskid: string
+
+        :returns: A RequestTaskInfo query object
+        :rtype: RequestTaskInfo
+        """
+        return RequestTaskInfo(taskid)

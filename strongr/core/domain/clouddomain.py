@@ -8,6 +8,6 @@ from strongr.clouddomain.event import NewVmDeployed
 
 class CloudDomain(containers.DeclarativeContainer):
     """IoC container of service providers."""
-    cloudServices = providers.Singleton(CloudServices)
+    cloudService = providers.Singleton(CloudServices)
     commandFactory = providers.Singleton(CommandFactory)
     queryFactory = providers.Singleton(QueryFactory)

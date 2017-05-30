@@ -7,14 +7,13 @@ class ListDeployedVmsCommand(Command):
     deploy:list
     """
     def handle(self):
-        services = self.cloudDomain().getServicesContainer()
-        cloudServices = services.cloudServices()
-        commandFactory = services.cloudCommandFactory()
+        cloudService = self.getDomains().cloudDomain().cloudService()
+        queryFactory = self.getDomains().cloudDomain().queryFactory()
 
-        cloudNames = cloudServices.getCloudNames()
+        cloudNames = cloudService.getCloudNames()
         cloudProviderName = self.choice('Please select a cloud provider (default {0})'.format(cloudNames[0]), cloudNames, 0)
 
-        cloudService = cloudServices.getCloudServiceByName(cloudProviderName)
-        commandBus = cloudService.getCommandBus()
-        listDeployedVms = commandFactory.newListDeployedVmsCommand()
-        commandBus.handle(listDeployedVms)
+        cloudService = cloudService.getCloudServiceByName(cloudProviderName)
+        queryBus = cloudService.getQueryBus()
+        listDeployedVms = queryFactory.newListDeployedVmsCommand()
+        queryBus.handle(listDeployedVms)

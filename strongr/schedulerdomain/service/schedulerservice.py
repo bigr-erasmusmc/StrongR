@@ -7,8 +7,8 @@ from cmndr.handlers.nameextractors import ClassNameExtractor
 from strongr.schedulerdomain.command import ScheduleTask, DoDelayedTasks
 from strongr.schedulerdomain.handler import ScheduleTaskHandler, DoDelayedTasksHandler
 
-from strongr.schedulerdomain.query import RequestScheduledTasks
-from strongr.schedulerdomain.handler import RequestScheduledTasksHandler
+from strongr.schedulerdomain.query import RequestScheduledTasks, RequestTaskInfo
+from strongr.schedulerdomain.handler import RequestScheduledTasksHandler, RequestTaskInfoHandler
 class SchedulerService:
     def getCommandBus(self, middlewares=None):
         handlers = {
@@ -25,7 +25,8 @@ class SchedulerService:
 
     def getQueryBus(self, middlewares=None):
         handlers = {
-                    RequestScheduledTasksHandler: RequestScheduledTasks.__name__
+                    RequestScheduledTasksHandler: RequestScheduledTasks.__name__,
+                    RequestTaskInfoHandler: RequestTaskInfo.__name__
                 }
         extractor = ClassNameExtractor()
         locator = LazyLoadingInMemoryLocator(handlers)

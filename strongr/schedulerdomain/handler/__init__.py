@@ -1,3 +1,5 @@
 from .scheduletaskhandler import ScheduleTaskHandler
 from .dodelayedtaskshandler import DoDelayedTasksHandler
 from .requestscheduledtaskshandler import RequestScheduledTasksHandler
+from .requesttaskinfohandler import RequestTaskInfoHandler
+from .findnodewithavailableresourceshandler import FindNodeWithAvailableResourcesHandler
