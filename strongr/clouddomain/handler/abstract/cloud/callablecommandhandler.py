@@ -1,7 +1,6 @@
 from abc import ABCMeta, abstractmethod
 
-from strongr import core
-
+import strongr.core
 class CallableCommandHandler:
     __metaclass__ = ABCMeta
 
