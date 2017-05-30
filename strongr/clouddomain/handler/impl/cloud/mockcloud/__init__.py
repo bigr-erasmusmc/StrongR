@@ -2,4 +2,3 @@ from .deployvmhandler import DeployVmHandler
 from .runshellcodehandler import RunShellCodeHandler
 from .listdeployedvmshandler import ListDeployedVmsHandler
 from .deployvmshandler import DeployVmsHandler
-from .launchappcontainerhandler import LaunchAppContainerHandler

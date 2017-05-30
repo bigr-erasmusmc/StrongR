@@ -1,9 +1,16 @@
-from strongr.schedulerDomain.command import ScheduleTask
+from strongr.schedulerdomain.command import ScheduleTask, DoDelayedTasks
 
 from strongr.core.exception import InvalidParameterException
 
 class CommandFactory:
     """ This factory instantiates command objects to be sent to a scheduler commandbus. """
+    def newDoDelayedTasks(self):
+        """ Generates a new DoDelayedTasks command
+
+        :returns: A DoDelayedTasks command object
+        :rtype: DoDelayedTasks
+        """
+        return DoDelayedTasks()
 
     def newScheduleTaskCommand(self, taskid, cmd, cores, ram):
         """ Generates a new ScheduleTask command

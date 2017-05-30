@@ -1,39 +1,9 @@
-from strongr.clouddomain.command import DeployVm, DeployVms, ListDeployedVms, RunShellCode, LaunchAppContainer
+from strongr.clouddomain.command import DeployVm, DeployVms, RunShellCode
 
 from strongr.core.exception import InvalidParameterException
 
 class CommandFactory:
     """ This factory instantiates command objects to be sent to a cloud commandbus. """
-
-    def newLaunchAppContainerCommand(self, host, image, ram, swap, affinity):
-        """ Generates a new LaunchAppContainer command
-
-        :param host: The hostname where the container should be deployed
-        :type host: string
-        :param image: The imagename for the container
-        :type image: string
-        :param ram: how much ram should be allocated for the container
-        :type ram: int
-        :param swap: how much swap should be allocated for the container
-        :type swap: int
-        :param affinity: the processing core affinity, this is passed along to docker --cpuset-cpus=""
-        :type affinity: string
-
-        :returns: A LaunchAppContainer command object
-        :rtype: LaunchAppContainer
-        """
-        if not len(host) > 0:
-            raise InvalidParameterException('Host invalid')
-        elif not len(image) > 0:
-            raise InvalidParameterException('Image invalid')
-        elif not ram > 0:
-            raise InvalidParameterException('Ram should be higher than 0')
-        elif not swap >= -1:
-            raise InvalidParameterException('Swap should be -1 or higher')
-        elif not len(affinity) > 0:
-            raise InvalidParameterException('Affinity invalid')
-
-        return LaunchAppContainer(host=host, image=image, ram=ram, swap=swap, affinity=affinity)
 
     def newDeployVmCommand(self, name, cores, ram):
         """ Generates a new DeployVm command
@@ -72,14 +42,6 @@ class CommandFactory:
             if not isinstance(deployCommand, DeployVm):
                 raise InvalidParameterException('Object {0} should be instance of DeployVm'.format(deployCommand))
         return DeployVms(deployVmCommands)
-
-    def newListDeployedVmsCommand(self):
-        """ Generates a new ListDeployedVms command
-
-        :returns: A ListDeployedVms command object
-        :rtype: ListDeployedVms
-        """
-        return ListDeployedVms()
 
     def newRunShellCodeCommand(self, sh, host):
         """ Generates a new RunShellCode command
