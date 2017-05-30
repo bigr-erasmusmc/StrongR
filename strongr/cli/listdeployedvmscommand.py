@@ -16,4 +16,4 @@ class ListDeployedVmsCommand(Command):
         cloudService = cloudService.getCloudServiceByName(cloudProviderName)
         queryBus = cloudService.getQueryBus()
         listDeployedVms = queryFactory.newListDeployedVmsCommand()
-        queryBus.handle(listDeployedVms)
+        print(queryBus.handle(listDeployedVms))
