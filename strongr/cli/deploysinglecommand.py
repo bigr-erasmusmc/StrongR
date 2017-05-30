@@ -9,9 +9,8 @@ class DeploySingleCommand(Command):
     deploy:single
     """
     def handle(self):
-        services = self.cloudDomain().getServicesContainer()
-        cloudServices = services.cloudServices()
-        commandFactory = services.cloudCommandFactory()
+        cloudServices = self.getDomains().cloudDomain().cloudService()
+        commandFactory = self.getDomains().cloudDomain().commandFactory()
 
         cores = int(self.ask('How many processing cores should the VM have? (default 1): ', 1))
         ram = int(self.ask('How much memory in GiB should the VM have? (default 4): ', 4))
