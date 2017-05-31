@@ -1,6 +1,6 @@
 from strongr.clouddomain.handler.abstract.cloud import AbstractRequestJidStatusHandler
 
-import salt.cloud
+import salt.runner
 
 class RequestJidStatusHandler(AbstractRequestJidStatusHandler):
     def __call__(self, query):
