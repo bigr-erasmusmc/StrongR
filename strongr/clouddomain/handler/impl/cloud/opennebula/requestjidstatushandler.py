@@ -6,5 +6,5 @@ class RequestJidStatusHandler(AbstractRequestJidStatusHandler):
     def __call__(self, query):
         opts = salt.config.master_config('/etc/salt/master')
         runner = salt.runner.RunnerClient(opts)
-        result = runner.cmd('jobs.lookup_jid', query.jid)
+        result = runner.cmd('jobs.lookup_jid', [query.jid])
         return result
