@@ -1,4 +1,4 @@
-from strongr.clouddomain.query import ListDeployedVms
+from strongr.clouddomain.query import ListDeployedVms, RequestJidStatus
 
 from strongr.core.exception import InvalidParameterException
 
@@ -10,4 +10,12 @@ class QueryFactory:
         :rtype: ListDeployedVms
         """
         return ListDeployedVms()
+
+    def newRequestJidStatus(self, jid):
+        """ Generates a new RequestJidStatusquery
+
+        :returns: A RequestJidStatus query object
+        :rtype: RequestJidStatus
+        """
+        return RequestJidStatus(jid)
 

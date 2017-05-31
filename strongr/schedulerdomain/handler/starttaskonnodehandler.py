@@ -13,4 +13,4 @@ class StartTaskOnNodeHandler:
         taskinfo = queryBus.handle(queryFactory.newRequestTaskInfo(command.taskid))
 
         jid = cloudCommandBus.handle(cloudCommandFactory.newRunShellCodeCommand(sh=taskinfo["cmd"], host=command.node))
-        print(jid)
+        core.cache().set("jidmap." + taskinfo["taskid"], jid, '3600')

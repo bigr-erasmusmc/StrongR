@@ -7,10 +7,11 @@ from cmndr.handlers.locators import LazyLoadingInMemoryLocator
 from cmndr.handlers.nameextractors import ClassNameExtractor
 
 from strongr.clouddomain.handler.abstract.cloud import AbstractDeployVmHandler, AbstractDeployVmsHandler, \
-                                                        AbstractListDeployedVmsHandler, AbstractRunShellCodeHandler
+                                                        AbstractListDeployedVmsHandler, AbstractRunShellCodeHandler,\
+                                                        AbstractRequestJidStatusHandler
 
 from strongr.clouddomain.command import DeployVm, DeployVms, RunShellCode
-from strongr.clouddomain.query import ListDeployedVms
+from strongr.clouddomain.query import ListDeployedVms, RequestJidStatus
 
 class AbstractCloudService():
     __metaclass__ = ABCMeta
@@ -22,7 +23,8 @@ class AbstractCloudService():
         AbstractDeployVmHandler: DeployVm.__name__, \
         AbstractListDeployedVmsHandler: ListDeployedVms.__name__, \
         AbstractRunShellCodeHandler: RunShellCode.__name__, \
-        AbstractDeployVmsHandler: DeployVms.__name__
+        AbstractDeployVmsHandler: DeployVms.__name__, \
+        AbstractRequestJidStatusHandler: RequestJidStatus.__name__
     }
 
     def __init__(self):
