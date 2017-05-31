@@ -102,3 +102,19 @@ class CommandFactory:
             raise InvalidParameterException('taskid is invalid')
 
         return StartTaskOnNode(node=node, taskid=taskid)
+
+    def newCheckTaskRunning(self, taskid):
+        """ Generates a new CheckTaskRunning command
+
+        :param node: the node name
+        :type node: string
+        :param taskid: the taskid to be started
+        :type taskid: string
+
+        :returns: A CheckTaskRunning command object
+        :rtype: CheckTaskRunning
+        """
+        if not len(taskid) > 0:
+            raise InvalidParameterException('taskid is invalid')
+
+        return CheckTaskRunning(taskid=taskid)

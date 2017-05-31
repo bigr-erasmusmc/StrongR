@@ -24,7 +24,7 @@ class DoDelayedTasksHandler:
             if taskinfo == None: # this should be an exception at some point
                 continue
             if taskinfo["taskid"] in runningTasks and runningTasks[taskinfo["taskid"]]:
-                continue
+                commandBus.handle(commandFactory.newCheckTaskRunning(taskinfo["taskid"]))
             else:
                 node = queryBus.handle(queryFactory.newFindNodeWithAvailableResources(taskinfo["cores"], taskinfo["ram"]))
                 if node == None: # this should be an exception at some point
