@@ -1,6 +1,6 @@
 from strongr.schedulerdomain.command import ScheduleTask, DoDelayedTasks,\
                                             ClaimResourcesOnNode, ReleaseResourcesOnNode,\
-                                            StartTaskOnNode
+                                            StartTaskOnNode, CheckTaskRunning
 
 from strongr.core.exception import InvalidParameterException
 
