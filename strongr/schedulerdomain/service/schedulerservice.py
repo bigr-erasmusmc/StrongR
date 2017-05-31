@@ -6,10 +6,10 @@ from cmndr.handlers.nameextractors import ClassNameExtractor
 
 from strongr.schedulerdomain.command import ScheduleTask, DoDelayedTasks,\
                                             ClaimResourcesOnNode, ReleaseResourcesOnNode,\
-                                            StartTaskOnNode
+                                            StartTaskOnNode, CheckTaskRunning
 from strongr.schedulerdomain.handler import ScheduleTaskHandler, DoDelayedTasksHandler,\
                                             ClaimResourcesOnNodeHandler, ReleaseResourcesOnNodeHandler,\
-                                            StartTaskOnNodeHandler
+                                            StartTaskOnNodeHandler, CheckTaskRunningHandler
 
 from strongr.schedulerdomain.query import RequestScheduledTasks, RequestTaskInfo,\
                                             FindNodeWithAvailableResources
@@ -22,7 +22,8 @@ class SchedulerService:
                     DoDelayedTasksHandler: DoDelayedTasks.__name__,
                     ClaimResourcesOnNodeHandler: ClaimResourcesOnNode.__name__,
                     ReleaseResourcesOnNodeHandler: ReleaseResourcesOnNode.__name__,
-                    StartTaskOnNodeHandler: StartTaskOnNode.__name__
+                    StartTaskOnNodeHandler: StartTaskOnNode.__name__,
+                    CheckTaskRunningHandler: CheckTaskRunning.__name__
                 }
         extractor = ClassNameExtractor()
         locator = LazyLoadingInMemoryLocator(handlers)
