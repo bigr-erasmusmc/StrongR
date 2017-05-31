@@ -8,4 +8,5 @@ class CheckTaskRunning():
         cloudQueryFactory = core.domains().cloudDomain().queryFactory()
 
         jid = core.cache().get("jidmap." + command.taskid)
-        status = cloudCommandBus.handle(cloudCommandFactory.newRunShellCodeCommand(sh=taskinfo["cmd"], host=command.node))
+        status = cloudQueryBus.handle(cloudQueryFactory.newRequestJidStatus(jid))
+        print(status)
