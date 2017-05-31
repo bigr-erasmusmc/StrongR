@@ -20,6 +20,7 @@ class RunShellCodeCommand(Command):
             host = '*'
 
         runShellCode = commandFactory.newRunShellCodeCommand(host=host, sh=cmd)
+        print(cmd)
 
         cloudNames = cloudServices.getCloudNames()
         cloudProviderName = self.choice('Please select a cloud provider (default {0})'.format(cloudNames[0]), cloudNames, 0)
