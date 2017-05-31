@@ -1,12 +1,15 @@
 from .abstractcloudservice import AbstractCloudService
 
-from strongr.clouddomain.handler.impl.cloud.opennebula import DeployVmHandler, ListDeployedVmsHandler, RunShellCodeHandler, DeployVmsHandler
-from strongr.clouddomain.command import DeployVm, RunShellCode, DeployVms
-from strongr.clouddomain.query import ListDeployedVms
+from strongr.clouddomain.handler.impl.cloud.opennebula import DeployVmHandler, ListDeployedVmsHandler,\
+                                                                RunShellCodeHandler, DeployVmsHandler,\
+                                                                RequestJidStatusHandler
+
+#from strongr.clouddomain.command import DeployVm, RunShellCode, DeployVms
+#from strongr.clouddomain.query import ListDeployedVms, RequestJidStatus
 
 class OpenNebula(AbstractCloudService):
     def getCommandHandlers(self):
         return [DeployVmHandler, RunShellCodeHandler, DeployVmsHandler]
 
     def getQueryHandlers(self):
-        return [ListDeployedVmsHandler]
+        return [ListDeployedVmsHandler, RequestJidStatusHandler]
