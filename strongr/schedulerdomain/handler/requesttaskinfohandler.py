@@ -12,5 +12,5 @@ class RequestTaskInfoHandler:
             with open("/tmp/strongr/{}".format(query.taskid), "r") as file:
                 scheduledTask = jsonpickle.decode(file.read())
 
-        return scheduledTask
+        return scheduledTask.__dict__
 

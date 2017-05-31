@@ -4,16 +4,22 @@ from cmndr.handlers.inflectors import CallableInflector
 from cmndr.handlers.locators import LazyLoadingInMemoryLocator
 from cmndr.handlers.nameextractors import ClassNameExtractor
 
-from strongr.schedulerdomain.command import ScheduleTask, DoDelayedTasks
-from strongr.schedulerdomain.handler import ScheduleTaskHandler, DoDelayedTasksHandler
+from strongr.schedulerdomain.command import ScheduleTask, DoDelayedTasks,\
+                                            ClaimResourcesOnNode, ReleaseResourcesOnNode
+from strongr.schedulerdomain.handler import ScheduleTaskHandler, DoDelayedTasksHandler,\
+                                            ClaimResourcesOnNodeHandler, ReleaseResourcesOnNodeHandler
 
-from strongr.schedulerdomain.query import RequestScheduledTasks, RequestTaskInfo
-from strongr.schedulerdomain.handler import RequestScheduledTasksHandler, RequestTaskInfoHandler
+from strongr.schedulerdomain.query import RequestScheduledTasks, RequestTaskInfo,\
+                                            FindNodeWithAvailableResources
+from strongr.schedulerdomain.handler import RequestScheduledTasksHandler, RequestTaskInfoHandler,\
+                                            FindNodeWithAvailableResourcesHandler
 class SchedulerService:
     def getCommandBus(self, middlewares=None):
         handlers = {
                     ScheduleTaskHandler: ScheduleTask.__name__,
-                    DoDelayedTasksHandler: DoDelayedTasks.__name__
+                    DoDelayedTasksHandler: DoDelayedTasks.__name__,
+                    ClaimResourcesOnNodeHandler: ClaimResourcesOnNode.__name__,
+                    ReleaseResourcesOnNodeHandler: ReleaseResourcesOnNode.__name__
                 }
         extractor = ClassNameExtractor()
         locator = LazyLoadingInMemoryLocator(handlers)
@@ -26,7 +32,8 @@ class SchedulerService:
     def getQueryBus(self, middlewares=None):
         handlers = {
                     RequestScheduledTasksHandler: RequestScheduledTasks.__name__,
-                    RequestTaskInfoHandler: RequestTaskInfo.__name__
+                    RequestTaskInfoHandler: RequestTaskInfo.__name__,
+                    FindNodeWithAvailableResourcesHandler: FindNodeWithAvailableResources.__name__
                 }
         extractor = ClassNameExtractor()
         locator = LazyLoadingInMemoryLocator(handlers)

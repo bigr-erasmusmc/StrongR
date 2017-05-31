@@ -1,4 +1,5 @@
-from strongr.schedulerdomain.command import ScheduleTask, DoDelayedTasks
+from strongr.schedulerdomain.command import ScheduleTask, DoDelayedTasks,\
+                                            ClaimResourcesOnNode, ReleaseResourcesOnNode
 
 from strongr.core.exception import InvalidParameterException
 
@@ -38,3 +39,47 @@ class CommandFactory:
             raise InvalidParameterException('Taskid invalid')
 
         return ScheduleTask(taskid=taskid, cmd=cmd, cores=cores, ram=ram)
+
+    def newClaimResourcesOnNode(self, node, cores, ram):
+        """ Generates a new ClaimResourcesOnNode command
+
+        :param node: the node name
+        :type node: string
+        :param cores: the amount of cores claimed
+        :type cores: int
+        :param ram: the amount of ram claimed
+        :type ram: int
+
+        :returns: A ClaimResourcesOnNode command object
+        :rtype: ClaimResourcesOnNode
+        """
+        if not len(node) > 0:
+            raise InvalidParameterException('Node is invalid')
+        elif not cores > 0:
+            raise InvalidParameterException('Cores should be higher than 0')
+        elif not ram > 0:
+            raise InvalidParameterException('Ram should be higher than 0')
+
+        return ClaimResourcesOnNode(node=node,cores=cores, ram=ram)
+
+    def newReleaseResourcesOnNode(self, node, cores, ram):
+        """ Generates a new ReleaseResourcesOnNode command
+
+        :param node: the node name
+        :type node: string
+        :param cores: the amount of cores claimed
+        :type cores: int
+        :param ram: the amount of ram claimed
+        :type ram: int
+
+        :returns: A ReleaseResourcesOnNode command object
+        :rtype: ReleaseResourcesOnNode
+        """
+        if not len(node) > 0:
+            raise InvalidParameterException('Node is invalid')
+        elif not cores > 0:
+            raise InvalidParameterException('Cores should be higher than 0')
+        elif not ram > 0:
+            raise InvalidParameterException('Ram should be higher than 0')
+
+        return ReleaseResourcesOnNode(node=node,cores=cores, ram=ram)
