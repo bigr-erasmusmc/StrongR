@@ -14,6 +14,7 @@ class CheckTaskRunningHandler:
             # job not finished yet
             return
 
+        cache = core.cache()
         running = cache.get("tasks.running")
         del running[command.taskid]
         cache.set("tasks.running", running)
