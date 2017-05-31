@@ -3,3 +3,4 @@ from .abstractdeployvmhandler import AbstractDeployVmHandler
 from .abstractdeployvmshandler import AbstractDeployVmsHandler
 from .abstractlistdeployedvmshandler import AbstractListDeployedVmsHandler
 from .abstractrunshellcodehandler import AbstractRunShellCodeHandler
+from .abstractrequestjidstatushandler import AbstractRequestJidStatusHandler
