@@ -1,4 +1,5 @@
 import strongr.core
+import os
 
 class CheckTaskRunningHandler:
     def __call__(self, command):
@@ -9,5 +10,12 @@ class CheckTaskRunningHandler:
 
         jid = core.cache().get("jidmap." + command.taskid)
         status = cloudQueryBus.handle(cloudQueryFactory.newRequestJidStatus(jid))
-        status = status[status.keys()[0]]
-        print(status)
+        if status == None and not status:
+            # job not finished yet
+            return
+
+        running = cache.get("tasks.running")
+        del running[command.taskid]
+        cache.set("tasks.running", running)
+
+        os.remove('/tmp/strongr/' + command.taskid)

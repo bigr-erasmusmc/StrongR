@@ -20,6 +20,11 @@ class Cache:
             return self._cache[key]
         return None
 
+    def delete(self, key):
+        if self.exists(key):
+            del self._timeout[key]
+            del self._cache[key]
+
     def exists(self, key):
         self._checkKey(key)
         if key in self._cache:
