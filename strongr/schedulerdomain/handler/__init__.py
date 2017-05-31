@@ -5,3 +5,4 @@ from .requesttaskinfohandler import RequestTaskInfoHandler
 from .findnodewithavailableresourceshandler import FindNodeWithAvailableResourcesHandler
 from .claimresourcesonnodehandler import ClaimResourcesOnNodeHandler
 from .releaseresourcesonnode import ReleaseResourcesOnNodeHandler
+from .starttaskonnodehandler import StartTaskOnNodeHandler

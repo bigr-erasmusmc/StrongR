@@ -1,5 +1,6 @@
 from strongr.schedulerdomain.command import ScheduleTask, DoDelayedTasks,\
-                                            ClaimResourcesOnNode, ReleaseResourcesOnNode
+                                            ClaimResourcesOnNode, ReleaseResourcesOnNode,\
+                                            StartTaskOnNode
 
 from strongr.core.exception import InvalidParameterException
 
@@ -83,3 +84,21 @@ class CommandFactory:
             raise InvalidParameterException('Ram should be higher than 0')
 
         return ReleaseResourcesOnNode(node=node,cores=cores, ram=ram)
+
+    def newStartTaskOnNode(self, node, taskid):
+        """ Generates a new StartTaskOnNode command
+
+        :param node: the node name
+        :type node: string
+        :param taskid: the taskid to be started
+        :type taskid: string
+
+        :returns: A StartTaskOnNode command object
+        :rtype: StartTaskOnNode
+        """
+        if not len(node) > 0:
+            raise InvalidParameterException('node is invalid')
+        elif not len(taskid) > 0:
+            raise InvalidParameterException('taskid is invalid')
+
+        return StartTaskOnNode(node=node, taskid=taskid)

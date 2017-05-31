@@ -25,3 +25,7 @@ class Core(containers.DeclarativeContainer):
     cache = providers.Singleton(Cache)
 
     #threadPool = ThreadPoolExecutor(max_workers=3)
+
+core = Core()
+def getCore():
+    return core

@@ -1,5 +1,5 @@
 {
   "cloud": {
-    "driver": "MockCloud"
+    "driver": "OpenNebula"
   }
 }

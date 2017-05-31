@@ -5,7 +5,6 @@ class Cache:
     _timeout = {}
 
     def _checkKey(self, key):
-        print(self._cache)
         if key in self._timeout and int(time.time()) > self._timeout[key]:
             del self._cache[key]
             del self._timeout[key]

@@ -4,16 +4,17 @@ import strongr.core
 
 class DoDelayedTasksHandler:
     def __call__(self, command):
-        schedulerService = strongr.core.Core.domains().schedulerDomain().schedulerService()
+        core = strongr.core.getCore()
+        schedulerService = core.domains().schedulerDomain().schedulerService()
         queryBus = schedulerService.getQueryBus()
-        queryFactory = strongr.core.Core.domains().schedulerDomain().queryFactory()
+        queryFactory = core.domains().schedulerDomain().queryFactory()
 
         commandBus = schedulerService.getCommandBus()
-        commandFactory = strongr.core.Core.domains().schedulerDomain().commandFactory()
+        commandFactory = core.domains().schedulerDomain().commandFactory()
 
         tasks = queryBus.handle(queryFactory.newRequestScheduledTasks())
 
-        cache = strongr.core.Core.cache()
+        cache = core.cache()
         if not cache.exists("tasks.running"):
             cache.set("tasks.running", {}, 3600)
 
@@ -29,5 +30,6 @@ class DoDelayedTasksHandler:
             if node == None: # this should be an exception at some point
                 continue
             commandBus.handle(commandFactory.newClaimResourcesOnNode(node, taskinfo["cores"], taskinfo["ram"]))
+            commandBus.handle(commandFactory.newStartTaskOnNode(node, taskinfo["taskid"]))
             runningTasks[taskinfo["taskid"]] = True
             cache.set("tasks.running", runningTasks, 3600)

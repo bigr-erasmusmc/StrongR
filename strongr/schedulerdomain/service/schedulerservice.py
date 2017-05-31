@@ -5,9 +5,11 @@ from cmndr.handlers.locators import LazyLoadingInMemoryLocator
 from cmndr.handlers.nameextractors import ClassNameExtractor
 
 from strongr.schedulerdomain.command import ScheduleTask, DoDelayedTasks,\
-                                            ClaimResourcesOnNode, ReleaseResourcesOnNode
+                                            ClaimResourcesOnNode, ReleaseResourcesOnNode,\
+                                            StartTaskOnNode
 from strongr.schedulerdomain.handler import ScheduleTaskHandler, DoDelayedTasksHandler,\
-                                            ClaimResourcesOnNodeHandler, ReleaseResourcesOnNodeHandler
+                                            ClaimResourcesOnNodeHandler, ReleaseResourcesOnNodeHandler,\
+                                            StartTaskOnNodeHandler
 
 from strongr.schedulerdomain.query import RequestScheduledTasks, RequestTaskInfo,\
                                             FindNodeWithAvailableResources
@@ -19,7 +21,8 @@ class SchedulerService:
                     ScheduleTaskHandler: ScheduleTask.__name__,
                     DoDelayedTasksHandler: DoDelayedTasks.__name__,
                     ClaimResourcesOnNodeHandler: ClaimResourcesOnNode.__name__,
-                    ReleaseResourcesOnNodeHandler: ReleaseResourcesOnNode.__name__
+                    ReleaseResourcesOnNodeHandler: ReleaseResourcesOnNode.__name__,
+                    StartTaskOnNodeHandler: StartTaskOnNode.__name__
                 }
         extractor = ClassNameExtractor()
         locator = LazyLoadingInMemoryLocator(handlers)

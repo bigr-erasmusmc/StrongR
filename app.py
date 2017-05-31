@@ -5,9 +5,15 @@ from strongr.cli import DeploySingleCommand, ListDeployedVmsCommand,\
         AddTaskCommand, GetTaskStatusCommand,\
         RunResourceManager
 
-from strongr.core import Core
+import strongr.core
+import json
 
-coreContainer = Core()
+core = strongr.core.getCore()
+coreContainer = core
+
+with open('config.json', 'r') as file:
+    config = json.load(file)
+    coreContainer.config.update(config)
 
 application = Application()
 application.add(DeploySingleCommand(coreContainer))

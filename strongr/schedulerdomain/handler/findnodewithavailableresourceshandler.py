@@ -3,7 +3,8 @@ import json
 
 class FindNodeWithAvailableResourcesHandler:
     def __call__(self, query):
-        cache = strongr.core.Core.cache()
+        core = strongr.core.getCore()
+        cache = core.cache()
         if not cache.exists('nodes'):
             with open("/tmp/strongr-nodes", "r") as file:
                 nodes = json.loads(file.read())
