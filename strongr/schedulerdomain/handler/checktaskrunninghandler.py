@@ -17,6 +17,6 @@ class CheckTaskRunningHandler:
         cache = core.cache()
         running = cache.get("tasks.running")
         del running[command.taskid]
-        cache.set("tasks.running", running)
+        cache.set("tasks.running", running, 3600)
 
         os.remove('/tmp/strongr/' + command.taskid)
