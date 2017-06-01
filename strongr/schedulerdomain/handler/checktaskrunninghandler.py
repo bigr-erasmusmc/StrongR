@@ -20,6 +20,7 @@ class CheckTaskRunningHandler:
             # job not finished yet
             return
 
+        print("Job finished {}".format(command.taskid))
         taskinfo = queryBus.handle(queryFactory.newRequestTaskInfo(command.taskid))
         cache = core.cache()
         running = cache.get("tasks.running")
