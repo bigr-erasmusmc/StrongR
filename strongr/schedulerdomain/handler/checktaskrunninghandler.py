@@ -27,5 +27,5 @@ class CheckTaskRunningHandler:
 
         os.remove('/tmp/strongr/' + command.taskid)
 
-        taskinfo = queryBus.handle(queryFactory.newRequestTaskInfo(t))
+        taskinfo = queryBus.handle(queryFactory.newRequestTaskInfo(command.taskid))
         commandBus.handle(commandFactory.newReleaseResourcesOnNode(node, taskinfo["cores"], taskinfo["ram"]))
