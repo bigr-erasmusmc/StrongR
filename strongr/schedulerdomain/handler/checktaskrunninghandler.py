@@ -20,6 +20,7 @@ class CheckTaskRunningHandler:
             # job not finished yet
             return
 
+        taskinfo = queryBus.handle(queryFactory.newRequestTaskInfo(command.taskid))
         cache = core.cache()
         running = cache.get("tasks.running")
         del running[command.taskid]
@@ -28,8 +29,4 @@ class CheckTaskRunningHandler:
         os.remove('/tmp/strongr/' + command.taskid)
 
         node = cache.get("tidtonode." + command.taskid)
-        taskinfo = queryBus.handle(queryFactory.newRequestTaskInfo(command.taskid))
-        print(taskinfo)
-        print(node)
-        return
         commandBus.handle(commandFactory.newReleaseResourcesOnNode(node, taskinfo["cores"], taskinfo["ram"]))
