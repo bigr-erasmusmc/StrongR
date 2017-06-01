@@ -29,4 +29,7 @@ class CheckTaskRunningHandler:
 
         node = cache.get("tidtonode." + command.taskid)
         taskinfo = queryBus.handle(queryFactory.newRequestTaskInfo(command.taskid))
+        print(taskinfo)
+        print(node)
+        return
         commandBus.handle(commandFactory.newReleaseResourcesOnNode(node, taskinfo["cores"], taskinfo["ram"]))
