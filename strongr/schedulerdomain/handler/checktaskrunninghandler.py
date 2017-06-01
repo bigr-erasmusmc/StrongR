@@ -5,6 +5,12 @@ class CheckTaskRunningHandler:
     def __call__(self, command):
         core = strongr.core.getCore()
 
+        schedulerService = core.domains().schedulerDomain().schedulerService()
+        commandBus = schedulerService.getCommandBus()
+        commandFactory = core.domains().schedulerDomain().commandFactory()
+        queryBus = schedulerService.getQueryBus()
+        queryFactory = core.domains().schedulerDomain().queryFactory()
+
         cloudQueryBus = core.domains().cloudDomain().cloudService().getCloudServiceByName(core.config.cloud.driver()).getQueryBus()
         cloudQueryFactory = core.domains().cloudDomain().queryFactory()
 
@@ -20,3 +26,6 @@ class CheckTaskRunningHandler:
         cache.set("tasks.running", running, 3600)
 
         os.remove('/tmp/strongr/' + command.taskid)
+
+        taskinfo = queryBus.handle(queryFactory.newRequestTaskInfo(t))
+        commandBus.handle(commandFactory.newReleaseResourcesOnNode(node, taskinfo["cores"], taskinfo["ram"]))
