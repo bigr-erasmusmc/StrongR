@@ -16,7 +16,6 @@ class CheckTaskRunningHandler:
 
         jid = core.cache().get("jidmap." + command.taskid)
         status = cloudQueryBus.handle(cloudQueryFactory.newRequestJidStatus(jid))
-        print(status)
         if status == None and not status:
             # job not finished yet
             return
