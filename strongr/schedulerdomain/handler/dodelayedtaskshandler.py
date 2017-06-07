@@ -23,7 +23,7 @@ class DoDelayedTasksHandler:
             if taskinfo == None: # this should be an exception at some point
                 continue
             if taskinfo["taskid"] in runningTasks and runningTasks[taskinfo["taskid"]]:
-                # check if task is running and do some updates
+                # check if task is running or finished
                 commandBus.handle(commandFactory.newCheckTaskRunning(taskinfo["taskid"]))
             else:
                 # task is not running or finished, let's try to execute it on an available node
