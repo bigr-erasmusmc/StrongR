@@ -29,7 +29,9 @@ class DoDelayedTasksHandler:
                 # task is not running or finished, let's try to execute it on an available node
                 node = queryBus.handle(queryFactory.newFindNodeWithAvailableResources(taskinfo["cores"], taskinfo["ram"]))
                 if node == None: # this should be an exception at some point
-                    continue
+                    # Work in a FIFO-style fashion for the moment. We do not wish to execute the next task even if there
+                    # might be enough resources in the cluster for this would not be FIFO.
+                    return
                 commandBus.handle(commandFactory.newClaimResourcesOnNode(node, taskinfo["cores"], taskinfo["ram"]))
                 commandBus.handle(commandFactory.newStartTaskOnNode(node, taskinfo["taskid"]))
                 runningTasks[taskinfo["taskid"]] = True
