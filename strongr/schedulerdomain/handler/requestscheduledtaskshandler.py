@@ -7,5 +7,4 @@ class RequestScheduledTasksHandler:
 
         tasks = [f for f in os.listdir('/tmp/strongr/') if os.path.isfile('/tmp/strongr/' + f)]
         tasks.sort()
-        print(tasks)
         return tasks
