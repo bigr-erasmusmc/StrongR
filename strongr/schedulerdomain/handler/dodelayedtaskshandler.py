@@ -12,6 +12,8 @@ class DoDelayedTasksHandler:
         commandFactory = core.domains().schedulerDomain().commandFactory()
 
         tasks = queryBus.handle(queryFactory.newRequestScheduledTasks())
+        if tasks == None:
+            return
 
         cache = core.cache()
         if not cache.exists("tasks.running"):
