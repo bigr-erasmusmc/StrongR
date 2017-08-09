@@ -12,6 +12,7 @@ class FindNodeWithAvailableResourcesHandler:
                 nodes[node]["ram_available"] = nodes[node]["ram"]
                 nodes[node]["cores_available"] = nodes[node]["cores"]
             cache.set("nodes", nodes, 3600)
+            print(nodes)
         else:
             nodes = cache.get('nodes')
 

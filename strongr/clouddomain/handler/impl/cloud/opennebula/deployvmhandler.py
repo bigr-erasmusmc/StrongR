@@ -16,6 +16,4 @@ class DeployVmHandler(AbstractDeployVmHandler):
 
         client = salt.cloud.CloudClient('/etc/salt/cloud')
         client.profile(names=[command.name], profile='salt-minion', vm_overrides=overrides)
-        self.publishDomainEvent(command.name, command.cores, command.ram)
-
-        return
+        #self.publishDomainEvent(command.name, command.cores, command.ram)
