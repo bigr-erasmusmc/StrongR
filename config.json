@@ -1,5 +1,5 @@
 {
-  "cloud": {
-    "driver": "OpenNebula"
+  "develop": {
+    "cloud.driver": "OpenNebula"
   }
 }

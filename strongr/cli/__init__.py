@@ -5,3 +5,4 @@ from .deploymanycommand import DeployManyCommand
 from .addtaskcommand import AddTaskCommand
 from .gettaskstatuscommand import GetTaskStatusCommand
 from .runresourcemanager import RunResourceManager
+from .printconfig import PrintConfig

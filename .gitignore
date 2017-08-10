@@ -1,5 +1,6 @@
 bin/
 strongr-tasks-lock
+.idea/
 
 # VIM
 *.swp

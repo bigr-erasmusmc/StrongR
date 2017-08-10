@@ -4,8 +4,6 @@ import dependency_injector.providers as providers
 from strongr.clouddomain.service import CloudServices
 from strongr.clouddomain.factory import CommandFactory, QueryFactory
 
-from strongr.clouddomain.event import NewVmDeployed
-
 class CloudDomain(containers.DeclarativeContainer):
     """IoC container of service providers."""
     cloudService = providers.Singleton(CloudServices)

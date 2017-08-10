@@ -1,29 +1,40 @@
 from cleo import Application
+from cleo.inputs.argv_input import ArgvInput
 
 from strongr.cli import DeploySingleCommand, ListDeployedVmsCommand,\
         RunShellCodeCommand, DeployManyCommand,\
         AddTaskCommand, GetTaskStatusCommand,\
-        RunResourceManager
+        RunResourceManager, PrintConfig
 
 import strongr.core
 import json
 
-core = strongr.core.getCore()
-coreContainer = core
+# Use CLEO ArgvInput to extract some parameters
+# this dependency gets injected into
+# application.run(..) as well
+argvInputs = ArgvInput()
 
-with open('config.json', 'r') as file:
-    config = json.load(file)
-    coreContainer.config.update(config)
+# env is used for loading the right config environment
+env = "develop"
+if argvInputs.has_parameter_option('env'):
+    env = argvInputs.get_parameter_option('env')
+
+core = strongr.core.getCore()
+
+configDomain = core.domains().configDomain()
+configDomain.configService().getCommandBus().handle(configDomain.commandFactory().newLoadConfig(env))
 
 application = Application()
-application.add(DeploySingleCommand(coreContainer))
-application.add(ListDeployedVmsCommand(coreContainer))
-application.add(RunShellCodeCommand(coreContainer))
-application.add(DeployManyCommand(coreContainer))
-application.add(AddTaskCommand(coreContainer))
-application.add(GetTaskStatusCommand(coreContainer))
-application.add(RunResourceManager(coreContainer))
+
+application.add(DeploySingleCommand(core))
+application.add(ListDeployedVmsCommand(core))
+application.add(RunShellCodeCommand(core))
+application.add(DeployManyCommand(core))
+application.add(AddTaskCommand(core))
+application.add(GetTaskStatusCommand(core))
+application.add(RunResourceManager(core))
+application.add(PrintConfig(core))
 
 
 if __name__ == '__main__':
-    application.run()
+    application.run(input_=argvInputs)
