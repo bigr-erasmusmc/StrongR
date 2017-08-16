@@ -4,7 +4,8 @@ from cleo.inputs.argv_input import ArgvInput
 from strongr.cli import DeploySingleCommand, ListDeployedVmsCommand,\
         RunShellCodeCommand, DeployManyCommand,\
         AddTaskCommand, GetTaskStatusCommand,\
-        RunResourceManager, PrintConfig
+        RunResourceManager, PrintConfig,\
+        IsValidUserCommand
 
 import strongr.core
 import json
@@ -34,6 +35,7 @@ application.add(AddTaskCommand(core))
 application.add(GetTaskStatusCommand(core))
 application.add(RunResourceManager(core))
 application.add(PrintConfig(core))
+application.add(IsValidUserCommand(core))
 
 
 if __name__ == '__main__':
