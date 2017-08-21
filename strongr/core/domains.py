@@ -2,7 +2,7 @@ import dependency_injector.containers as containers
 import dependency_injector.providers as providers
 
 from .domain import CloudDomain, SchedulerDomain, ConfigDomain,\
-                    AuthDomain
+                    AuthDomain, RestDomain
 
 class Domains(containers.DeclarativeContainer):
     """IoC container of domains."""
@@ -10,3 +10,4 @@ class Domains(containers.DeclarativeContainer):
     schedulerDomain = providers.Factory(SchedulerDomain)
     configDomain = providers.Factory(ConfigDomain)
     authDomain = providers.Factory(AuthDomain)
+    restDomain = providers.Factory(RestDomain)

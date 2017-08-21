@@ -7,3 +7,4 @@ from .gettaskstatuscommand import GetTaskStatusCommand
 from .runresourcemanager import RunResourceManager
 from .printconfig import PrintConfig
 from .isvalidusercommand import IsValidUserCommand
+from .runrestservercommand import RunRestServerCommand

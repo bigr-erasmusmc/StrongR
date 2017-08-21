@@ -26,3 +26,8 @@ class PatchedCommand(Command):
             output = options[0]
 
         return output
+
+    def _castToBool(self, val):
+        if isinstance(val, bool):
+            return val
+        return val.lower() in ['true', '1', 't', 'y', 'yes', 'yeah', 'yup', 'certainly', 'uh-huh', 'yarr']

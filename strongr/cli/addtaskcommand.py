@@ -31,4 +31,3 @@ class AddTaskCommand(Command):
         command = commandFactory.newScheduleTaskCommand(taskid, cmd, cores, ram)
         schedulerService.getCommandBus().handle(command)
         print(json.dumps({'taskid': taskid}))
-
