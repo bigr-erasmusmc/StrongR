@@ -39,6 +39,15 @@ class RunRestServerCommand(Command):
 
         app = Flask(__name__)
 
+        # the oauth2 lib can not work with templates,
+        # this hack was proposed as a temp fix on the
+        # libraries github. Use this for now, we
+        # should refactor this later.
+        # https://github.com/lepture/flask-oauthlib/issues/180
+        from strongr.restdomain.api.oauth2 import bind_oauth2
+        oauth2 = bind_oauth2(app)
+        app.oauth2 = oauth2
+
         for blueprint in blueprints:
             app.register_blueprint(blueprint)
 
@@ -63,4 +72,3 @@ class RunRestServerCommand(Command):
                 def load(self):
                     return self.application
             WSGIServer(app).run()
-

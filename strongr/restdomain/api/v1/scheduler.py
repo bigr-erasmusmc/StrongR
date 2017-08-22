@@ -1,10 +1,11 @@
 from flask_restplus import Namespace, Resource, fields, reqparse
 from flask import request
 
+from strongr.restdomain.api.utils import blueprint_require_oauth
+
 import strongr.core
 import time
 import uuid
-
 
 ns = Namespace('scheduler', description='Operations related to the schedulerdomain')
 
@@ -16,6 +17,7 @@ task = ns.model('task', {
 @ns.route('/task')
 class Tasks(Resource):
     @ns.response(201, 'Task successfully created.')
+    @blueprint_require_oauth('task')
     @ns.expect(task, validate=True)
     def post(self):
         """Creates a new task."""
@@ -31,3 +33,4 @@ class Tasks(Resource):
 
         schedulerService.getCommandBus().handle(command)
         return {'taskid': taskid}, 201
+
