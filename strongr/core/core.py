@@ -13,10 +13,13 @@ from .domaineventspublisher import DomainEventsPublisher
 #from .keyvaluestore import InMemoryStore
 from .cache import Cache
 
+
+from strongr.core.middlewares.celery.commandrouter import CommandRouter
+
 class Core(containers.DeclarativeContainer):
     """IoC container of core component providers."""
     config = providers.Configuration('config')
-    logger = providers.Singleton(logging.Logger, name='strongr-master')
+    logger = providers.Singleton(logging.Logger, name='strongr')
 
     domains = providers.Factory(Domains)
     domainEventsPublisher = providers.Singleton(DomainEventsPublisher)
@@ -25,6 +28,8 @@ class Core(containers.DeclarativeContainer):
     cache = providers.Singleton(Cache)
 
     #threadPool = ThreadPoolExecutor(max_workers=3)
+
+    commandRouter = providers.Singleton(CommandRouter)
 
 core = Core()
 def getCore():

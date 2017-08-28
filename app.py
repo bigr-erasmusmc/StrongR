@@ -5,7 +5,8 @@ from strongr.cli import DeploySingleCommand, ListDeployedVmsCommand,\
         RunShellCodeCommand, DeployManyCommand,\
         AddTaskCommand, GetTaskStatusCommand,\
         RunResourceManager, PrintConfig,\
-        IsValidUserCommand, RunRestServerCommand
+        IsValidUserCommand, RunRestServerCommand,\
+        RunCeleryCommand
 
 import strongr.core
 import json
@@ -37,6 +38,7 @@ application.add(RunResourceManager(core))
 application.add(PrintConfig(core))
 application.add(IsValidUserCommand(core))
 application.add(RunRestServerCommand(core))
+application.add(RunCeleryCommand(core))
 
 
 if __name__ == '__main__':

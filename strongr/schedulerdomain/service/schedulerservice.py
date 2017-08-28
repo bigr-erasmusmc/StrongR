@@ -1,8 +1,4 @@
-from cmndr import CommandBus
-from cmndr.handlers import CommandHandler
-from cmndr.handlers.inflectors import CallableInflector
-from cmndr.handlers.locators import LazyLoadingInMemoryLocator
-from cmndr.handlers.nameextractors import ClassNameExtractor
+from strongr.core.abstracts.abstractservice import AbstractService
 
 from strongr.schedulerdomain.command import ScheduleTask, DoDelayedTasks,\
                                             ClaimResourcesOnNode, ReleaseResourcesOnNode,\
@@ -15,34 +11,27 @@ from strongr.schedulerdomain.query import RequestScheduledTasks, RequestTaskInfo
                                             FindNodeWithAvailableResources
 from strongr.schedulerdomain.handler import RequestScheduledTasksHandler, RequestTaskInfoHandler,\
                                             FindNodeWithAvailableResourcesHandler
-class SchedulerService:
-    def getCommandBus(self, middlewares=None):
-        handlers = {
-                    ScheduleTaskHandler: ScheduleTask.__name__,
-                    DoDelayedTasksHandler: DoDelayedTasks.__name__,
-                    ClaimResourcesOnNodeHandler: ClaimResourcesOnNode.__name__,
-                    ReleaseResourcesOnNodeHandler: ReleaseResourcesOnNode.__name__,
-                    StartTaskOnNodeHandler: StartTaskOnNode.__name__,
-                    CheckTaskRunningHandler: CheckTaskRunning.__name__
-                }
-        extractor = ClassNameExtractor()
-        locator = LazyLoadingInMemoryLocator(handlers)
-        inflector = CallableInflector()
-        handler = CommandHandler(extractor, locator, inflector)
-        if middlewares != None:
-            return CommandBus(middlewares + [handler])
-        return CommandBus([handler])
+class SchedulerService(AbstractService):
+    _command_bus = None
+    _query_bus = None
 
-    def getQueryBus(self, middlewares=None):
-        handlers = {
-                    RequestScheduledTasksHandler: RequestScheduledTasks.__name__,
-                    RequestTaskInfoHandler: RequestTaskInfo.__name__,
-                    FindNodeWithAvailableResourcesHandler: FindNodeWithAvailableResources.__name__
-                }
-        extractor = ClassNameExtractor()
-        locator = LazyLoadingInMemoryLocator(handlers)
-        inflector = CallableInflector()
-        handler = CommandHandler(extractor, locator, inflector)
-        if middlewares != None:
-            return CommandBus(middlewares + [handler])
-        return CommandBus([handler])
+    def getCommandBus(self):
+        if self._command_bus is None:
+            self._command_bus = self._make_default_commandbus({
+                        ScheduleTaskHandler: ScheduleTask,
+                        DoDelayedTasksHandler: DoDelayedTasks,
+                        ClaimResourcesOnNodeHandler: ClaimResourcesOnNode,
+                        ReleaseResourcesOnNodeHandler: ReleaseResourcesOnNode,
+                        StartTaskOnNodeHandler: StartTaskOnNode,
+                        CheckTaskRunningHandler: CheckTaskRunning
+                    })
+        return self._command_bus
+
+    def getQueryBus(self):
+        if self._query_bus is None:
+            self._query_bus = self._make_default_querybus({
+                    RequestScheduledTasksHandler: RequestScheduledTasks,
+                    RequestTaskInfoHandler: RequestTaskInfo,
+                    FindNodeWithAvailableResourcesHandler: FindNodeWithAvailableResources
+                })
+        return self._query_bus

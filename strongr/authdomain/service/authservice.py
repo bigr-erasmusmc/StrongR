@@ -1,25 +1,21 @@
-from cmndr import CommandBus
-from cmndr.handlers import CommandHandler
-from cmndr.handlers.inflectors import CallableInflector
-from cmndr.handlers.locators import LazyLoadingInMemoryLocator
-from cmndr.handlers.nameextractors import ClassNameExtractor
+from strongr.core.abstracts.abstractservice import AbstractService
 
 from strongr.authdomain.query import IsValidUser
 from strongr.authdomain.handler import IsValidUserHandler
 
-class AuthService:
-    def getCommandBus(self, middlewares=None):
-        # The authdomain does not have a commandbus
-        return None
+class AuthService(AbstractService):
+    _command_bus = None
+    _query_bus = None
 
-    def getQueryBus(self, middlewares=None):
-        handlers = {
-                    IsValidUserHandler: IsValidUser.__name__,
-                }
-        extractor = ClassNameExtractor()
-        locator = LazyLoadingInMemoryLocator(handlers)
-        inflector = CallableInflector()
-        handler = CommandHandler(extractor, locator, inflector)
-        if middlewares != None:
-            return CommandBus(middlewares + [handler])
-        return CommandBus([handler])
+    def getCommandBus(self):
+        if self._command_bus is None:
+            self._command_bus = self._make_default_commandbus({
+                    })
+        return self._command_bus
+
+    def getQueryBus(self):
+        if self._query_bus is None:
+            self._query_bus = self._make_default_querybus({
+                    IsValidUserHandler: IsValidUser,
+                })
+        return self._query_bus

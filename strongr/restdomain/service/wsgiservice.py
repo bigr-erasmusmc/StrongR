@@ -1,24 +1,21 @@
-from cmndr import CommandBus
-from cmndr.handlers import CommandHandler
-from cmndr.handlers.inflectors import CallableInflector
-from cmndr.handlers.locators import LazyLoadingInMemoryLocator
-from cmndr.handlers.nameextractors import ClassNameExtractor
+from strongr.core.abstracts.abstractservice import AbstractService
 
 from strongr.restdomain.query.wsgi import RetrieveBlueprints
 from strongr.restdomain.handler.wsgi import RetrieveBlueprintsHandler
 
-class WsgiService:
-    def getCommandBus(self, middlewares=None):
-        return None # WsgiService has no commandbus yet
+class WsgiService(AbstractService):
+    _command_bus = None
+    _query_bus = None
 
-    def getQueryBus(self, middlewares=None):
-        handlers = {
-                    RetrieveBlueprintsHandler: RetrieveBlueprints.__name__
-                }
-        extractor = ClassNameExtractor()
-        locator = LazyLoadingInMemoryLocator(handlers)
-        inflector = CallableInflector()
-        handler = CommandHandler(extractor, locator, inflector)
-        if middlewares != None:
-            return CommandBus(middlewares + [handler])
-        return CommandBus([handler])
+    def getCommandBus(self):
+        if self._command_bus is None:
+            self._command_bus = self._make_default_commandbus({
+                    })
+        return self._command_bus
+
+    def getQueryBus(self):
+        if self._query_bus is None:
+            self._query_bus = self._make_default_querybus({
+                    RetrieveBlueprintsHandler: RetrieveBlueprints
+                })
+        return self._query_bus
