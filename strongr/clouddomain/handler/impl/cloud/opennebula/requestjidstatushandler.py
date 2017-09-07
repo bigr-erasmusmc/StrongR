@@ -1,5 +1,6 @@
 from strongr.clouddomain.handler.abstract.cloud import AbstractRequestJidStatusHandler
 
+import strongr.core
 import salt.runner
 
 class RequestJidStatusHandler(AbstractRequestJidStatusHandler):
@@ -8,7 +9,13 @@ class RequestJidStatusHandler(AbstractRequestJidStatusHandler):
         opts['quiet'] = True
         runner = salt.runner.RunnerClient(opts)
 
-        jobs = runner.cmd('jobs.active')
+        core = strongr.core.getCore()
+        cache = core.cache()
+
+        if not cache.exists('clouddomain.jobs.running'):
+            cache.set('clouddomain.jobs.running', runner.cmd('jobs.active'), 3)
+
+        jobs = cache.get('clouddomain.jobs.running')
 
         if query.jid not in jobs: # we only want to give status when the job is finished running
             result = runner.cmd('jobs.lookup_jid', [query.jid])
