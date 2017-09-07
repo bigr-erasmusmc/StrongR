@@ -6,5 +6,10 @@ class RequestJidStatusHandler(AbstractRequestJidStatusHandler):
     def __call__(self, query):
         opts = salt.config.master_config('/etc/salt/master')
         runner = salt.runner.RunnerClient(opts)
-        result = runner.cmd('jobs.lookup_jid', [query.jid])
-        return result
+
+        jobs = runner.cmd('jobs.active')
+
+        if query.jid not in jobs: # we only want to give status when the job is finished running
+            result = runner.cmd('jobs.lookup_jid', [query.jid])
+            return result
+        return None
