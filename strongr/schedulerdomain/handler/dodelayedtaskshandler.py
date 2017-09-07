@@ -1,8 +1,6 @@
-import strongr.core
-
 class DoDelayedTasksHandler:
     def __call__(self, command):
-        core = strongr.core.getCore()
+        from strongr.core.core import core
         schedulerService = core.domains().schedulerDomain().schedulerService()
 
         queryBus = schedulerService.getQueryBus()

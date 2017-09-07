@@ -1,20 +1,19 @@
+import logging
+
 import dependency_injector.containers as containers
 import dependency_injector.providers as providers
 
-import logging
-
-#import asyncio
-#from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
-
+from strongr.core.middlewares.celery.commandrouter import CommandRouter
+from .cache import Cache
+from .domaineventspublisher import DomainEventsPublisher
 from .domains import Domains
 
-from .domaineventspublisher import DomainEventsPublisher
-
-#from .keyvaluestore import InMemoryStore
-from .cache import Cache
+from sqlalchemy import create_engine
 
 
-from strongr.core.middlewares.celery.commandrouter import CommandRouter
+def _make_db_conn():
+    engine = create_engine(core.config()['database.uri'], echo=True)
+    return engine
 
 class Core(containers.DeclarativeContainer):
     """IoC container of core component providers."""
@@ -31,6 +30,6 @@ class Core(containers.DeclarativeContainer):
 
     commandRouter = providers.Singleton(CommandRouter)
 
+    db = providers.Singleton(_make_db_conn)
+
 core = Core()
-def getCore():
-    return core

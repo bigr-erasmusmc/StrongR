@@ -1,6 +1,8 @@
 {
   "develop": {
-    "cloud.driver": "OpenNebula"
+    "cloud.driver": "OpenNebula",
+    "database.uri": "sqlite:////tmp/strongr-dev.db",
+    "database.loadtestdata": true
   },
   "production": {
     "gunicorn.bind": "0.0.0.0:8080",

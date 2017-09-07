@@ -1,4 +1,4 @@
-import ConfigParser
+from configparser import ConfigParser
 import os.path
 
 class IniLoader():
@@ -8,7 +8,7 @@ class IniLoader():
 
         for configLocation in configLocations:
             if os.path.isfile(configLocation):
-                config = ConfigParser.ConfigParser()
+                config = ConfigParser()
                 config.read(configLocation)
                 for key in config.defaults():
                     output[key] = config.defaults()[key]

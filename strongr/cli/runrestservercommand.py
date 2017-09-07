@@ -36,17 +36,11 @@ class RunRestServerCommand(Command):
 
         blueprints = wsgiQueryBus.handle(wsgiQueryFactory.newRetrieveBlueprints())
 
-
         app = Flask(__name__)
 
-        # the oauth2 lib can not work with templates,
-        # this hack was proposed as a temp fix on the
-        # libraries github. Use this for now, we
-        # should refactor this later.
-        # https://github.com/lepture/flask-oauthlib/issues/180
-        from strongr.restdomain.api.oauth2 import bind_oauth2
-        oauth2 = bind_oauth2(app)
-        app.oauth2 = oauth2
+        # oauth2 lib has no support for blueprints so we should bind it in a different way
+        oauth2CommandBus = domain.oauth2Service().getCommandBus()
+        oauth2CommandBus.handle(domain.oauth2CommandFactory().newBindOauth2ToApp(app))
 
         for blueprint in blueprints:
             app.register_blueprint(blueprint)

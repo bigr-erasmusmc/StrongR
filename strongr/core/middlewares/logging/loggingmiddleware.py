@@ -1,6 +1,5 @@
 from cmndr import Middleware
 
-import strongr.core
 import datetime
 
 class LoggingMiddleware(Middleware):
@@ -8,7 +7,8 @@ class LoggingMiddleware(Middleware):
 
     def __init__(self):
         if self._logger is None:
-            self._logger = strongr.core.getCore().logger()
+            from strongr.core.core import core
+            self._logger = core.logger()
 
     def execute(self, command, next_callable):
         #self._logger.debug('{}: {}'.format(time.time(), command.__dict__))

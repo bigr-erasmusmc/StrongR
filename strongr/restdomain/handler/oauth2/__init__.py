@@ -3,3 +3,6 @@ from .retrieveclienthandler import RetrieveClientHandler
 from .retrievetokenbyaccesstokenhandler import RetrieveTokenByAccessTokenHandler
 from .retrievetokenbyrefreshtokenhandler import RetrieveTokenByRefreshTokenHandler
 from .retrievegranthandler import RetrieveGrantHandler
+from .settokenhandler import SetTokenHandler
+from .bindoauth2toapphandler import BindOauth2ToAppHandler
+from .retrieveuserbyclientidhandler import RetrieveUserByClientIdHandler

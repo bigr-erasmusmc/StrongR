@@ -1,11 +1,10 @@
 from cmndr import Middleware
 import jsonpickle
 
-import strongr.core
-
 class CeleryMiddleware(Middleware):
     def __init__(self, wait_for_return):
-        self._core = strongr.core.getCore()
+        from strongr.core.core import core
+        self._core = core
         self._wait_for_return = wait_for_return
 
     def execute(self, command, next_callable):

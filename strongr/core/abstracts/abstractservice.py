@@ -6,8 +6,6 @@ from cmndr.handlers.inflectors import CallableInflector
 from cmndr.handlers.locators import LazyLoadingInMemoryLocator
 from cmndr.handlers.nameextractors import ClassNameExtractor
 
-import strongr.core
-
 from strongr.core.middlewares.celery.celerymiddleware import CeleryMiddleware
 from strongr.core.middlewares.logging.loggingmiddleware import LoggingMiddleware
 
@@ -44,6 +42,7 @@ class AbstractService():
 
         # this is needed to get remotable (celery) commands working
         # it takes care of routing celery tasks to the appropriate command bus
-        strongr.core.getCore().commandRouter().append_route(remotable_mappings, bus)
+        from strongr.core.core import core
+        core.commandRouter().append_route(remotable_mappings, bus)
 
         return bus

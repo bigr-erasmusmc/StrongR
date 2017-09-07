@@ -1,11 +1,19 @@
-from strongr.restdomain.query.oauth2 import RetrieveClient, RetrieveGrant,\
-                                            RetrieveTokenByAccessToken, RetrieveTokenByRefreshToken
+from strongr.restdomain.query.oauth2 import RetrieveClient, RetrieveGrant, \
+    RetrieveTokenByAccessToken, RetrieveTokenByRefreshToken, RetrieveUserByClientId
 
 from strongr.core.exception import InvalidParameterException
 
 class QueryFactory:
     """ This factory instantiates query objects to be sent to a rest querybus. """
-    def newRetrieveClient(client_id):
+
+    def newRetrieveUserByClientId(self, client_id):
+        client_id = client_id.strip()
+        if not len(client_id) > 0:
+            raise InvalidParameterException('Client id is invalid')
+
+        return RetrieveUserByClientId(client_id)
+
+    def newRetrieveClient(self, client_id):
         """ Generates a new RetrieveClient query
 
         :param client_id: the client id
@@ -16,7 +24,7 @@ class QueryFactory:
         """
         client_id = client_id.strip()
         if not len(client_id) > 0:
-            raise InvalidParameterException('Client id is invalid'.format(cmd))
+            raise InvalidParameterException('Client id is invalid')
 
         return RetrieveClient(client_id=client_id)
 
@@ -34,11 +42,11 @@ class QueryFactory:
         """
         client_id = client_id.strip()
         if not len(client_id) > 0:
-            raise InvalidParameterException('Client id is invalid'.format(cmd))
+            raise InvalidParameterException('Client id is invalid')
 
         code = code.strip()
         if not len(code) > 0:
-            raise InvalidParameterException('Code is invalid'.format(cmd))
+            raise InvalidParameterException('Code is invalid')
 
         return RetrieveGrant(client_id=client_id, code=code)
 
@@ -51,9 +59,9 @@ class QueryFactory:
         :returns: A RetrieveTokenByAccessToken query object
         :rtype: RetrieveTokenByAccessToken
         """
-        client_id = client_id.strip()
-        if not len(client_id) > 0:
-            raise InvalidParameterException('Client id is invalid'.format(cmd))
+        access_token = access_token.strip()
+        if not len(access_token) > 0:
+            raise InvalidParameterException('access_token is invalid')
 
         return RetrieveTokenByAccessToken(access_token)
 
@@ -66,8 +74,8 @@ class QueryFactory:
         :returns: A RetrieveTokenByRefreshToken query object
         :rtype: RetrieveTokenByRefreshToken
         """
-        client_id = client_id.strip()
-        if not len(client_id) > 0:
-            raise InvalidParameterException('Client id is invalid'.format(cmd))
+        refresh_token = refresh_token.strip()
+        if not len(refresh_token) > 0:
+            raise InvalidParameterException('refresh_token is invalid')
 
         return RetrieveTokenByRefreshToken(refresh_token)

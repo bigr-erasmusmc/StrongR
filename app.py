@@ -1,3 +1,5 @@
+# bootstrap the application
+
 from cleo import Application
 from cleo.inputs.argv_input import ArgvInput
 
@@ -6,10 +8,9 @@ from strongr.cli import DeploySingleCommand, ListDeployedVmsCommand,\
         AddTaskCommand, GetTaskStatusCommand,\
         RunResourceManager, PrintConfig,\
         IsValidUserCommand, RunRestServerCommand,\
-        RunCeleryCommand
+        RunCeleryCommand, DbUpdateCommand
 
-import strongr.core
-import json
+from strongr.core.core import core
 
 # Use CLEO ArgvInput to extract some parameters
 # this dependency gets injected into
@@ -20,8 +21,6 @@ argvInputs = ArgvInput()
 env = "develop"
 if argvInputs.has_parameter_option('env'):
     env = argvInputs.get_parameter_option('env')
-
-core = strongr.core.getCore()
 
 configDomain = core.domains().configDomain()
 configDomain.configService().getCommandBus().handle(configDomain.commandFactory().newLoadConfig(env))
@@ -39,6 +38,7 @@ application.add(PrintConfig(core))
 application.add(IsValidUserCommand(core))
 application.add(RunRestServerCommand(core))
 application.add(RunCeleryCommand(core))
+application.add(DbUpdateCommand(core))
 
 
 if __name__ == '__main__':

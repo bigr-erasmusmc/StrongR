@@ -9,3 +9,4 @@ from .printconfig import PrintConfig
 from .isvalidusercommand import IsValidUserCommand
 from .runrestservercommand import RunRestServerCommand
 from .runcelerycommand import RunCeleryCommand
+from .dbupdatecommand import DbUpdateCommand
