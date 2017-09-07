@@ -7,7 +7,7 @@ class StartTaskOnNodeHandler:
         queryBus = schedulerService.getQueryBus()
         queryFactory = core.domains().schedulerDomain().queryFactory()
 
-        cloudCommandBus = core.domains().cloudDomain().cloudService().getCloudServiceByName(core.config.cloud.driver()).getCommandBus()
+        cloudCommandBus = core.domains().cloudDomain().cloudService().getCloudServiceByName(core.config()['cloud.driver']).getCommandBus()
         cloudCommandFactory = core.domains().cloudDomain().commandFactory()
 
         taskinfo = queryBus.handle(queryFactory.newRequestTaskInfo(command.taskid))
