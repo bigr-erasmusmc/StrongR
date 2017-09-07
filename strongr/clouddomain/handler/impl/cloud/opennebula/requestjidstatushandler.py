@@ -5,6 +5,7 @@ import salt.runner
 class RequestJidStatusHandler(AbstractRequestJidStatusHandler):
     def __call__(self, query):
         opts = salt.config.master_config('/etc/salt/master')
+        opts['quiet'] = True
         runner = salt.runner.RunnerClient(opts)
 
         jobs = runner.cmd('jobs.active')
