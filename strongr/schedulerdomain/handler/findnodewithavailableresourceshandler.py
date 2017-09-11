@@ -19,6 +19,8 @@ class FindNodeWithAvailableResourcesHandler:
         ordered = sorted(nodes, key=lambda key: nodes[key]["ram_available"])
 
         for node in ordered:
+            from pprint import pprint
+            pprint(node)
             if nodes[node]["ram_available"] - query.ram >= 0 and nodes[node]["cores_available"] - query.cores >= 0:
                 print('Found node!')
                 return node
