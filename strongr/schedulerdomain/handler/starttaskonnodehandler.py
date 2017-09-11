@@ -15,3 +15,6 @@ class StartTaskOnNodeHandler:
         jid = cloudCommandBus.handle(cloudCommandFactory.newRunShellCodeCommand(sh=taskinfo["cmd"], host=command.node))
         core.cache().set("jidmap." + taskinfo["taskid"], jid, 3600)
         core.cache().set('tidtonode.' + taskinfo["taskid"], command.node, 3600)
+        core.cache().delete('clouddomain.jobs.running')
+        # invalidate this cache key, else the system might think the job is
+        # already finished while in reality it hasn't even started yet
