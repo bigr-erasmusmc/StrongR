@@ -20,6 +20,9 @@ class FindNodeWithAvailableResourcesHandler:
 
         for node in ordered:
             if nodes[node]["ram_available"] - query.ram >= 0 and nodes[node]["cores_available"] - query.cores >= 0:
+                print('Found node!')
                 return node
+
+        print('Could not find node for job {}'.format(query))
 
         return None # TODO: throw exception instead of returning None
