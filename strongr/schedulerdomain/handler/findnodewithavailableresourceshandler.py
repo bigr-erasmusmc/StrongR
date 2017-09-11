@@ -23,6 +23,6 @@ class FindNodeWithAvailableResourcesHandler:
                 print('Found node!')
                 return node
 
-        print('Could not find node for job {}'.format(query))
+        print('Could not find node for job RAM:{} CORES:{}'.format(query.ram, query.cores))
 
         return None # TODO: throw exception instead of returning None
