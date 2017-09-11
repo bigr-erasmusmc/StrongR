@@ -13,7 +13,7 @@ class RequestJidStatusHandler(AbstractRequestJidStatusHandler):
         cache = core.cache()
 
         if not cache.exists('clouddomain.jobs.running'):
-            cache.set('clouddomain.jobs.running', runner.cmd('jobs.active'), 3)
+            cache.set('clouddomain.jobs.running', runner.cmd('jobs.active'), 1)
 
         jobs = cache.get('clouddomain.jobs.running')
 
