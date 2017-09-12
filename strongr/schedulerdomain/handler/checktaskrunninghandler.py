@@ -24,8 +24,9 @@ class CheckTaskRunningHandler:
         taskinfo = queryBus.handle(queryFactory.newRequestTaskInfo(command.taskid))
         cache = core.cache()
         running = cache.get("tasks.running")
-        del running[command.taskid]
-        cache.set("tasks.running", running, 3600)
+        if running is not None and command.taskid in running:
+            del running[command.taskid]
+            cache.set("tasks.running", running, 3600)
 
         os.remove('/tmp/strongr/' + command.taskid)
 

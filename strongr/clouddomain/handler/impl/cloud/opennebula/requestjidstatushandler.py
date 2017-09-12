@@ -17,6 +17,9 @@ class RequestJidStatusHandler(AbstractRequestJidStatusHandler):
 
         jobs = cache.get('clouddomain.jobs.running')
 
+        if jobs is None:
+            jobs = {}
+
         if query.jid not in jobs: # we only want to give status when the job is finished running
             result = runner.cmd('jobs.lookup_jid', [query.jid])
             return result
