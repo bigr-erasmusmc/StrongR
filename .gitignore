@@ -2,6 +2,7 @@ activate
 bin/
 strongr-tasks-lock
 .idea/
+config.*
 
 # VIM
 *.swp
