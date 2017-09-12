@@ -9,7 +9,7 @@ from strongr.cli import DeploySingleCommand, ListDeployedVmsCommand,\
         RunCeleryCommand
 
 import strongr.core
-import json
+import logging.config
 
 # Use CLEO ArgvInput to extract some parameters
 # this dependency gets injected into
@@ -25,6 +25,8 @@ core = strongr.core.getCore()
 
 configDomain = core.domains().configDomain()
 configDomain.configService().getCommandBus().handle(configDomain.commandFactory().newLoadConfig(env))
+
+logging.config.dictConfig(core.config().logger.as_dict())
 
 application = Application()
 

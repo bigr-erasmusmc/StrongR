@@ -11,7 +11,7 @@ class CheckTaskRunningHandler:
         queryBus = schedulerService.getQueryBus()
         queryFactory = core.domains().schedulerDomain().queryFactory()
 
-        cloudQueryBus = core.domains().cloudDomain().cloudService().getCloudServiceByName(core.config()['cloud.driver']).getQueryBus()
+        cloudQueryBus = core.domains().cloudDomain().cloudService().getCloudServiceByName(core.config().clouddomain.driver).getQueryBus()
         cloudQueryFactory = core.domains().cloudDomain().queryFactory()
 
         jid = core.cache().get("jidmap." + command.taskid)

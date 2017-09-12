@@ -19,7 +19,7 @@ from strongr.core.middlewares.celery.commandrouter import CommandRouter
 class Core(containers.DeclarativeContainer):
     """IoC container of core component providers."""
     config = providers.Configuration('config')
-    logger = providers.Singleton(logging.Logger, name='strongr')
+    logger = providers.Singleton(logging.Logger, name='root', level=logging.DEBUG)
 
     domains = providers.Factory(Domains)
     domainEventsPublisher = providers.Singleton(DomainEventsPublisher)

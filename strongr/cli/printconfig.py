@@ -1,4 +1,5 @@
 from .wrapper import Command
+import json
 
 class PrintConfig(Command):
     """
@@ -7,8 +8,6 @@ class PrintConfig(Command):
     print:config
     """
     def handle(self):
-        config = self.getContainer().config()
-
-        for key in config:
-            print("{} = {}".format(key, config[key]))
-
+        config = self.getContainer().config().as_dict()
+        del config['internal']
+        print(json.dumps(config, indent=2, sort_keys=True))

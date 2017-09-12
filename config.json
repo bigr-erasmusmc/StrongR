@@ -1,9 +1,26 @@
 {
-  "develop": {
-    "cloud.driver": "OpenNebula"
-  },
-  "production": {
-    "gunicorn.bind": "0.0.0.0:8080",
-    "gunicorn.worker_class": "sync"
-  }
+    "defaults": {
+    },
+    "develop": {
+        "clouddomain": {
+            "driver": "OpenNebula"
+        },
+        "restdomain": {
+            "flask": {
+                "debug": true
+            }
+        },
+        "logger": {
+            "handlers": {
+                "default": {
+                    "level": "DEBUG"
+                }
+            },
+            "loggers": {
+                "": {
+                    "level": "DEBUG"
+                }
+            }
+        }
+    }
 }

@@ -1,10 +1,12 @@
-import ConfigParser
+import configparser as ConfigParser
 import os.path
 
 class IniLoader():
     def getConfig(self, environment):
         configLocations = ['/etc/strongr/config.ini', os.path.expanduser('~/.strongr/config.ini'), 'config.ini']
         output = {}
+
+        return output # return nothing for now, below code does not work anymore
 
         for configLocation in configLocations:
             if os.path.isfile(configLocation):
