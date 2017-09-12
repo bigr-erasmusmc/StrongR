@@ -3,6 +3,7 @@ bin/
 strongr-tasks-lock
 .idea/
 config.*
+temp
 
 # VIM
 *.swp
