@@ -10,8 +10,7 @@ class ListDeployedVmsCommand(Command):
         cloudService = self.getDomains().cloudDomain().cloudService()
         queryFactory = self.getDomains().cloudDomain().queryFactory()
 
-        cloudNames = cloudService.getCloudNames()
-        cloudProviderName = self.choice('Please select a cloud provider (default {0})'.format(cloudNames[0]), cloudNames, 0)
+        cloudProviderName = self.getContainer().config().clouddomain.driver
 
         cloudService = cloudService.getCloudServiceByName(cloudProviderName)
         queryBus = cloudService.getQueryBus()

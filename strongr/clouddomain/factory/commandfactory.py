@@ -1,9 +1,23 @@
-from strongr.clouddomain.command import DeployVm, DeployVms, RunShellCode
+from strongr.clouddomain.command import DeployVm, DeployVms, RunShellCode, DestroyVm
 
 from strongr.core.exception import InvalidParameterException
 
 class CommandFactory:
     """ This factory instantiates command objects to be sent to a cloud commandbus. """
+
+    def newDestroyVmCommand(self, name):
+        """ Generates a new DestroyVm command
+
+        :param name: The name of the VM to be destroyed
+        :type name: string
+
+        :returns: A DestroyVm command object
+        :rtype: DestroyVm
+        """
+        if not len(name) > 0:
+            raise InvalidParameterException('Name {0} is invalid'.format(name))
+
+        return DestroyVm(name=name)
 
     def newDeployVmCommand(self, name, cores, ram):
         """ Generates a new DeployVm command
