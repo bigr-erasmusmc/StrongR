@@ -1,6 +1,7 @@
 from strongr.clouddomain.handler.abstract.cloud import AbstractDeployVmsHandler
 
 import salt.cloud
+import time
 
 class DeployVmsHandler(AbstractDeployVmsHandler):
     def __call__(self, commands):
@@ -21,8 +22,8 @@ class DeployVmsHandler(AbstractDeployVmsHandler):
 
         ret = []
         for chunked_names in self._chunk_list(names, 2):
-            print(chunked_names)
-            #ret.append(client.profile(names=chunked_names, profile='salt-minion', vm_overrides=overrides, parallel=True))
+            ret.append(client.profile(names=chunked_names, profile='salt-minion', vm_overrides=overrides, parallel=True))
+            time.sleep(30)
 
         return ret
 
