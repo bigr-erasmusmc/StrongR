@@ -25,10 +25,10 @@ class FindNodeWithAvailableResourcesHandler:
         if time.time() > self._query_timer:
             core = strongr.core.getCore()
             cache = core.cache()
-            cloudCommandBus = core.domains().cloudDomain().cloudService().getCloudServiceByName(core.config().clouddomain.driver).getCommandBus()
+            cloudQueryBus = core.domains().cloudDomain().cloudService().getCloudServiceByName(core.config().clouddomain.driver).getQueryBus()
             cloudQueryFactory = core.domains().cloudDomain().queryFactory()
 
-            machines = cloudCommandBus.handle(cloudQueryFactory.newListDeployedVms())
+            machines = cloudQueryBus.handle(cloudQueryFactory.newListDeployedVms())
             if machines is not None:
                 machines = [machine for machine in machines if machine.startswith('worker-')]
                 for machine in machines:
