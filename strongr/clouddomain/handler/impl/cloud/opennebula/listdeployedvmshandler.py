@@ -11,5 +11,5 @@ class ListDeployedVmsHandler(AbstractListDeployedVmsHandler):
         for provider in list(rs.keys()):
             for location in list(rs[provider].keys()):
                 for machine in list(rs[provider][location].keys()):
-                    print(machine)
+                    print(rs[provider][location][machine])
         #return names
