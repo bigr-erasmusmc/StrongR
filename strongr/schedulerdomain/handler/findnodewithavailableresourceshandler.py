@@ -30,9 +30,8 @@ class FindNodeWithAvailableResourcesHandler:
 
             machines = cloudQueryBus.handle(cloudQueryFactory.newListDeployedVms())
             if machines is not None:
-                machines = [machine for machine in machines if machine.startswith('worker-')]
                 for machine in machines:
-                    if machine not in self._machines:
+                    if machine.startswith('worker-') and machine not in self._machines:
                         # add new machines
                         self._machines[machine] = machines[machine]
                         self._machines[machine]["ram_available"] = self._machines[machine]["ram"]
