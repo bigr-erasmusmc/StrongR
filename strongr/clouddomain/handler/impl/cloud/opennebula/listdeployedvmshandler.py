@@ -12,8 +12,8 @@ class ListDeployedVmsHandler(AbstractListDeployedVmsHandler):
             for location in list(rs[provider].keys()):
                 for machine in list(rs[provider][location].keys()):
                     names[machine] = {
-                        'cores': rs[provider][location][machine]['size']['cpu'],
-                        'ram': rs[provider][location][machine]['size']['memory'] / 1024
+                        'cores': int(rs[provider][location][machine]['size']['cpu']),
+                        'ram': int(rs[provider][location][machine]['size']['memory']) // 1024
                     }
 
         return names
