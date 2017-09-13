@@ -16,4 +16,12 @@ class ListDeployedVmsHandler(AbstractListDeployedVmsHandler):
                         'ram': int(rs[provider][location][machine]['size']['memory']) // 1024
                     }
 
+        opts = salt.config.master_config('/etc/salt/master')
+        opts['quiet'] = True
+        runner = salt.runner.RunnerClient(opts)
+
+        result = runner.cmd('manage.up')
+
+        print(result)
+
         return names
