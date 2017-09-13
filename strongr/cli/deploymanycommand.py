@@ -28,8 +28,7 @@ class DeployManyCommand(Command):
             amount -= 1
         deployVms = commandFactory.newDeployVmsCommand(deployVmList)
 
-        cloudNames = cloudServices.getCloudNames()
-        cloudProviderName = self.choice('Please select a cloud provider (default {0})'.format(cloudNames[0]), cloudNames, 0)
+        cloudProviderName = self.getContainer().config().clouddomain.driver
 
         cloudService = cloudServices.getCloudServiceByName(cloudProviderName)
         commandBus = cloudService.getCommandBus()
