@@ -1,5 +1,9 @@
-import configparser as ConfigParser
-#import ConfigParser
+import sys
+
+if sys.version_info > (3, 0):
+    import configparser as ConfigParser
+else:
+    import ConfigParser
 import os.path
 
 class IniLoader():
