@@ -22,7 +22,7 @@ class ListDeployedVmsHandler(AbstractListDeployedVmsHandler):
 
         result = runner.cmd('manage.up')
 
-        for machine in list(names.keys()):
+        for machine in list(names):
             if machine not in result:
                 del names[machine]
 
