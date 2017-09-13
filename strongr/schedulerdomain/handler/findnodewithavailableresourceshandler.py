@@ -37,7 +37,7 @@ class FindNodeWithAvailableResourcesHandler:
                         self._machines[machine]["ram_available"] = self._machines[machine]["ram"]
                         self._machines[machine]["cores_available"] = self._machines[machine]["cores"]
 
-                for machine in self._machines:
+                for machine in list(self._machines):
                     if machine not in machines:
                         del self._machines[machine] # delete machines that are no longer up
 
