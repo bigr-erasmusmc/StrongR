@@ -22,7 +22,7 @@ class DeploySingleCommand(Command):
             return
 
 
-        deployVmCommand = commandFactory.newDeployVmCommand(name=name, cores=cores, ram=ram)
+        deployVmCommand = commandFactory.newDeployVmCommand(name='worker-' + name, cores=cores, ram=ram)
 
         cloudProviderName = self.getContainer().config().clouddomain.driver
 

@@ -23,7 +23,7 @@ class DeployManyCommand(Command):
 
         deployVmList = []
         while amount > 0:
-            deployVmCommand = commandFactory.newDeployVmCommand(name=str(uuid.uuid4()), cores=cores, ram=ram)
+            deployVmCommand = commandFactory.newDeployVmCommand(name='worker-' + str(uuid.uuid4()), cores=cores, ram=ram)
             deployVmList.append(deployVmCommand)
             amount -= 1
         deployVms = commandFactory.newDeployVmsCommand(deployVmList)
