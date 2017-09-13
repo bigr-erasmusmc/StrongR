@@ -21,7 +21,8 @@ class DeployVmsHandler(AbstractDeployVmsHandler):
 
         ret = []
         for chunked_names in self._chunk_list(names, 2):
-            ret.append(client.profile(names=chunked_names, profile='salt-minion', vm_overrides=overrides, parallel=True))
+            print(chunked_names)
+            #ret.append(client.profile(names=chunked_names, profile='salt-minion', vm_overrides=overrides, parallel=True))
 
         return ret
 
