@@ -45,14 +45,14 @@ class FindNodeWithAvailableResourcesHandler:
                     cached_nodes = cache.get('nodes')
                     for machine in cached_nodes:
                         if machine in self._machines:
+                            # sync with cache
                             self._machines[machine]["ram_available"] = cached_nodes[machine]["ram_available"]
                             self._machines[machine]["cores_available"] = cached_nodes[machine]["cores_available"]
 
+                # push back in cache, other commands need this data
                 cache.set('nodes', self._machines, 3600)
                 self._query_timer = time.time() + 120 # refresh machine list once every 2 minutes
 
-        print(self._machines)
-        return None
         ordered = sorted(self._machines, key=lambda key: self._machines[key]["ram_available"])
 
         for machine in ordered:
