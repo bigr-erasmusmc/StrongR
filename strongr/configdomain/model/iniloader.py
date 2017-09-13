@@ -1,4 +1,5 @@
-import configparser as ConfigParser
+#import configparser as ConfigParser
+import ConfigParser
 import os.path
 
 class IniLoader():
