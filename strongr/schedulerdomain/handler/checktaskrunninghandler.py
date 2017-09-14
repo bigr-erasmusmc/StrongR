@@ -31,4 +31,5 @@ class CheckTaskRunningHandler:
         os.remove('/tmp/strongr/' + command.taskid)
 
         node = cache.get("tidtonode." + command.taskid)
-        commandBus.handle(commandFactory.newReleaseResourcesOnNode(node, taskinfo["cores"], taskinfo["ram"]))
+        if node is not None:
+            commandBus.handle(commandFactory.newReleaseResourcesOnNode(node, taskinfo["cores"], taskinfo["ram"]))
