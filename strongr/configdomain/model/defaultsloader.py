@@ -5,7 +5,10 @@ class DefaultsLoader:
                 'configloaderorder': ['IniLoader', 'JsonLoader', 'YamlLoader']
             },
             'clouddomain': {
-                'driver': 'MockCloud'
+                'driver': 'MockCloud',
+                'OpenNebula': {
+                    'salt_config': '/etc/salt'
+                }
             },
             'restdomain': {
                 'backend': 'flask',

@@ -3,9 +3,12 @@ from strongr.clouddomain.handler.abstract.cloud import AbstractRequestJidStatusH
 import strongr.core
 import salt.runner
 
+import strongr.core
+
 class RequestJidStatusHandler(AbstractRequestJidStatusHandler):
     def __call__(self, query):
-        opts = salt.config.master_config('/etc/salt/master')
+        core = strongr.core.getCore()
+        opts = salt.config.master_config(core.config().clouddomain.OpenNebula.salt_config + '/master')
         opts['quiet'] = True
         runner = salt.runner.RunnerClient(opts)
 

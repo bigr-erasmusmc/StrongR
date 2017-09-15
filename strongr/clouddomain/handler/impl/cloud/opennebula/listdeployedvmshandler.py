@@ -1,10 +1,13 @@
 from strongr.clouddomain.handler.abstract.cloud import AbstractListDeployedVmsHandler
 
 import salt.cloud
+import strongr.core
 
 class ListDeployedVmsHandler(AbstractListDeployedVmsHandler):
     def __call__(self, command):
-        client = salt.cloud.CloudClient('/etc/salt/cloud')
+        core = strongr.core.getCore()
+
+        client = salt.cloud.CloudClient(core.config().clouddomain.OpenNebula.salt_config + '/cloud')
         names = {}
         rs = client.query()
 
@@ -16,7 +19,7 @@ class ListDeployedVmsHandler(AbstractListDeployedVmsHandler):
                         'ram': int(rs[provider][location][machine]['size']['memory']) // 1024
                     }
 
-        opts = salt.config.master_config('/etc/salt/master')
+        opts = salt.config.master_config(core.config().clouddomain.OpenNebula.salt_config + '/master')
         opts['quiet'] = True
         runner = salt.runner.RunnerClient(opts)
 
