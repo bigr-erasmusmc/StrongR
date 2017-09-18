@@ -3,7 +3,7 @@ import dependency_injector.providers as providers
 
 import logging
 
-from strongr.core.cache.cachefactory import get_cache
+from strongr.core.cache import get_cache
 from .domains import Domains
 
 from .domaineventspublisher import DomainEventsPublisher
