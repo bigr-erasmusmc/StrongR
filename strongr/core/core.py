@@ -3,15 +3,10 @@ import dependency_injector.providers as providers
 
 import logging
 
-#import asyncio
-#from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
-
+import strongr.core.cache
 from .domains import Domains
 
 from .domaineventspublisher import DomainEventsPublisher
-
-#from .keyvaluestore import InMemoryStore
-import strongr.cache
 
 
 from strongr.core.middlewares.celery.commandrouter import CommandRouter
@@ -25,7 +20,7 @@ class Core(containers.DeclarativeContainer):
     domainEventsPublisher = providers.Singleton(DomainEventsPublisher)
 
     #keyValueStore = providers.Singleton(InMemoryStore)
-    cache = providers.Singleton(strongr.cache.RedisCache, namespace='strongr-')
+    cache = providers.Singleton(strongr.core.cache.RedisCache, namespace='strongr-')
 
     #threadPool = ThreadPoolExecutor(max_workers=3)
 
