@@ -10,12 +10,12 @@ class DeployVmsHandler(AbstractDeployVmsHandler):
 
         overrides = {}
 
-        if command[0].ram > 0:
-            overrides['memory'] = command[0].ram * 1024
+        if command.ram > 0:
+            overrides['memory'] = command.ram * 1024
 
-        if command[0].cores > 0:
-            overrides['cpu'] = command[0].cores
-            overrides['vcpu'] = command[0].cores
+        if command.cores > 0:
+            overrides['cpu'] = command.cores
+            overrides['vcpu'] = command.cores
 
         client = salt.cloud.CloudClient(core.config().clouddomain.OpenNebula.salt_config + '/cloud')
 
