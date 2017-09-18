@@ -4,6 +4,9 @@ class DefaultsLoader:
             'internal': {
                 'configloaderorder': ['IniLoader', 'JsonLoader', 'YamlLoader']
             },
+            'cache': {
+                'driver': 'local'
+            },
             'clouddomain': {
                 'driver': 'MockCloud',
                 'OpenNebula': {

@@ -7,9 +7,9 @@ class RedisCache:
     _redis = None
     _namespace = None
 
-    def __init__(self, namespace):
-        self._redis = Redis.from_url(strongr.core.getCore().config().cache.uri)
-        self._namespace = namespace
+    def __init__(self):
+        self._redis = Redis.from_url(strongr.core.getCore().config().cache.redis.url)
+        self._namespace = strongr.core.getCore().config().cache.redis.namespace
 
     def set(self, key, value, timeout):
         self._redis.set(self._namespace + key, value, timeout)

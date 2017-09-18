@@ -3,7 +3,7 @@ import dependency_injector.providers as providers
 
 import logging
 
-from strongr.core.cache import RedisCache, LocalCache
+from strongr.core.cache.cachefactory import get_cache
 from .domains import Domains
 
 from .domaineventspublisher import DomainEventsPublisher
@@ -19,7 +19,7 @@ class Core(containers.DeclarativeContainer):
     domains = providers.Factory(Domains)
     domainEventsPublisher = providers.Singleton(DomainEventsPublisher)
 
-    cache = providers.Singleton(RedisCache, namespace='strongr-')
+    cache = providers.Singleton(get_cache)
 
     commandRouter = providers.Singleton(CommandRouter)
 
