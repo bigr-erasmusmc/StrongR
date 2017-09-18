@@ -5,25 +5,22 @@ import time
 import strongr.core
 
 class DeployVmsHandler(AbstractDeployVmsHandler):
-    def __call__(self, commands):
+    def __call__(self, command):
         core = strongr.core.getCore()
-        names = []
-        for deployCommand in commands:
-            names.append(deployCommand.name)
 
         overrides = {}
 
-        if commands[0].ram > 0:
-            overrides['memory'] = commands[0].ram * 1024
+        if command[0].ram > 0:
+            overrides['memory'] = command[0].ram * 1024
 
-        if commands[0].cores > 0:
-            overrides['cpu'] = commands[0].cores
-            overrides['vcpu'] = commands[0].cores
+        if command[0].cores > 0:
+            overrides['cpu'] = command[0].cores
+            overrides['vcpu'] = command[0].cores
 
         client = salt.cloud.CloudClient(core.config().clouddomain.OpenNebula.salt_config + '/cloud')
 
         ret = []
-        for chunked_names in self._chunk_list(names, 2):
+        for chunked_names in self._chunk_list(command.names, 2):
             ret.append(client.profile(names=chunked_names, profile=core.config().clouddomain.OpenNebula.profile, vm_overrides=overrides, parallel=True))
             time.sleep(60)
 
