@@ -13,7 +13,7 @@ class RedisCache:
         self._namespace = strongr.core.getCore().config().cache.redis.namespace
 
     def set(self, key, value, timeout):
-        self._redis.setex(self._namespace + key, timeout, pickle.dumps(value))
+        self._redis.setex(self._namespace + key, pickle.dumps(value), timeout)
 
     def get(self, key):
         ret = self._redis.get(self._namespace + key)
