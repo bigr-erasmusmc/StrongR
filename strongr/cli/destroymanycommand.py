@@ -1,24 +1,25 @@
 from .wrapper import Command
 
-class DestroySingleCommand(Command):
+class DestroyManyCommand(Command):
     """
-    Destroys a VM in the cloud.
+    Destroys a list of VMs in the cloud.
 
-    destroy:single
-        {machine : The name of the VM to be destroyed}
+    destroy:many
+        {machines* : The names of the VMs to be destroyed}
     """
     def handle(self):
         cloudServices = self.getDomains().cloudDomain().cloudService()
         commandFactory = self.getDomains().cloudDomain().commandFactory()
 
-        machine = self.argument('machine')
-        destroyVmsCommand = commandFactory.newDestroyVmsCommand(names=[machine])
+        machines = self.argument('machines')
+
+        destroyVmsCommand = commandFactory.newDestroyVmsCommand(names=machines)
 
         cloudProviderName = self.getContainer().config().clouddomain.driver
 
         cloudService = cloudServices.getCloudServiceByName(cloudProviderName)
         commandBus = cloudService.getCommandBus()
 
-        self.info('Destroying VM {0}'.format(machine))
+        self.info('Destroying VMs {0}'.format(machines))
 
         commandBus.handle(destroyVmsCommand)

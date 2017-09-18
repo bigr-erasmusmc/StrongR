@@ -6,11 +6,11 @@ from cmndr.handlers.inflectors import CallableInflector
 from cmndr.handlers.locators import LazyLoadingInMemoryLocator
 from cmndr.handlers.nameextractors import ClassNameExtractor
 
-from strongr.clouddomain.handler.abstract.cloud import AbstractDeployVmHandler, AbstractDeployVmsHandler, \
+from strongr.clouddomain.handler.abstract.cloud import AbstractDestroyVmsHandler, AbstractDeployVmsHandler, \
                                                         AbstractListDeployedVmsHandler, AbstractRunShellCodeHandler,\
-                                                        AbstractRequestJidStatusHandler, AbstractDestroyVmHandler
+                                                        AbstractRequestJidStatusHandler
 
-from strongr.clouddomain.command import DeployVm, DeployVms, RunShellCode, DestroyVm
+from strongr.clouddomain.command import DestroyVms, DeployVms, RunShellCode
 from strongr.clouddomain.query import ListDeployedVms, RequestJidStatus
 
 class AbstractCloudService():
@@ -20,12 +20,11 @@ class AbstractCloudService():
 
 
     _mappings = {
-        AbstractDeployVmHandler: DeployVm.__name__, \
         AbstractListDeployedVmsHandler: ListDeployedVms.__name__, \
         AbstractRunShellCodeHandler: RunShellCode.__name__, \
         AbstractDeployVmsHandler: DeployVms.__name__, \
         AbstractRequestJidStatusHandler: RequestJidStatus.__name__,
-        AbstractDestroyVmHandler: DestroyVm.__name__
+        AbstractDestroyVmsHandler: DestroyVms.__name__
     }
 
     def __init__(self):

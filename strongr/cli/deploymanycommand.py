@@ -21,12 +21,12 @@ class DeployManyCommand(Command):
             self.error('Invalid input')
             return
 
-        deployVmList = []
+        deployVmNameList = []
         while amount > 0:
-            deployVmCommand = commandFactory.newDeployVmCommand(name='worker-' + str(uuid.uuid4()), cores=cores, ram=ram)
-            deployVmList.append(deployVmCommand)
+            deployVmNameList.append('worker-' + str(uuid.uuid4()))
             amount -= 1
-        deployVms = commandFactory.newDeployVmsCommand(deployVmList)
+
+        deployVms = commandFactory.newDeployVmsCommand(names=deployVmNameList, cores=cores, ram=ram)
 
         cloudProviderName = self.getContainer().config().clouddomain.driver
 

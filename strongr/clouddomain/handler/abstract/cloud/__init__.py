@@ -4,4 +4,4 @@ from .abstractdeployvmshandler import AbstractDeployVmsHandler
 from .abstractlistdeployedvmshandler import AbstractListDeployedVmsHandler
 from .abstractrunshellcodehandler import AbstractRunShellCodeHandler
 from .abstractrequestjidstatushandler import AbstractRequestJidStatusHandler
-from .abstractdestroyvmhandler import AbstractDestroyVmHandler
+from .abstractdestroyvmshandler import AbstractDestroyVmsHandler

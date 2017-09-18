@@ -14,7 +14,7 @@ class DeploySingleCommand(Command):
 
         cores = int(self.ask('How many processing cores should the VM have? (default 1): ', 1))
         ram = int(self.ask('How much memory in GiB should the VM have? (default 4): ', 4))
-        name = self.ask('What is the name of the VM? (default generated): ', str(uuid.uuid4()))
+        name = self.ask('What is the name of the VM? (default generated): ', 'worker-' + str(uuid.uuid4()))
 
         if not (cores > 0 and ram > 0 and len(name) > 0):
             # TODO: put something sensible in here, this is just a placeholder
@@ -22,7 +22,7 @@ class DeploySingleCommand(Command):
             return
 
 
-        deployVmCommand = commandFactory.newDeployVmCommand(name='worker-' + name, cores=cores, ram=ram)
+        deployVmsCommand = commandFactory.newDeployVmsCommand(names=[name], cores=cores, ram=ram)
 
         cloudProviderName = self.getContainer().config().clouddomain.driver
 
@@ -31,4 +31,4 @@ class DeploySingleCommand(Command):
 
         self.info('Deploying VM {0} cores={1} ram={2}GiB'.format(name, cores, ram))
 
-        commandBus.handle(deployVmCommand)
+        commandBus.handle(deployVmsCommand)
