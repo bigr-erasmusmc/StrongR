@@ -22,7 +22,7 @@ class DoDelayedTasksHandler:
         for t in tasks:
             runningTasks = cache.get("tasks.running")
             taskinfo = queryBus.handle(queryFactory.newRequestTaskInfo(t))
-            if taskinfo == None: # this should be an exception at some point
+            if taskinfo is None: # this should be an exception at some point
                 continue
             if taskinfo["taskid"] in runningTasks and runningTasks[taskinfo["taskid"]]:
                 # check if task is running or finished
