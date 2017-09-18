@@ -13,8 +13,7 @@ class RedisCache:
         self._namespace = strongr.core.getCore().config().cache.redis.namespace
 
     def set(self, key, value, timeout):
-        # redis timeout works in seconds instead of ms
-        self._redis.set(self._namespace + key, pickle.dumps(value), int(timeout / 1000))
+        self._redis.psetex(self._namespace + key, timeout, pickle.dumps(value))
 
     def get(self, key):
         return pickle.loads(self._redis.get(self._namespace + key))
