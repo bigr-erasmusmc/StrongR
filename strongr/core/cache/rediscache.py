@@ -16,7 +16,8 @@ class RedisCache:
         self._redis.psetex(self._namespace + key, timeout, pickle.dumps(value))
 
     def get(self, key):
-        return pickle.loads(self._redis.get(self._namespace + key))
+        ret = self._redis.get(self._namespace + key)
+        return None if ret is None else pickle.loads(ret)
 
     def delete(self, key):
         self._redis.delete(self._namespace + key)
