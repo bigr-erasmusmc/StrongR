@@ -1,6 +1,6 @@
 import time
 
-class Cache:
+class LocalCache:
     _cache = {}
     _timeout = {}
 

@@ -11,7 +11,7 @@ class DestroyVmsHandler(AbstractDestroyVmsHandler):
 
         ret = []
         for chunked_names in self._chunk_list(command.names, 4):
-            ret.append(client.destroy(names=chunked_names))
+            ret.append(client.destroy(names=chunked_names, parallel=True))
             time.sleep(60)
 
         return ret

@@ -11,7 +11,7 @@ from .domains import Domains
 from .domaineventspublisher import DomainEventsPublisher
 
 #from .keyvaluestore import InMemoryStore
-from .cache import Cache
+import strongr.cache
 
 
 from strongr.core.middlewares.celery.commandrouter import CommandRouter
@@ -25,7 +25,7 @@ class Core(containers.DeclarativeContainer):
     domainEventsPublisher = providers.Singleton(DomainEventsPublisher)
 
     #keyValueStore = providers.Singleton(InMemoryStore)
-    cache = providers.Singleton(Cache)
+    cache = providers.Singleton(strongr.cache.RedisCache, namespace='strongr-')
 
     #threadPool = ThreadPoolExecutor(max_workers=3)
 
