@@ -6,7 +6,7 @@ from strongr.cli import DeploySingleCommand, ListDeployedVmsCommand,\
         AddTaskCommand, GetTaskStatusCommand,\
         RunResourceManager, PrintConfig,\
         IsValidUserCommand, RunRestServerCommand,\
-        RunCeleryCommand
+        RunCeleryCommand, DestroySingleCommand
 
 import strongr.core
 import logging.config
@@ -41,6 +41,7 @@ application.add(PrintConfig(core))
 application.add(IsValidUserCommand(core))
 application.add(RunRestServerCommand(core))
 application.add(RunCeleryCommand(core))
+application.add(DestroySingleCommand(core))
 
 
 if __name__ == '__main__':

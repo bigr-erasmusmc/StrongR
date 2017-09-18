@@ -13,4 +13,5 @@ class CallableCommandHandler:
         self.publishDomainEvent(event)
 
     def publishDomainEvent(self, event):
-        core.Core.domainEventsPublisher().publish(event)
+        core = strongr.core.getCore()
+        core.domainEventsPublisher().publish(event)

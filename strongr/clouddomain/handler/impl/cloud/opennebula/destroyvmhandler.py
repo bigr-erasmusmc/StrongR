@@ -7,4 +7,4 @@ class DestroyVmHandler(AbstractDestroyVmHandler):
     def __call__(self, command):
         core = strongr.core.getCore()
         client = salt.cloud.CloudClient(core.config().clouddomain.OpenNebula.salt_config + '/cloud')
-        return client.destroy(command.name)
+        client.destroy(command.name)
