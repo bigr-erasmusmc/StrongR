@@ -47,7 +47,7 @@ class EnsureMinAmountOfNodesHandler(object):
                 #cloudService = cloudServices.getCloudServiceByName(cloudProviderName)
                 #commandBus = cloudService.getCommandBus()
 
-                self.info('Deploying VM {0} cores={1} ram={2}GiB'.format(names, templates[machine]['cores'], templates[machine]['ram']))
+                logger.info('Deploying VM {0} cores={1} ram={2}GiB'.format(names, templates[machine]['cores'], templates[machine]['ram']))
 
                 #commandBus.handle(deployVmsCommand)
         else:
