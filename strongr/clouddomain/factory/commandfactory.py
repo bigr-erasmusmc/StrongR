@@ -47,7 +47,10 @@ class CommandFactory:
         if not isinstance(ram, int) or ram <= 0:
             raise InvalidParameterException('ram is invalid')
 
-        return DeployVms(names, cores, ram)
+        if len(profile) <= 0:
+            raise InvalidParameterException('profile is invalid')
+
+        return DeployVms(names, profile, cores, ram)
 
     def newRunShellCodeCommand(self, sh, host):
         """ Generates a new RunShellCode command
