@@ -10,6 +10,8 @@ class DeployVmsHandler(AbstractDeployVmsHandler):
         overrides = {}
 
         overrides['memory'] = command.ram * 1024
+        overrides['cpu'] = command.cores
+        overrides['vcpu'] = command.cores
 
         client = salt.cloud.CloudClient(strongr.core.Core.config().clouddomain.OpenNebula.salt_config + '/cloud')
 
