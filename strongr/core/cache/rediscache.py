@@ -1,5 +1,5 @@
 import pickle
-from strongr.core import Core
+import strongr.core
 import strongr.core.gateways
 from strongr.core.lock.redislock import RedisLock
 
@@ -10,7 +10,7 @@ class RedisCache:
 
     def __init__(self):
         self._redis = strongr.core.gateways.Gateways.redis()
-        self._namespace = Core.config().cache.redis.namespace
+        self._namespace = strongr.core.Core.config().cache.redis.namespace
 
     def set(self, key, value, timeout):
         with RedisLock(key):
