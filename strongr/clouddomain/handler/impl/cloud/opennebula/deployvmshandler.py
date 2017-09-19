@@ -13,11 +13,7 @@ class DeployVmsHandler(AbstractDeployVmsHandler):
         overrides['cpu'] = command.cores
         overrides['vcpu'] = command.cores
 
-
-        opts = {}
-        opts['quiet'] = True
-
-        client = salt.cloud.CloudClient(strongr.core.Core.config().clouddomain.OpenNebula.salt_config + '/cloud', opts=opts)
+        client = salt.cloud.CloudClient(strongr.core.Core.config().clouddomain.OpenNebula.salt_config + '/cloud')
 
         ret = []
         for chunked_names in self._chunk_list(command.names, 2):
