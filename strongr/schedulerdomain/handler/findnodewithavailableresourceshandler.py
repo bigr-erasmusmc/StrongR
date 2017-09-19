@@ -58,17 +58,17 @@ class FindNodeWithAvailableResourcesHandler:
                     del nodes[machine]  # delete machines that are no longer up
 
             # push back in cache, other commands need this data
-            cache.set('nodes', self._machines, 3600)
+            cache.set('nodes', nodes, 3600)
 
             self._timeout = int(time.time()) + 120 # refresh every 2 minutes
         else:
             nodes = cache.get('nodes')
 
 
-        ordered = sorted(nodes, key=lambda key: self._machines[key]["ram_available"])
+        ordered = sorted(nodes, key=lambda key: nodes[key]["ram_available"])
 
         for machine in ordered:
-            if self._machines[machine]["ram_available"] - query.ram >= 0 and self._machines[machine]["cores_available"] - query.cores >= 0:
+            if nodes[machine]["ram_available"] - query.ram >= 0 and nodes[machine]["cores_available"] - query.cores >= 0:
                 return machine
 
 
