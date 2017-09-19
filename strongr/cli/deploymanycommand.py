@@ -28,9 +28,10 @@ class DeployManyCommand(Command):
             deployVmNameList.append('worker-' + str(uuid.uuid4()))
             amount -= 1
 
-        deployVms = commandFactory.newDeployVmsCommand(names=deployVmNameList, cores=cores, ram=ram)
-
         cloudProviderName = Core.config().clouddomain.driver
+
+        profile = getattr(Core.config().clouddomain, cloudProviderName).default_profile
+        deployVms = commandFactory.newDeployVmsCommand(names=deployVmNameList, profile=profile, cores=cores, ram=ram)
 
         cloudService = cloudServices.getCloudServiceByName(cloudProviderName)
         commandBus = cloudService.getCommandBus()
