@@ -1,27 +1,32 @@
-import time
-
-from redis import Redis
-import strongr.core
 import pickle
+from strongr.core import Core
+import strongr.core.gateways
+from strongr.core.lock.redislock import RedisLock
+
 
 class RedisCache:
     _redis = None
     _namespace = None
 
     def __init__(self):
-        self._redis = Redis.from_url(strongr.core.getCore().config().cache.redis.url)
-        self._namespace = strongr.core.getCore().config().cache.redis.namespace
+        self._redis = strongr.core.gateways.Gateways.redis()
+        self._namespace = Core.config().cache.redis.namespace
 
     def set(self, key, value, timeout):
-        self._redis.setex(self._namespace + key, pickle.dumps(value), timeout)
+        with RedisLock(key):
+            self._redis.delete(self._namespace + key)
+            self._redis.setex(self._namespace + key, pickle.dumps(value), timeout)
 
     def get(self, key):
-        ret = self._redis.get(self._namespace + key)
+        with RedisLock(key):
+            ret = self._redis.get(self._namespace + key)
         return None if ret is None else pickle.loads(ret)
 
     def delete(self, key):
-        self._redis.delete(self._namespace + key)
+        with RedisLock(key):
+            self._redis.delete(self._namespace + key)
 
     def exists(self, key):
-        return self._redis.exists(self._namespace + key)
+        with RedisLock(key):
+            return self._redis.exists(self._namespace + key)
 

@@ -5,7 +5,7 @@ import strongr.core
 
 class CeleryMiddleware(Middleware):
     def __init__(self, wait_for_return):
-        self._core = strongr.core.getCore()
+        self._core = strongr.core.Core
         self._wait_for_return = wait_for_return
 
     def execute(self, command, next_callable):

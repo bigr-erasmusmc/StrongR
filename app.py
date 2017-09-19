@@ -15,6 +15,7 @@ import logging.config
 # Use CLEO ArgvInput to extract some parameters
 # this dependency gets injected into
 # application.run(..) as well
+
 argvInputs = ArgvInput()
 
 # env is used for loading the right config environment
@@ -22,7 +23,7 @@ env = "develop"
 if argvInputs.has_parameter_option('env'):
     env = argvInputs.get_parameter_option('env')
 
-core = strongr.core.getCore()
+core = strongr.core.Core
 
 configDomain = core.domains().configDomain()
 configDomain.configService().getCommandBus().handle(configDomain.commandFactory().newLoadConfig(env))
@@ -44,7 +45,6 @@ application.add(RunRestServerCommand(core))
 application.add(RunCeleryCommand(core))
 application.add(DestroySingleCommand(core))
 application.add(DestroyManyCommand(core))
-
 
 if __name__ == '__main__':
     application.run(input_=argvInputs)
