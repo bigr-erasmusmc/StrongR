@@ -41,7 +41,7 @@ class EnsureMinAmountOfNodesHandler(object):
                 profile = getattr(config.clouddomain, cloudProviderName).default_profile
                 names = []
                 for i in range(0, machines_needed[machine]):
-                    names.append(machine + '-' + uuid.uuid4())
+                    names.append(machine + '-' + str(uuid.uuid4()))
                 #deployVmsCommand = commandFactory.newDeployVmsCommand(names=[name], profile=profile, cores=templates[machine]['cores'], ram=templates[machine]['ram'])
 
                 #cloudService = cloudServices.getCloudServiceByName(cloudProviderName)
