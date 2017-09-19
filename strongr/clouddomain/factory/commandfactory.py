@@ -19,11 +19,14 @@ class CommandFactory:
 
         return DestroyVms(names=names)
 
-    def newDeployVmsCommand(self, names, cores, ram):
+    def newDeployVmsCommand(self, names, profile, cores, ram):
         """ Generates a new DeployVms command
 
         :param names: A list of names
         :type names: list
+
+        :param profile: the vm profile to be used
+        :type profile: string
 
         :param cores: the number of cores per vm
         :type cores: int

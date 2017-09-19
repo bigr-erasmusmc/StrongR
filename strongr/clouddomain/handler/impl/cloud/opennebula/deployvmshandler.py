@@ -20,7 +20,7 @@ class DeployVmsHandler(AbstractDeployVmsHandler):
 
         ret = []
         for chunked_names in self._chunk_list(command.names, 2):
-            ret.append(client.profile(names=chunked_names, profile=strongr.core.Core.config().clouddomain.OpenNebula.profile, vm_overrides=overrides, parallel=True))
+            ret.append(client.profile(names=chunked_names, profile=strongr.core.Core.config().clouddomain.OpenNebula.default_profile, vm_overrides=overrides, parallel=True))
             time.sleep(60)
 
         return ret
