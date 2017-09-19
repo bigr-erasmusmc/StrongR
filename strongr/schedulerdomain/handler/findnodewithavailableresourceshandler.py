@@ -42,6 +42,9 @@ class FindNodeWithAvailableResourcesHandler:
                         nodes[machine] = machines[machine]
                         nodes[machine]["ram_available"] = nodes[machine]["ram"]
                         nodes[machine]["cores_available"] = nodes[machine]["cores"]
+            # push back in cache, other commands need this data
+            cache.set('nodes', nodes, 3600)
+            self._timeout = int(time.time()) + 120
         elif int(time.time()) > self._timeout:
             machines = cloudQueryBus.handle(cloudQueryFactory.newListDeployedVms())
             nodes = cache.get('nodes')
@@ -59,7 +62,6 @@ class FindNodeWithAvailableResourcesHandler:
 
             # push back in cache, other commands need this data
             cache.set('nodes', nodes, 3600)
-
             self._timeout = int(time.time()) + 120 # refresh every 2 minutes
         else:
             nodes = cache.get('nodes')
