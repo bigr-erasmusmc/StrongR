@@ -45,6 +45,10 @@ class EnsureMinAmountOfNodesHandler(object):
 
                 deployVmsCommand = commandFactory.newDeployVmsCommand(names=[names], profile=profile, cores=templates[machine]['cores'], ram=templates[machine]['ram'])
 
+                from pprint import pprint
+                pprint(deployVmsCommand)
+                exit()
+
                 cloudService = cloudServices.getCloudServiceByName(cloudProviderName)
                 commandBus = cloudService.getCommandBus()
 
