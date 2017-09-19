@@ -9,7 +9,7 @@ class StartTaskOnNodeHandler:
         core = strongr.core.getCore()
         schedulerService = strongr.core.domain.schedulerdomain.SchedulerDomain.schedulerService()
         queryBus = schedulerService.getQueryBus()
-        queryFactory = core.domains().schedulerDomain().queryFactory()
+        queryFactory = strongr.core.domain.schedulerdomain.SchedulerDomain.queryFactory()
 
         cloudCommandBus = strongr.core.domain.clouddomain.CloudDomain.cloudService().getCloudServiceByName(core.config().clouddomain.driver).getCommandBus()
         cloudCommandFactory = strongr.core.domain.clouddomain.CloudDomain.commandFactory()
