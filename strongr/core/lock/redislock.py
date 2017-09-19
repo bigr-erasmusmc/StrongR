@@ -1,15 +1,13 @@
 import time
-import strongr.core
+import strongr.core.gateways
 
 class RedisLock(object):
-    _redis = None
     _redis_namespace = 'strongr-redislock-'
 
     def __init__(self, name, timeout=10):
         self._timeout = timeout
         self._name = name
-        if self._redis is None:
-            self._redis = strongr.core.gateways.Gateways.redis()
+        self._redis = strongr.core.gateways.Gateways.redis()
 
     def __enter__(self):
         timeout_after = int(time.time()) + self._timeout

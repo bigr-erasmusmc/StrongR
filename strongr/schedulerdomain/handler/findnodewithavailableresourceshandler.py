@@ -1,15 +1,15 @@
 import strongr.core
-#import json
 
 import time
 
 import strongr.core.domain.clouddomain
 import strongr.core.gateways
 
+from strongr.core.lock.redislock import RedisLock
+
 
 class FindNodeWithAvailableResourcesHandler:
-    _machines = {}
-    _query_timer = 0
+    _timeout = 0
 
     def __call__(self, query):
         #core = strongr.core.getCore()
@@ -26,38 +26,46 @@ class FindNodeWithAvailableResourcesHandler:
         #    nodes = cache.get('nodes')
         #
 
-        if time.time() > self._query_timer:
-            core = strongr.core.getCore()
-            cache = strongr.core.gateways.Gateways.cache()
-            cloudQueryBus = strongr.core.domain.clouddomain.CloudDomain.cloudService().getCloudServiceByName(core.config().clouddomain.driver).getQueryBus()
-            cloudQueryFactory = strongr.core.domain.clouddomain.CloudDomain.queryFactory()
+        core = strongr.core.Core
+        cache = strongr.core.gateways.Gateways.cache()
 
+        cloudQueryBus = strongr.core.domain.clouddomain.CloudDomain.cloudService().getCloudServiceByName(core.config().clouddomain.driver).getQueryBus()
+        cloudQueryFactory = strongr.core.domain.clouddomain.CloudDomain.queryFactory()
+
+        if not cache.exists('nodes'):
             machines = cloudQueryBus.handle(cloudQueryFactory.newListDeployedVms())
+            nodes = {}
             if machines is not None:
                 for machine in machines:
-                    if machine.startswith('worker-') and machine not in self._machines:
+                    if machine.startswith('worker-'):
                         # add new machines
-                        self._machines[machine] = machines[machine]
-                        self._machines[machine]["ram_available"] = self._machines[machine]["ram"]
-                        self._machines[machine]["cores_available"] = self._machines[machine]["cores"]
+                        nodes[machine] = machines[machine]
+                        nodes[machine]["ram_available"] = nodes[machine]["ram"]
+                        nodes[machine]["cores_available"] = nodes[machine]["cores"]
+        elif int(time.time()) > self._timeout:
+            machines = cloudQueryBus.handle(cloudQueryFactory.newListDeployedVms())
+            nodes = cache.get('nodes')
+            if machines is not None:
+                for machine in machines:
+                    if machine.startswith('worker-') and machine not in nodes:
+                        # add new machines
+                        nodes[machine] = machines[machine]
+                        nodes[machine]["ram_available"] = nodes[machine]["ram"]
+                        nodes[machine]["cores_available"] = nodes[machine]["cores"]
 
-                for machine in list(self._machines):
-                    if machine not in machines:
-                        del self._machines[machine] # delete machines that are no longer up
+            for node in list(nodes):
+                if node not in machines:
+                    del nodes[machine]  # delete machines that are no longer up
 
-                if cache.exists('nodes'):
-                    cached_nodes = cache.get('nodes')
-                    for machine in cached_nodes:
-                        if machine in self._machines:
-                            # sync with cache
-                            self._machines[machine]["ram_available"] = cached_nodes[machine]["ram_available"]
-                            self._machines[machine]["cores_available"] = cached_nodes[machine]["cores_available"]
+            # push back in cache, other commands need this data
+            cache.set('nodes', self._machines, 3600)
 
-                # push back in cache, other commands need this data
-                cache.set('nodes', self._machines, 3600)
-                self._query_timer = time.time() + 120 # refresh machine list once every 2 minutes
+            self._timeout = int(time.time()) + 120 # refresh every 2 minutes
+        else:
+            nodes = cache.get('nodes')
 
-        ordered = sorted(self._machines, key=lambda key: self._machines[key]["ram_available"])
+
+        ordered = sorted(nodes, key=lambda key: self._machines[key]["ram_available"])
 
         for machine in ordered:
             if self._machines[machine]["ram_available"] - query.ram >= 0 and self._machines[machine]["cores_available"] - query.cores >= 0:
