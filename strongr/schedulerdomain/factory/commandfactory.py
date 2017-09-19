@@ -1,11 +1,16 @@
 from strongr.schedulerdomain.command import ScheduleTask, DoDelayedTasks,\
                                             ClaimResourcesOnNode, ReleaseResourcesOnNode,\
-                                            StartTaskOnNode, CheckTaskRunning
+                                            StartTaskOnNode, CheckTaskRunning,\
+                                            EnsureMinAmountOfNodes
 
 from strongr.core.exception import InvalidParameterException
 
 class CommandFactory:
     """ This factory instantiates command objects to be sent to a scheduler commandbus. """
+
+    def newEnsureMinAmountOfNodes(self):
+        return EnsureMinAmountOfNodes()
+
     def newDoDelayedTasks(self):
         """ Generates a new DoDelayedTasks command
 

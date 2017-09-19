@@ -29,7 +29,7 @@ from strongr.cli import DeploySingleCommand, ListDeployedVmsCommand,\
         RunResourceManager, PrintConfig,\
         IsValidUserCommand, RunRestServerCommand,\
         RunCeleryCommand, DestroySingleCommand,\
-        DestroyManyCommand
+        DestroyManyCommand, EnsureMinAmountOfNodesCommand
 
 
 application = Application()
@@ -47,6 +47,7 @@ application.add(RunRestServerCommand())
 application.add(RunCeleryCommand())
 application.add(DestroySingleCommand())
 application.add(DestroyManyCommand())
+application.add(EnsureMinAmountOfNodesCommand())
 
 if __name__ == '__main__':
     application.run(input_=argvInputs)

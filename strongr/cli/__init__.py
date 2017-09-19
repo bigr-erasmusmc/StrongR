@@ -11,3 +11,4 @@ from .runrestservercommand import RunRestServerCommand
 from .runcelerycommand import RunCeleryCommand
 from .destroysinglecommand import DestroySingleCommand
 from .destroymanycommand import DestroyManyCommand
+from .ensureminamountofnodescommand import EnsureMinAmountOfNodesCommand

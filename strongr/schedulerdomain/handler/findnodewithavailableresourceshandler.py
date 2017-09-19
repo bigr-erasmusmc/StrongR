@@ -70,7 +70,7 @@ class FindNodeWithAvailableResourcesHandler:
         ordered = sorted(nodes, key=lambda key: nodes[key]["ram_available"])
 
         for machine in ordered:
-            if nodes[machine]["ram_available"] - query.ram >= 0 and nodes[machine]["cores_available"] - query.cores >= 0:
+            if 'locked' not in nodes[machine] and nodes[machine]["ram_available"] - query.ram >= 0 and nodes[machine]["cores_available"] - query.cores >= 0:
                 return machine
 
 

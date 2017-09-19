@@ -26,6 +26,13 @@ class DefaultsLoader:
                     "worker_class": "sync"
                 }
             },
+            'schedulerdomain': {
+                'driver': 'simplescaler',
+                'simplescaler': {
+                    'scaleoutmincoresneeded': 16,
+                    'scaleoutminramneeded': 16
+                }
+            },
             'logger': {
                 'version': 1,
                 'disable_existing_loggers': False,

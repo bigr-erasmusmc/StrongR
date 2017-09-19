@@ -13,20 +13,15 @@ class RedisCache:
         self._namespace = strongr.core.Core.config().cache.namespace
 
     def set(self, key, value, timeout):
-        with RedisLock(key):
-            self._redis.delete(self._namespace + key)
-            self._redis.setex(self._namespace + key, pickle.dumps(value), timeout)
+        self._redis.setex(self._namespace + key, pickle.dumps(value), timeout)
 
     def get(self, key):
-        with RedisLock(key):
-            ret = self._redis.get(self._namespace + key)
+        ret = self._redis.get(self._namespace + key)
         return None if ret is None else pickle.loads(ret)
 
     def delete(self, key):
-        with RedisLock(key):
-            self._redis.delete(self._namespace + key)
+        self._redis.delete(self._namespace + key)
 
     def exists(self, key):
-        with RedisLock(key):
-            return self._redis.exists(self._namespace + key)
+        return self._redis.exists(self._namespace + key)
 

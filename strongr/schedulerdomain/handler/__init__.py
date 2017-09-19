@@ -7,3 +7,4 @@ from .claimresourcesonnodehandler import ClaimResourcesOnNodeHandler
 from .releaseresourcesonnode import ReleaseResourcesOnNodeHandler
 from .starttaskonnodehandler import StartTaskOnNodeHandler
 from .checktaskrunninghandler import CheckTaskRunningHandler
+from .ensureminamountofnodeshandler import EnsureMinAmountOfNodesHandler
