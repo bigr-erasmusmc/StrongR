@@ -1,3 +1,5 @@
+from strongr.core import Core
+from strongr.core.domain.clouddomain import CloudDomain
 from .wrapper import Command
 
 class ListDeployedVmsCommand(Command):
@@ -7,10 +9,10 @@ class ListDeployedVmsCommand(Command):
     deploy:list
     """
     def handle(self):
-        cloudService = self.getDomains().cloudDomain().cloudService()
-        queryFactory = self.getDomains().cloudDomain().queryFactory()
+        cloudService = CloudDomain.cloudService()
+        queryFactory = CloudDomain.queryFactory()
 
-        cloudProviderName = self.getContainer().config().clouddomain.driver
+        cloudProviderName = Core.config().clouddomain.driver
 
         cloudService = cloudService.getCloudServiceByName(cloudProviderName)
         queryBus = cloudService.getQueryBus()

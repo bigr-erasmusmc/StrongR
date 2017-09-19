@@ -11,6 +11,7 @@ from strongr.schedulerdomain.query import RequestScheduledTasks, RequestTaskInfo
                                             FindNodeWithAvailableResources
 from strongr.schedulerdomain.handler import RequestScheduledTasksHandler, RequestTaskInfoHandler,\
                                             FindNodeWithAvailableResourcesHandler
+
 class SchedulerService(AbstractService):
     _command_bus = None
     _query_bus = None

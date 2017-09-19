@@ -1,11 +1,10 @@
 import strongr.core
-from strongr.core.gateways import Gateways
+import strongr.core.gateways
 
 
 class ClaimResourcesOnNodeHandler:
     def __call__(self, command):
-        core = strongr.core.getCore()
-        cache = Gateways.cache()
+        cache = strongr.core.gateways.Gateways.cache()
         if cache.exists('nodes'):
             nodes = cache.get("nodes")
             nodes[command.node]["ram_available"] -= command.ram

@@ -1,3 +1,4 @@
+from strongr.core.domain.schedulerdomain import SchedulerDomain
 from .wrapper import Command
 
 import json
@@ -9,8 +10,8 @@ class GetTaskStatusCommand(Command):
     task:status
     """
     def handle(self):
-        schedulerService = self.getDomains().schedulerDomain().schedulerService()
-        queryFactory = self.getDomains().schedulerDomain().queryFactory()
+        schedulerService = SchedulerDomain.schedulerService()
+        queryFactory = SchedulerDomain.queryFactory()
 
         query = queryFactory.newRequestScheduledTasks()
         result = schedulerService.getQueryBus().handle(query)

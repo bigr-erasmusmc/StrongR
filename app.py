@@ -1,16 +1,9 @@
 from cleo import Application
 from cleo.inputs.argv_input import ArgvInput
 
-from strongr.cli import DeploySingleCommand, ListDeployedVmsCommand,\
-        RunShellCodeCommand, DeployManyCommand,\
-        AddTaskCommand, GetTaskStatusCommand,\
-        RunResourceManager, PrintConfig,\
-        IsValidUserCommand, RunRestServerCommand,\
-        RunCeleryCommand, DestroySingleCommand,\
-        DestroyManyCommand
-
 import strongr.core
 import logging.config
+from strongr.core.domain.configdomain import ConfigDomain
 
 # Use CLEO ArgvInput to extract some parameters
 # this dependency gets injected into
@@ -25,26 +18,35 @@ if argvInputs.has_parameter_option('env'):
 
 core = strongr.core.Core
 
-configDomain = core.domains().configDomain()
-configDomain.configService().getCommandBus().handle(configDomain.commandFactory().newLoadConfig(env))
+ConfigDomain.configService().getCommandBus().handle(ConfigDomain.commandFactory().newLoadConfig(env))
 
 logging.config.dictConfig(core.config().logger.as_dict())
 
+
+from strongr.cli import DeploySingleCommand, ListDeployedVmsCommand,\
+        RunShellCodeCommand, DeployManyCommand,\
+        AddTaskCommand, GetTaskStatusCommand,\
+        RunResourceManager, PrintConfig,\
+        IsValidUserCommand, RunRestServerCommand,\
+        RunCeleryCommand, DestroySingleCommand,\
+        DestroyManyCommand
+
+
 application = Application()
 
-application.add(DeploySingleCommand(core))
-application.add(ListDeployedVmsCommand(core))
-application.add(RunShellCodeCommand(core))
-application.add(DeployManyCommand(core))
-application.add(AddTaskCommand(core))
-application.add(GetTaskStatusCommand(core))
-application.add(RunResourceManager(core))
-application.add(PrintConfig(core))
-application.add(IsValidUserCommand(core))
-application.add(RunRestServerCommand(core))
-application.add(RunCeleryCommand(core))
-application.add(DestroySingleCommand(core))
-application.add(DestroyManyCommand(core))
+application.add(DeploySingleCommand())
+application.add(ListDeployedVmsCommand())
+application.add(RunShellCodeCommand())
+application.add(DeployManyCommand())
+application.add(AddTaskCommand())
+application.add(GetTaskStatusCommand())
+application.add(RunResourceManager())
+application.add(PrintConfig())
+application.add(IsValidUserCommand())
+application.add(RunRestServerCommand())
+application.add(RunCeleryCommand())
+application.add(DestroySingleCommand())
+application.add(DestroyManyCommand())
 
 if __name__ == '__main__':
     application.run(input_=argvInputs)

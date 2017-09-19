@@ -1,3 +1,4 @@
+from strongr.core.domain.clouddomain import CloudDomain
 from .wrapper import Command
 
 class RunShellCodeCommand(Command):
@@ -9,7 +10,7 @@ class RunShellCodeCommand(Command):
         {cmd* : shellcode to be run on the specified host(s)}
     """
     def handle(self):
-        services = self.cloudDomain().getServicesContainer()
+        services = CloudDomain.getServicesContainer()
         cloudServices = services.cloudServices()
         commandFactory = services.cloudCommandFactory()
 

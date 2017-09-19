@@ -1,3 +1,5 @@
+from strongr.core import Core
+from strongr.core.domain.clouddomain import CloudDomain
 from .wrapper import Command
 
 import uuid
@@ -9,8 +11,8 @@ class DeploySingleCommand(Command):
     deploy:single
     """
     def handle(self):
-        cloudServices = self.getDomains().cloudDomain().cloudService()
-        commandFactory = self.getDomains().cloudDomain().commandFactory()
+        cloudServices = CloudDomain.cloudService()
+        commandFactory = CloudDomain.commandFactory()
 
         cores = int(self.ask('How many processing cores should the VM have? (default 1): ', 1))
         ram = int(self.ask('How much memory in GiB should the VM have? (default 4): ', 4))
@@ -24,7 +26,7 @@ class DeploySingleCommand(Command):
 
         deployVmsCommand = commandFactory.newDeployVmsCommand(names=[name], cores=cores, ram=ram)
 
-        cloudProviderName = self.getContainer().config().clouddomain.driver
+        cloudProviderName = Core.config().clouddomain.driver
 
         cloudService = cloudServices.getCloudServiceByName(cloudProviderName)
         commandBus = cloudService.getCommandBus()

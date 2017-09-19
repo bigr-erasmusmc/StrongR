@@ -3,7 +3,8 @@ import strongr.core
 
 import time
 
-from strongr.core.gateways import Gateways
+import strongr.core.domain.clouddomain
+import strongr.core.gateways
 
 
 class FindNodeWithAvailableResourcesHandler:
@@ -27,9 +28,9 @@ class FindNodeWithAvailableResourcesHandler:
 
         if time.time() > self._query_timer:
             core = strongr.core.getCore()
-            cache = Gateways.cache()
-            cloudQueryBus = core.domains().cloudDomain().cloudService().getCloudServiceByName(core.config().clouddomain.driver).getQueryBus()
-            cloudQueryFactory = core.domains().cloudDomain().queryFactory()
+            cache = strongr.core.gateways.Gateways.cache()
+            cloudQueryBus = strongr.core.domain.clouddomain.CloudDomain.cloudService().getCloudServiceByName(core.config().clouddomain.driver).getQueryBus()
+            cloudQueryFactory = strongr.core.domain.clouddomain.CloudDomain.queryFactory()
 
             machines = cloudQueryBus.handle(cloudQueryFactory.newListDeployedVms())
             if machines is not None:

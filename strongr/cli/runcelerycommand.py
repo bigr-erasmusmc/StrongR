@@ -1,3 +1,5 @@
+from strongr.core import Core
+from strongr.core.domain.schedulerdomain import SchedulerDomain
 from .wrapper import Command
 
 import strongr.core
@@ -13,7 +15,7 @@ class RunCeleryCommand(Command):
         broker = 'amqp://guest:guest@localhost'
         celery_test = Celery('celery_test', broker=broker, backend=broker)
 
-        scheduler = self.getDomains().schedulerDomain().schedulerService()
+        scheduler = SchedulerDomain.schedulerService()
         scheduler.getCommandBus() # we need to initiate this so that celery knows where to send its commands
         scheduler.getQueryBus() # we need to initiate this so that celery knows where to send its commands
 
@@ -23,7 +25,7 @@ class RunCeleryCommand(Command):
             ]
 
         for command in commands:
-            strongr.core.getCore().commandRouter().enable_worker_route_for_command(celery_test, command)
+            Core.commandRouter().enable_worker_route_for_command(celery_test, command)
 
         argv = [
             'worker',

@@ -1,3 +1,4 @@
+from strongr.core.domain.schedulerdomain import SchedulerDomain
 from .wrapper import Command
 
 import uuid
@@ -15,8 +16,8 @@ class AddTaskCommand(Command):
         {mem : Amount of ram in GiB required for the task}
     """
     def handle(self):
-        schedulerService = self.getDomains().schedulerDomain().schedulerService()
-        commandFactory = self.getDomains().schedulerDomain().commandFactory()
+        schedulerService = SchedulerDomain.schedulerService()
+        commandFactory = SchedulerDomain.commandFactory()
 
         cmd = str(base64.b64decode(self.argument('shell')))
         cores = int(self.argument('cores'))

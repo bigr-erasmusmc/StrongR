@@ -1,23 +1,29 @@
 import strongr.core
 import os
 
+import strongr.core.domain.schedulerdomain
+import strongr.core.domain.clouddomain
 from strongr.core.gateways import Gateways
 
 
 class CheckTaskRunningHandler:
     def __call__(self, command):
+        SchedulerDomain = strongr.core.domain.schedulerdomain.SchedulerDomain
+        CloudDomain = strongr.core.domain.clouddomain.CloudDomain
+
         core = strongr.core.getCore()
+        cache = Gateways.cache()
 
-        schedulerService = core.domains().schedulerDomain().schedulerService()
+        schedulerService = SchedulerDomain.schedulerService()
         commandBus = schedulerService.getCommandBus()
-        commandFactory = core.domains().schedulerDomain().commandFactory()
+        commandFactory = SchedulerDomain.commandFactory()
         queryBus = schedulerService.getQueryBus()
-        queryFactory = core.domains().schedulerDomain().queryFactory()
+        queryFactory = SchedulerDomain.queryFactory()
 
-        cloudQueryBus = core.domains().cloudDomain().cloudService().getCloudServiceByName(core.config().clouddomain.driver).getQueryBus()
-        cloudQueryFactory = core.domains().cloudDomain().queryFactory()
+        cloudQueryBus = CloudDomain.cloudService().getCloudServiceByName(core.config().clouddomain.driver).getQueryBus()
+        cloudQueryFactory = CloudDomain.queryFactory()
 
-        jid = core.cache().get("jidmap." + command.taskid)
+        jid = cache.get("jidmap." + command.taskid)
         status = cloudQueryBus.handle(cloudQueryFactory.newRequestJidStatus(jid))
         if status == None and not status:
             # job not finished yet
@@ -25,7 +31,6 @@ class CheckTaskRunningHandler:
 
         print("Job finished {}".format(command.taskid))
         taskinfo = queryBus.handle(queryFactory.newRequestTaskInfo(command.taskid))
-        cache = Gateways.cache()
         running = cache.get("tasks.running")
         if running is not None and command.taskid in running:
             del running[command.taskid]

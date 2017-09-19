@@ -1,17 +1,19 @@
 import strongr.core
-from strongr.core.gateways import Gateways
-
+import strongr.core.domain.schedulerdomain
+import strongr.core.gateways
 
 class DoDelayedTasksHandler:
     def __call__(self, command):
-        core = strongr.core.getCore()
-        schedulerService = core.domains().schedulerDomain().schedulerService()
+        SchedulerDomain = strongr.core.domain.schedulerdomain.SchedulerDomain
+        Gateways = strongr.core.gateways.Gateways
+
+        schedulerService = SchedulerDomain.schedulerService()
 
         queryBus = schedulerService.getQueryBus()
-        queryFactory = core.domains().schedulerDomain().queryFactory()
+        queryFactory = SchedulerDomain.queryFactory()
 
         commandBus = schedulerService.getCommandBus()
-        commandFactory = core.domains().schedulerDomain().commandFactory()
+        commandFactory = SchedulerDomain.commandFactory()
 
         tasks = queryBus.handle(queryFactory.newRequestScheduledTasks())
         if tasks == None:

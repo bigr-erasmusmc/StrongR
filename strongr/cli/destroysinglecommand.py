@@ -1,3 +1,5 @@
+from strongr.core import Core
+from strongr.core.domain.clouddomain import CloudDomain
 from .wrapper import Command
 
 class DestroySingleCommand(Command):
@@ -8,13 +10,13 @@ class DestroySingleCommand(Command):
         {machine : The name of the VM to be destroyed}
     """
     def handle(self):
-        cloudServices = self.getDomains().cloudDomain().cloudService()
-        commandFactory = self.getDomains().cloudDomain().commandFactory()
+        cloudServices = CloudDomain.cloudService()
+        commandFactory = CloudDomain.commandFactory()
 
         machine = self.argument('machine')
         destroyVmsCommand = commandFactory.newDestroyVmsCommand(names=[machine])
 
-        cloudProviderName = self.getContainer().config().clouddomain.driver
+        cloudProviderName = Core.config().clouddomain.driver
 
         cloudService = cloudServices.getCloudServiceByName(cloudProviderName)
         commandBus = cloudService.getCommandBus()

@@ -1,16 +1,18 @@
 import strongr
+import strongr.core.domain.schedulerdomain
+import strongr.core.domain.clouddomain
 from strongr.core.gateways import Gateways
 
 
 class StartTaskOnNodeHandler:
     def __call__(self, command):
         core = strongr.core.getCore()
-        schedulerService = core.domains().schedulerDomain().schedulerService()
+        schedulerService = strongr.core.domain.schedulerdomain.SchedulerDomain.schedulerService()
         queryBus = schedulerService.getQueryBus()
         queryFactory = core.domains().schedulerDomain().queryFactory()
 
-        cloudCommandBus = core.domains().cloudDomain().cloudService().getCloudServiceByName(core.config().clouddomain.driver).getCommandBus()
-        cloudCommandFactory = core.domains().cloudDomain().commandFactory()
+        cloudCommandBus = strongr.core.domain.clouddomain.CloudDomain.cloudService().getCloudServiceByName(core.config().clouddomain.driver).getCommandBus()
+        cloudCommandFactory = strongr.core.domain.clouddomain.CloudDomain.commandFactory()
 
         taskinfo = queryBus.handle(queryFactory.newRequestTaskInfo(command.taskid))
 

@@ -5,7 +5,8 @@ class DefaultsLoader:
                 'configloaderorder': ['IniLoader', 'JsonLoader', 'YamlLoader']
             },
             'cache': {
-                'driver': 'local'
+                'driver': 'local',
+                'namespace': 'strongr-cache-'
             },
             'clouddomain': {
                 'driver': 'MockCloud',

@@ -1,3 +1,4 @@
+from strongr.core.domain.schedulerdomain import SchedulerDomain
 from .wrapper import Command
 
 import time
@@ -9,8 +10,8 @@ class RunResourceManager(Command):
     resourcemanager:run
     """
     def handle(self):
-        schedulerService = self.getDomains().schedulerDomain().schedulerService()
-        commandFactory = self.getDomains().schedulerDomain().commandFactory()
+        schedulerService = SchedulerDomain.schedulerService()
+        commandFactory = SchedulerDomain.commandFactory()
 
         commandBus = schedulerService.getCommandBus()
         doDelayedTasksCommand = commandFactory.newDoDelayedTasks()

@@ -10,7 +10,7 @@ class RedisCache:
 
     def __init__(self):
         self._redis = strongr.core.gateways.Gateways.redis()
-        self._namespace = strongr.core.Core.config().cache.redis.namespace
+        self._namespace = strongr.core.Core.config().cache.namespace
 
     def set(self, key, value, timeout):
         with RedisLock(key):
