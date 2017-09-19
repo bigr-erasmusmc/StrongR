@@ -38,17 +38,18 @@ class EnsureMinAmountOfNodesHandler(object):
                 cloudServices = strongr.core.domain.clouddomain.CloudDomain.cloudService()
                 commandFactory = strongr.core.domain.clouddomain.CloudDomain.commandFactory()
                 cloudProviderName = config.clouddomain.driver
-                profile = getattr(config.clouddomain, cloudProviderName).default_profile
+                profile = getattr(config.clouddomain, cloudProviderName).default_profile if 'profile' not in templates[machine] else templates[machine]['profile']
                 names = []
                 for i in range(0, machines_needed[machine]):
                     names.append(machine + '-' + str(uuid.uuid4()))
-                #deployVmsCommand = commandFactory.newDeployVmsCommand(names=[name], profile=profile, cores=templates[machine]['cores'], ram=templates[machine]['ram'])
 
-                #cloudService = cloudServices.getCloudServiceByName(cloudProviderName)
-                #commandBus = cloudService.getCommandBus()
+                deployVmsCommand = commandFactory.newDeployVmsCommand(names=[names], profile=profile, cores=templates[machine]['cores'], ram=templates[machine]['ram'])
 
-                logger.info('Deploying VM {0} cores={1} ram={2}GiB'.format(names, templates[machine]['cores'], templates[machine]['ram']))
+                cloudService = cloudServices.getCloudServiceByName(cloudProviderName)
+                commandBus = cloudService.getCommandBus()
 
-                #commandBus.handle(deployVmsCommand)
+                logger.info('Deploying VMs {0} cores={1} ram={2}GiB'.format(names, templates[machine]['cores'], templates[machine]['ram']))
+
+                commandBus.handle(deployVmsCommand)
         else:
             logger.info('No aditional machines needed!')
