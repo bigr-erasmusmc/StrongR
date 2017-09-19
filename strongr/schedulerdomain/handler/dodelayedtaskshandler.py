@@ -1,4 +1,6 @@
 import strongr.core
+from strongr.core.gateways import Gateways
+
 
 class DoDelayedTasksHandler:
     def __call__(self, command):
@@ -15,7 +17,7 @@ class DoDelayedTasksHandler:
         if tasks == None:
             return
 
-        cache = core.cache()
+        cache = Gateways.cache()
         if not cache.exists("tasks.running"):
             cache.set("tasks.running", {}, 3600)
 

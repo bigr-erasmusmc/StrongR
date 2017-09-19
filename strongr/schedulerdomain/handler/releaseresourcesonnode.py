@@ -1,8 +1,10 @@
 import strongr.core
+from strongr.core.gateways import Gateways
+
 
 class ReleaseResourcesOnNodeHandler:
     def __call__(self, command):
-        cache = strongr.core.getCore().cache()
+        cache = Gateways.cache()
         if cache.exists('nodes'):
             nodes = cache.get("nodes")
             nodes[command.node]["ram_available"] += command.ram

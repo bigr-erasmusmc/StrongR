@@ -1,6 +1,9 @@
 import strongr.core
 import os
 
+from strongr.core.gateways import Gateways
+
+
 class CheckTaskRunningHandler:
     def __call__(self, command):
         core = strongr.core.getCore()
@@ -22,7 +25,7 @@ class CheckTaskRunningHandler:
 
         print("Job finished {}".format(command.taskid))
         taskinfo = queryBus.handle(queryFactory.newRequestTaskInfo(command.taskid))
-        cache = core.cache()
+        cache = Gateways.cache()
         running = cache.get("tasks.running")
         if running is not None and command.taskid in running:
             del running[command.taskid]
