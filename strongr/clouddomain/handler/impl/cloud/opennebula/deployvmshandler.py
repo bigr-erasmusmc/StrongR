@@ -9,18 +9,13 @@ class DeployVmsHandler(AbstractDeployVmsHandler):
     def __call__(self, command):
         overrides = {}
 
-        if command.ram > 0:
-            overrides['memory'] = command.ram * 1024
-
-        if command.cores > 0:
-            overrides['cpu'] = command.cores
-            overrides['vcpu'] = command.cores
+        overrides['memory'] = command.ram * 1024
 
         client = salt.cloud.CloudClient(strongr.core.Core.config().clouddomain.OpenNebula.salt_config + '/cloud')
 
         ret = []
         for chunked_names in self._chunk_list(command.names, 2):
-            ret.append(client.profile(names=chunked_names, profile=strongr.core.Core.config().clouddomain.OpenNebula.default_profile, vm_overrides=overrides, parallel=True))
+            ret.append(client.profile(names=chunked_names, profile=command.profile, vm_overrides=overrides, parallel=True))
             time.sleep(60)
 
         return ret

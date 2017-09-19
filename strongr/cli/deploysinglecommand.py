@@ -23,10 +23,10 @@ class DeploySingleCommand(Command):
             self.error('Invalid input')
             return
 
-
-        deployVmsCommand = commandFactory.newDeployVmsCommand(names=[name], cores=cores, ram=ram)
-
         cloudProviderName = Core.config().clouddomain.driver
+
+        profile = getattr(Core.config().clouddomain, cloudProviderName).default_profile
+        deployVmsCommand = commandFactory.newDeployVmsCommand(names=[name], profile=profile, cores=cores, ram = ram)
 
         cloudService = cloudServices.getCloudServiceByName(cloudProviderName)
         commandBus = cloudService.getCommandBus()
