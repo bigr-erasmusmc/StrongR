@@ -4,7 +4,7 @@ import strongr.core
 import salt.runner
 
 import strongr.core
-from strongr.core.gateways import Gateways
+import strongr.core.gateways
 
 
 class RequestJidStatusHandler(AbstractRequestJidStatusHandler):
@@ -14,7 +14,7 @@ class RequestJidStatusHandler(AbstractRequestJidStatusHandler):
         opts['quiet'] = True
         runner = salt.runner.RunnerClient(opts)
 
-        cache = Gateways.cache()
+        cache = strongr.core.gateways.Gateways.cache()
 
         if not cache.exists('clouddomain.jobs.running'):
             cache.set('clouddomain.jobs.running', runner.cmd('jobs.active'), 1)
