@@ -1,9 +1,11 @@
 import strongr.core
+import logging
 
 class EnsureMinAmountOfNodesHandler(object):
     def __call__(self, command):
         config = strongr.core.Core.config()
         templates = config.schedulerdomain.simplescaler.templates.as_dict()
+        logger = logging.getLogger(self.__class__.__name__)
 
         cloudQueryBus = strongr.core.domain.clouddomain.CloudDomain.cloudService().getCloudServiceByName(config.clouddomain.driver).getQueryBus()
         cloudQueryFactory = strongr.core.domain.clouddomain.CloudDomain.queryFactory()
@@ -27,5 +29,8 @@ class EnsureMinAmountOfNodesHandler(object):
             else:
                 machines_needed[template_name] = templates[template_name]['spawned-min']
 
-        from pprint import pprint
-        pprint(machines_needed)
+
+        if len(machines_needed) > 0:
+            logger.info('Machines needed: {}'.format(machines_needed))
+        else:
+            logger.info('No aditional machines needed!')

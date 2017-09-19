@@ -1,6 +1,5 @@
 from cmndr import Middleware
 
-import strongr.core
 import logging
 
 class LoggingMiddleware(Middleware):
