@@ -17,8 +17,8 @@ class ScaleOutHandler(object):
             command.cores -= scaleout['cores']
             command.ram -= scaleout['ram']
             for template in list(templates):
-                if templates[template]['spawned-max'] <= scaleout['spawned'][template]:
-                    del(templates[template])
+                if template in scaleout['spawned'] and templates[template]['spawned-max'] <= scaleout['spawned'][template]:
+                    del(templates[template]) # we already have the max amount of vms for this template
 
         if not templates:
             return # max env size reached or no templates defined in config
