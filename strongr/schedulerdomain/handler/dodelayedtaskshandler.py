@@ -48,7 +48,7 @@ class DoDelayedTasksHandler:
 
         if coresshort > 0:
             # scaleout
-            pass
+            commandBus.handle(commandFactory.newScaleOut(coresshort, memshort))
         else:
             # scalein
             pass

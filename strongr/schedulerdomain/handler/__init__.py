@@ -8,3 +8,4 @@ from .releaseresourcesonnode import ReleaseResourcesOnNodeHandler
 from .starttaskonnodehandler import StartTaskOnNodeHandler
 from .checktaskrunninghandler import CheckTaskRunningHandler
 from .ensureminamountofnodeshandler import EnsureMinAmountOfNodesHandler
+from .scaleouthandler import ScaleOutHandler

@@ -3,12 +3,12 @@ from strongr.core.abstracts.abstractservice import AbstractService
 from strongr.schedulerdomain.command import ScheduleTask, DoDelayedTasks,\
                                             ClaimResourcesOnNode, ReleaseResourcesOnNode,\
                                             StartTaskOnNode, CheckTaskRunning, \
-                                            EnsureMinAmountOfNodes
+                                            EnsureMinAmountOfNodes, ScaleOut
 
 from strongr.schedulerdomain.handler import ScheduleTaskHandler, DoDelayedTasksHandler,\
                                             ClaimResourcesOnNodeHandler, ReleaseResourcesOnNodeHandler,\
                                             StartTaskOnNodeHandler, CheckTaskRunningHandler,\
-                                            EnsureMinAmountOfNodesHandler
+                                            EnsureMinAmountOfNodesHandler, ScaleOutHandler
 
 from strongr.schedulerdomain.query import RequestScheduledTasks, RequestTaskInfo,\
                                             FindNodeWithAvailableResources
@@ -28,7 +28,8 @@ class SchedulerService(AbstractService):
                         ReleaseResourcesOnNodeHandler: ReleaseResourcesOnNode,
                         StartTaskOnNodeHandler: StartTaskOnNode,
                         CheckTaskRunningHandler: CheckTaskRunning,
-                        EnsureMinAmountOfNodesHandler: EnsureMinAmountOfNodes
+                        EnsureMinAmountOfNodesHandler: EnsureMinAmountOfNodes,
+                        ScaleOutHandler: ScaleOut
                     })
         return self._command_bus
 

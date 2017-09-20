@@ -1,12 +1,19 @@
 from strongr.schedulerdomain.command import ScheduleTask, DoDelayedTasks,\
                                             ClaimResourcesOnNode, ReleaseResourcesOnNode,\
                                             StartTaskOnNode, CheckTaskRunning,\
-                                            EnsureMinAmountOfNodes
+                                            EnsureMinAmountOfNodes, ScaleOut
 
 from strongr.core.exception import InvalidParameterException
 
 class CommandFactory:
     """ This factory instantiates command objects to be sent to a scheduler commandbus. """
+    def newScaleOut(self, cores, ram):
+        if not cores > 0:
+            raise InvalidParameterException('Cores should be higher than 0')
+        elif not ram > 0:
+            raise InvalidParameterException('Ram should be higher than 0')
+
+        return ScaleOut(cores, ram)
 
     def newEnsureMinAmountOfNodes(self):
         return EnsureMinAmountOfNodes()
