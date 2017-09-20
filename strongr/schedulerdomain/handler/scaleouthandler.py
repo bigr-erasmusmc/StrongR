@@ -10,12 +10,15 @@ class ScaleOutHandler(object):
         cache = strongr.core.gateways.Gateways.cache()
         logger = logging.getLogger('schedulerdomain.' + self.__class__.__name__)
 
-        templates = config.schedulerdomain.simplescaler.templates.as_dict()
+        templates = dict(config.schedulerdomain.simplescaler.templates.as_dict()) # make a copy because we want to manipulate the list later
 
         if cache.exists('scaleout'):
             scaleout = cache.get('scaleout')
             command.cores -= scaleout['cores']
             command.ram -= scaleout['ram']
+            for template in list(templates):
+                if templates[template]['spawned-max'] <= scaleout['spawned'][template]:
+                    del(templates[template])
 
         if command.cores <= 0 or command.cores < config.schedulerdomain.simplescaler.scaleoutmincoresneeded:
             return
@@ -34,12 +37,15 @@ class ScaleOutHandler(object):
         # scaleout by one instance
 
         if not cache.exists('scaleout'):
-            scaleout = {'cores': 0, 'ram': 0}
+            scaleout = {'cores': 0, 'ram': 0, 'spawned': {template: 0}}
         else:
             # make sure we have the most recent version of scaleout
             scaleout = cache.get('scaleout')
+            if template not in scaleout['spawned']:
+                scaleout['spawned'][template] = 0
         scaleout['cores'] += templates[template]['cores']
         scaleout['ram'] += templates[template]['ram']
+        scaleout['spawned'][template] += 1
         cache.set('scaleout', scaleout, 3600)
 
         cloudServices = strongr.core.domain.clouddomain.CloudDomain.cloudService()
