@@ -20,6 +20,9 @@ class ScaleOutHandler(object):
                 if templates[template]['spawned-max'] <= scaleout['spawned'][template]:
                     del(templates[template])
 
+        if not templates:
+            return # max env size reached or no templates defined in config
+
         if command.cores <= 0 or command.cores < config.schedulerdomain.simplescaler.scaleoutmincoresneeded:
             return
 
