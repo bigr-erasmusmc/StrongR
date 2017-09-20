@@ -1,13 +1,13 @@
 import uuid
 
 import strongr.core
-import strongr.core.gateway
+import strongr.core.gateways
 import logging
 
 class ScaleOutHandler(object):
     def __call__(self, command):
         config = strongr.core.Core.config()
-        cache = strongr.core.gateway.Gateway.cache()
+        cache = strongr.core.gateways.Gateways.cache()
         logger = logging.getLogger('schedulerdomain.' + self.__class__.__name__)
 
         templates = config.schedulerdomain.simplescaler.templates.as_dict()
