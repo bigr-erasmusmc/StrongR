@@ -48,9 +48,10 @@ class FindNodeWithAvailableResourcesHandler:
         elif int(time.time()) > self._timeout:
             machines = cloudQueryBus.handle(cloudQueryFactory.newListDeployedVms())
             nodes = cache.get('nodes')
+            templates = tuple(core.config().schedulerdomain.simplescaler.templates.as_dict().keys())
             if machines is not None:
                 for machine in machines:
-                    if machine.startswith('worker-') and machine not in nodes:
+                    if machine.startswith(templates) and machine not in nodes:
                         # add new machines
                         nodes[machine] = machines[machine]
                         nodes[machine]["ram_available"] = nodes[machine]["ram"]
