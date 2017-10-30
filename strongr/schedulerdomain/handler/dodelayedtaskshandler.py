@@ -20,7 +20,7 @@ class DoDelayedTasksHandler:
         memshort = 0
         coresshort = 0
 
-        jobs = queryFactory.handle(queryFactory.newRequestScheduledJobs()) # this query only gives us enqueued, assigned and running jobs
+        jobs = queryBus.handle(queryFactory.newRequestScheduledJobs()) # this query only gives us enqueued, assigned and running jobs
 
         for job in jobs:
             if job.state == JobState.RUNNING:
