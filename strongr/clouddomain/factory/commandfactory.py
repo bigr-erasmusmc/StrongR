@@ -52,7 +52,7 @@ class CommandFactory:
 
         return DeployVms(names, profile, cores, ram)
 
-    def newRunShellCodeCommand(self, sh, host):
+    def newRunShellCodeCommand(self, job_id, sh, host):
         """ Generates a new RunShellCode command
 
         :param sh: runShellCode
@@ -65,7 +65,9 @@ class CommandFactory:
         """
         if not len(host) > 0:
             raise InvalidParameterException('Host {0} is invalid'.format(host))
+        elif not len(job_id) > 0:
+            raise InvalidParameterException('job_id is invalid')
         elif not len(sh) > 0:
             raise InvalidParameterException('Shellcode {0} is invalid'.format(sh))
 
-        return RunShellCode(sh=sh, host=host)
+        return RunShellCode(job_id=job_id, sh=sh, host=host)

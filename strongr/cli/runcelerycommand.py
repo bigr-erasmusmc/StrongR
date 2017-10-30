@@ -24,7 +24,7 @@ class RunCeleryCommand(Command):
         commands = config.celery.enabled_routes
 
         for command in commands:
-            strongr.core.Core.commandRouter().enable_worker_route_for_command(celery, command)
+            strongr.core.Core.command_router().enable_worker_route_for_command(celery, command)
 
         argv = [
             'worker',

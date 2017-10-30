@@ -1,6 +1,6 @@
-from strongr.schedulerdomain.command import ScheduleTask, DoDelayedTasks,\
+from strongr.schedulerdomain.command import ScheduleJob, DoDelayedTasks,\
                                             ClaimResourcesOnNode, ReleaseResourcesOnNode,\
-                                            StartTaskOnNode, CheckTaskRunning,\
+                                            StartJobOnVm, CheckJobRunning,\
                                             EnsureMinAmountOfNodes, ScaleOut
 
 from strongr.core.exception import InvalidParameterException
@@ -26,15 +26,15 @@ class CommandFactory:
         """
         return DoDelayedTasks()
 
-    def newScheduleTaskCommand(self, taskid, cmd, cores, ram):
+    def newScheduleJobCommand(self, job_id, cmd, cores, ram):
         """ Generates a new ScheduleTask command
 
-        :param taskid: the taskid
+        :param job_id: the jobs id (max 32 characters)
         :param cmd: The shellcode to be run
         :param cores: The amount of cores in the VM
         :param ram: The amount of RAM in GiB in the VM
 
-        :type taskid: string
+        :type job_id: string
         :type cmd: string
         :type cores: int
         :type ram: int
@@ -48,10 +48,10 @@ class CommandFactory:
             raise InvalidParameterException('Cores should be higher than 0')
         elif not ram > 0:
             raise InvalidParameterException('Ram should be higher than 0')
-        elif not len(taskid) > 0:
+        elif not len(job_id) > 0:
             raise InvalidParameterException('Taskid invalid')
 
-        return ScheduleTask(taskid=taskid, cmd=cmd, cores=cores, ram=ram)
+        return ScheduleJob(job_id=job_id, cmd=cmd, cores=cores, ram=ram)
 
     def newClaimResourcesOnNode(self, node, cores, ram):
         """ Generates a new ClaimResourcesOnNode command
@@ -97,36 +97,36 @@ class CommandFactory:
 
         return ReleaseResourcesOnNode(node=node,cores=cores, ram=ram)
 
-    def newStartTaskOnNode(self, node, taskid):
-        """ Generates a new StartTaskOnNode command
+    def newStartJobOnVm(self, vm_id, job_id):
+        """ Generates a new StartJobOnVm command
 
-        :param node: the node name
-        :type node: string
-        :param taskid: the taskid to be started
-        :type taskid: string
+        :param vm_id: the node name
+        :type vm_id: string
+        :param job_id: the taskid to be started
+        :type job_id: string
 
-        :returns: A StartTaskOnNode command object
-        :rtype: StartTaskOnNode
+        :returns: A StartJobOnVm command object
+        :rtype: StartJobOnVm
         """
-        if not len(node) > 0:
+        if not len(vm_id) > 0:
             raise InvalidParameterException('node is invalid')
-        elif not len(taskid) > 0:
+        elif not len(job_id) > 0:
             raise InvalidParameterException('taskid is invalid')
 
-        return StartTaskOnNode(node=node, taskid=taskid)
+        return StartJobOnVm(vm_id=vm_id, job_id=job_id)
 
-    def newCheckTaskRunning(self, taskid):
-        """ Generates a new CheckTaskRunning command
+    def newCheckJobRunning(self, job_id):
+        """ Generates a new CheckJobRunning command
 
         :param node: the node name
         :type node: string
-        :param taskid: the taskid to be started
-        :type taskid: string
+        :param job_id: the taskid to be started
+        :type job_id: string
 
-        :returns: A CheckTaskRunning command object
-        :rtype: CheckTaskRunning
+        :returns: A CheckJobRunning command object
+        :rtype: CheckJobRunning
         """
-        if not len(taskid) > 0:
+        if not len(job_id) > 0:
             raise InvalidParameterException('taskid is invalid')
 
-        return CheckTaskRunning(taskid=taskid)
+        return CheckJobRunning(job_id=job_id)

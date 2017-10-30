@@ -3,7 +3,7 @@ import dependency_injector.providers as providers
 
 import logging
 
-from .domaineventspublisher import DomainEventsPublisher
+from .eventspublisher import EventsPublisher
 from strongr.core.middlewares.celery.commandrouter import CommandRouter
 
 class Core(containers.DeclarativeContainer):
@@ -11,6 +11,5 @@ class Core(containers.DeclarativeContainer):
     config = providers.Configuration('config')
     logger = providers.Singleton(logging.Logger, name='root', level=logging.DEBUG)
 
-    domainEventsPublisher = providers.Singleton(DomainEventsPublisher)
-
-    commandRouter = providers.Singleton(CommandRouter)
+    inter_domain_events_publisher = providers.Singleton(EventsPublisher)
+    command_router = providers.Singleton(CommandRouter)

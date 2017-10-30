@@ -10,7 +10,7 @@ class CeleryMiddleware(Middleware):
 
     def execute(self, command, next_callable):
         name = command.__module__ + '.' + command.__class__.__name__
-        command_router = self._core.commandRouter()
+        command_router = self._core.command_router()
         if not command_router.has_remotable_command_registered(name):
             # if no remotable route is enabled for this command we should
             # proceed as normal

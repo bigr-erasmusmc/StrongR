@@ -25,7 +25,7 @@ class Tasks(Resource):
         broker = 'amqp://guest:guest@localhost'
         celery_test = Celery('celery_test', broker=broker, backend=broker)
 
-        query = queryFactory.newRequestScheduledTasks()
+        query = queryFactory.newRequestScheduledJobs()
 
         strongr.core.getCore().commandRouter().enable_route_for_command(celery_test, query.__module__ + '.' + query.__class__.__name__)
         result = schedulerService.getQueryBus().handle(query)
@@ -44,7 +44,7 @@ class Tasks(Resource):
         ram = int(request.json['ram'])
 
         taskid = str(int(time.time())) + '-' + str(uuid.uuid4())
-        command = commandFactory.newScheduleTaskCommand(taskid, cmd, cores, ram)
+        command = commandFactory.newScheduleJobCommand(taskid, cmd, cores, ram)
 
         from celery import Celery
         broker = 'amqp://guest:guest@localhost'

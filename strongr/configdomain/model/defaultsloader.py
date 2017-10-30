@@ -8,6 +8,22 @@ class DefaultsLoader:
                 'driver': 'local',
                 'namespace': 'strongr-cache-'
             },
+            'lock': {
+                'driver': 'local',
+                'redis': {
+                    'timeout': 10,
+                    'namespace': 'strongr-redislock-'
+                },
+                'file': {
+                    'timeout': 10,
+                    'path': '/var/lock/strongr'
+                }
+            },
+            'db': {
+                'engine': {
+                    'url': 'sqlite://'
+                }
+            },
             'clouddomain': {
                 'driver': 'MockCloud',
                 'OpenNebula': {
