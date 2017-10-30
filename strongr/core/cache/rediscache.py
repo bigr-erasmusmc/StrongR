@@ -1,7 +1,7 @@
 import pickle
 import strongr.core
 import strongr.core.gateways
-from strongr.core.lock.redislock import RedisLock
+from strongr.core.lock.redis import RedisLock
 
 
 class RedisCache:

@@ -1,10 +1,8 @@
-import os
+import strongr.core.gateways
+from strongr.schedulerdomain.model import Job, JobState
 
 class RequestScheduledTasksHandler:
     def __call__(self, query):
-        if not os.path.isdir('/tmp/strongr'):
-            os.mkdir('/tmp/strongr')
-
-        tasks = [f for f in os.listdir('/tmp/strongr/') if os.path.isfile('/tmp/strongr/' + f)]
-        tasks.sort()
-        return tasks
+        session = strongr.core.gateways.Gateways.sqlalchemy_session()
+        result = session.query(Job).filter(Job.state.notin_([JobState.FAILED, JobState.FINISHED])).order_by(Job.job_id).all()
+        return result

@@ -13,7 +13,7 @@ class RequestScheduledTasks(Command):
         schedulerService = SchedulerDomain.schedulerService()
         queryFactory = SchedulerDomain.schedulerQueryFactory()
 
-        query = queryFactory.newRequestScheduledTasks()
+        query = queryFactory.newRequestScheduledJobs()
         result = schedulerService.getQueryBus().handle(query)
         print(json.dumps(result))
 

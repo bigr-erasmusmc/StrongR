@@ -1,2 +1,0 @@
-class AppContainerLaunched:
-    pass

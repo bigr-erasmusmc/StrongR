@@ -1,33 +1,40 @@
 from strongr.core.abstracts.abstractservice import AbstractService
 
-from strongr.schedulerdomain.command import ScheduleTask, DoDelayedTasks,\
+from strongr.schedulerdomain.command import ScheduleJob, DoDelayedTasks,\
                                             ClaimResourcesOnNode, ReleaseResourcesOnNode,\
-                                            StartTaskOnNode, CheckTaskRunning, \
+                                            StartJobOnVm, CheckJobRunning, \
                                             EnsureMinAmountOfNodes, ScaleOut
 
-from strongr.schedulerdomain.handler import ScheduleTaskHandler, DoDelayedTasksHandler,\
+from strongr.schedulerdomain.handler import ScheduleJobHandler, DoDelayedTasksHandler,\
                                             ClaimResourcesOnNodeHandler, ReleaseResourcesOnNodeHandler,\
-                                            StartTaskOnNodeHandler, CheckTaskRunningHandler,\
-                                            EnsureMinAmountOfNodesHandler, ScaleOutHandler
+                                            StartJobOnVmHandler, CheckJobRunningHandler,\
+                                            EnsureMinAmountOfNodesHandler, ScaleOutHandler, \
+                                            RequestFinishedJobsHandler
 
-from strongr.schedulerdomain.query import RequestScheduledTasks, RequestTaskInfo,\
-                                            FindNodeWithAvailableResources
+from strongr.schedulerdomain.query import RequestScheduledJobs, RequestJobInfo,\
+                                            FindNodeWithAvailableResources, RequestFinishedJobs
 from strongr.schedulerdomain.handler import RequestScheduledTasksHandler, RequestTaskInfoHandler,\
                                             FindNodeWithAvailableResourcesHandler
+
+import strongr.core.domain.clouddomain
 
 class SchedulerService(AbstractService):
     _command_bus = None
     _query_bus = None
 
+    def register_models(self):
+        import strongr.schedulerdomain.model as model
+        # importing alone is enough for registration
+
     def getCommandBus(self):
         if self._command_bus is None:
             self._command_bus = self._make_default_commandbus({
-                        ScheduleTaskHandler: ScheduleTask,
+                        ScheduleJobHandler: ScheduleJob,
                         DoDelayedTasksHandler: DoDelayedTasks,
                         ClaimResourcesOnNodeHandler: ClaimResourcesOnNode,
                         ReleaseResourcesOnNodeHandler: ReleaseResourcesOnNode,
-                        StartTaskOnNodeHandler: StartTaskOnNode,
-                        CheckTaskRunningHandler: CheckTaskRunning,
+                        StartJobOnVmHandler: StartJobOnVm,
+                        CheckJobRunningHandler: CheckJobRunning,
                         EnsureMinAmountOfNodesHandler: EnsureMinAmountOfNodes,
                         ScaleOutHandler: ScaleOut
                     })
@@ -36,8 +43,9 @@ class SchedulerService(AbstractService):
     def getQueryBus(self):
         if self._query_bus is None:
             self._query_bus = self._make_default_querybus({
-                    RequestScheduledTasksHandler: RequestScheduledTasks,
-                    RequestTaskInfoHandler: RequestTaskInfo,
-                    FindNodeWithAvailableResourcesHandler: FindNodeWithAvailableResources
+                    RequestScheduledTasksHandler: RequestScheduledJobs,
+                    RequestTaskInfoHandler: RequestJobInfo,
+                    FindNodeWithAvailableResourcesHandler: FindNodeWithAvailableResources,
+                    RequestFinishedJobsHandler: RequestFinishedJobs
                 })
         return self._query_bus

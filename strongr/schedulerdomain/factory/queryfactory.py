@@ -1,4 +1,4 @@
-from strongr.schedulerdomain.query import RequestScheduledTasks, RequestTaskInfo, FindNodeWithAvailableResources
+from strongr.schedulerdomain.query import RequestScheduledJobs, RequestFinishedJobs, RequestJobInfo, FindNodeWithAvailableResources
 
 from strongr.core.exception import InvalidParameterException
 
@@ -17,13 +17,21 @@ class QueryFactory:
         """
         return FindNodeWithAvailableResources(cores=cores, ram=ram)
 
-    def newRequestScheduledTasks(self):
-        """ Generates a new RequestScheduledTasks query
+    def newRequestScheduledJobs(self):
+        """ Generates a new RequestScheduledJobs query
 
-        :returns: A RequestScheduledTasks query object
-        :rtype: RequestScheduledTasks
+        :returns: A RequestScheduledJobs query object
+        :rtype: RequestScheduledJobs
         """
-        return RequestScheduledTasks()
+        return RequestScheduledJobs()
+
+    def newRequestFinishedJobs(self):
+        """ Generates a new RequestFinishedJobs query
+
+        :returns: A RequestFinishedJobs query object
+        :rtype: RequestFinishedJobs
+        """
+        return RequestFinishedJobs()
 
     def newRequestTaskInfo(self, taskid):
         """ Generates a new RequestTaskInfo query
@@ -32,6 +40,6 @@ class QueryFactory:
         :type taskid: string
 
         :returns: A RequestTaskInfo query object
-        :rtype: RequestTaskInfo
+        :rtype: RequestJobInfo
         """
-        return RequestTaskInfo(taskid)
+        return RequestJobInfo(taskid)

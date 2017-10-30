@@ -5,74 +5,45 @@ import time
 import strongr.core.domain.clouddomain
 import strongr.core.gateways
 
-from strongr.core.lock.redislock import RedisLock
+from strongr.core.lock.redis import RedisLock
+from strongr.schedulerdomain.model import Job, Vm, VmState
 
+from sqlalchemy.sql import func
+from sqlalchemy import and_, or_
 
 class FindNodeWithAvailableResourcesHandler:
     _timeout = 0
 
     def __call__(self, query):
-        #core = strongr.core.getCore()
-        #cache = core.cache()
-        #if not cache.exists('nodes'):
-        #    with open("/tmp/strongr-nodes", "r") as file:
-        #        nodes = json.loads(file.read())
-        #    for node in nodes:
-        #        nodes[node]["ram_available"] = nodes[node]["ram"]
-        #        nodes[node]["cores_available"] = nodes[node]["cores"]
-        #    cache.set("nodes", nodes, 3600)
-        #    print(nodes)
-        #else:
-        #    nodes = cache.get('nodes')
-        #
+        db = strongr.core.gateways.Gateways.sqlalchemy_session()
 
-        core = strongr.core.Core
-        cache = strongr.core.gateways.Gateways.cache()
-
-        cloudQueryBus = strongr.core.domain.clouddomain.CloudDomain.cloudService().getCloudServiceByName(core.config().clouddomain.driver).getQueryBus()
-        cloudQueryFactory = strongr.core.domain.clouddomain.CloudDomain.queryFactory()
-
-        if not cache.exists('nodes'):
-            machines = cloudQueryBus.handle(cloudQueryFactory.newListDeployedVms())
-            nodes = {}
-            if machines is not None:
-                for machine in machines:
-                    if machine.startswith('worker-'):
-                        # add new machines
-                        nodes[machine] = machines[machine]
-                        nodes[machine]["ram_available"] = nodes[machine]["ram"]
-                        nodes[machine]["cores_available"] = nodes[machine]["cores"]
-            # push back in cache, other commands need this data
-            cache.set('nodes', nodes, 3600)
-            self._timeout = int(time.time()) + 120
-        elif int(time.time()) > self._timeout:
-            machines = cloudQueryBus.handle(cloudQueryFactory.newListDeployedVms())
-            nodes = cache.get('nodes')
-            templates = tuple(core.config().schedulerdomain.simplescaler.templates.as_dict().keys())
-            if machines is not None:
-                for machine in machines:
-                    if machine.startswith(templates) and machine not in nodes:
-                        # add new machines
-                        nodes[machine] = machines[machine]
-                        nodes[machine]["ram_available"] = nodes[machine]["ram"]
-                        nodes[machine]["cores_available"] = nodes[machine]["cores"]
-
-            for node in list(nodes):
-                if node not in machines:
-                    del nodes[machine]  # delete machines that are no longer up
-
-            # push back in cache, other commands need this data
-            cache.set('nodes', nodes, 3600)
-            self._timeout = int(time.time()) + 120 # refresh every 2 minutes
-        else:
-            nodes = cache.get('nodes')
+        # subquery to see whats already running on vm
+        subquery = db.query(Job.vm_id, func.sum(Job.cores).label('cores'), func.sum(Job.ram).label('ram')).group_by(Job.vm_id).subquery('j')
 
 
-        ordered = sorted(nodes, key=lambda key: nodes[key]["ram_available"])
+        query = db.query(Vm.vm_id)\
+            .outerjoin(subquery, subquery.c.vm_id == Vm.vm_id)\
+            .filter(
+                and_(
+                    or_(
+                        and_( # case 1 - vm with jobs, check if vm has enough availabale resources to run the job
+                            Vm.cores - subquery.c.cores >= query.cores,
+                            Vm.ram - subquery.c.ram >= query.ram
+                        ),
+                        and_( # case 2 - vm with no jobs, check if vm has enough available resources to run the job
+                            subquery.c.cores == None,
+                            subquery.c.ram == None,
+                            Vm.cores >= query.cores,
+                            Vm.ram >= query.ram
+                        )
+                    ),
+                    Vm.state.in_([VmState.READY]) # vm should be in state ready before we push jobs to it
+                )
+            ).order_by(Vm.ram - subquery.c.ram)
 
-        for machine in ordered:
-            if 'locked' not in nodes[machine] and nodes[machine]["ram_available"] - query.ram >= 0 and nodes[machine]["cores_available"] - query.cores >= 0:
-                return machine
 
+        results = query.all()
 
-        return None # TODO: throw exception instead of returning None
+        if len(results) == 0:
+            return None
+        return results[0].vm_id

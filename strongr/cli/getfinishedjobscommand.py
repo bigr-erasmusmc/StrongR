@@ -3,16 +3,16 @@ from .wrapper import Command
 
 import json
 
-class GetTaskStatusCommand(Command):
+class GetFinishedJobsCommand(Command):
     """
-    Get task status. For now this returns json with all the enqueued tasks.
+    Returns all finished jobs.
 
-    task:status
+    jobs:finished
     """
     def handle(self):
         schedulerService = SchedulerDomain.schedulerService()
         queryFactory = SchedulerDomain.queryFactory()
 
-        query = queryFactory.newRequestScheduledTasks()
+        query = queryFactory.newRequestFinishedJobs()
         result = schedulerService.getQueryBus().handle(query)
         print(json.dumps(result))

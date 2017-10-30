@@ -14,6 +14,14 @@ from strongr.core.middlewares.logging.loggingmiddleware import LoggingMiddleware
 class AbstractService():
     __metaclass__ = ABCMeta
 
+    @abstractmethod
+    def register_models(self):
+        """
+        Every service should register its models with sqlalchemy
+        :return:
+        """
+        pass
+
     def _default_middlewares(self, will_return_values):
         return [
                 LoggingMiddleware(),
@@ -44,6 +52,6 @@ class AbstractService():
 
         # this is needed to get remotable (celery) commands working
         # it takes care of routing celery tasks to the appropriate command bus
-        strongr.core.getCore().commandRouter().append_route(remotable_mappings, bus)
+        strongr.core.getCore().command_router().append_route(remotable_mappings, bus)
 
         return bus

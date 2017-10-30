@@ -1,0 +1,46 @@
+version: '3'
+services:
+  strongr-master:
+    build: ./strongr-master/
+    networks:
+      - strongr-int
+
+  strongr-worker:
+    build: ./strongr-worker/
+    networks:
+      - strongr-int
+
+  strongr-restserver:
+    build: ./strongr-restserver/
+    networks:
+      - strongr-int
+
+  redis:
+    image: "redis:4-alpine"
+    volumes:
+      - redis-data:/data
+    networks:
+    - strongr-int
+
+  rabbitmq:
+    image: "rabbitmq:3-alpine"
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    networks:
+      - strongr-int
+
+  mysql:
+    image: "mysql:5"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - strongr-int
+
+
+volumes:
+  mysql-data: /opt/strongr/mysql
+  redis-data: /opt/strongr/redis
+  rabbitmq-data: /opt/strongr/rabbitmq
+
+networks:
+  strongr-int:

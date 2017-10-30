@@ -6,7 +6,7 @@ import base64
 import json
 import time
 
-class AddTaskCommand(Command):
+class AddJobCommand(Command):
     """
     Add a task to the resource manager
 
@@ -23,12 +23,7 @@ class AddTaskCommand(Command):
         cores = int(self.argument('cores'))
         ram = int(self.argument('mem'))
 
-        if not (cores > 0 and ram > 0 and len(cmd) > 0):
-            # TODO: put something sensible in here, this is just a placeholder
-            self.error('Invalid input')
-            return
-
-        taskid = str(int(time.time())) + '-' + str(uuid.uuid4())
-        command = commandFactory.newScheduleTaskCommand(taskid, cmd, cores, ram)
+        job_id = str(int(time.time())) + '-' + str(uuid.uuid4())
+        command = commandFactory.newScheduleJobCommand(job_id, cmd, cores, ram)
         schedulerService.getCommandBus().handle(command)
-        print(json.dumps({'taskid': taskid}))
+        print(json.dumps({'job_id': job_id}))

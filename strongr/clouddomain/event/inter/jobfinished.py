@@ -1,0 +1,2 @@
+class JobFinished(object):
+    pass

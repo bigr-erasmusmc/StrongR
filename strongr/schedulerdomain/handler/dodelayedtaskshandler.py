@@ -2,49 +2,39 @@ import strongr.core
 import strongr.core.domain.schedulerdomain
 import strongr.core.gateways
 
+from strongr.schedulerdomain.model import Job, JobState
+
+
 class DoDelayedTasksHandler:
     def __call__(self, command):
         SchedulerDomain = strongr.core.domain.schedulerdomain.SchedulerDomain
-        Gateways = strongr.core.gateways.Gateways
 
         schedulerService = SchedulerDomain.schedulerService()
+        commandBus = schedulerService.getCommandBus()
 
         queryBus = schedulerService.getQueryBus()
         queryFactory = SchedulerDomain.queryFactory()
 
-        commandBus = schedulerService.getCommandBus()
         commandFactory = SchedulerDomain.commandFactory()
-
-        tasks = queryBus.handle(queryFactory.newRequestScheduledTasks())
-        if tasks == None:
-            return
-
-        cache = Gateways.cache()
-        if not cache.exists("tasks.running"):
-            cache.set("tasks.running", {}, 3600)
 
         memshort = 0
         coresshort = 0
-        for t in tasks:
-            runningTasks = cache.get("tasks.running")
-            taskinfo = queryBus.handle(queryFactory.newRequestTaskInfo(t))
-            if taskinfo is None: # this should be an exception at some point
-                continue
-            if taskinfo["taskid"] in runningTasks and runningTasks[taskinfo["taskid"]]:
+
+        jobs = queryBus.handle(queryFactory.newRequestScheduledJobs()) # this query only gives us enqueued, assigned and running jobs
+
+        for job in jobs:
+            if job.state == JobState.RUNNING:
                 # check if task is running or finished
-                commandBus.handle(commandFactory.newCheckTaskRunning(taskinfo["taskid"]))
+                commandBus.handle(commandFactory.newCheckJobRunning(job.job_id))
             else:
-                # task is not running or finished, let's try to execute it on an available node
-                node = queryBus.handle(queryFactory.newFindNodeWithAvailableResources(taskinfo["cores"], taskinfo["ram"]))
-                if node == None:
-                    memshort += taskinfo["ram"]
-                    coresshort += taskinfo["cores"]
+                # task is not running, let's try to execute it on an available node
+                vm_id = queryBus.handle(queryFactory.newFindNodeWithAvailableResources(job.cores, job.ram))
+                if vm_id == None:
+                    memshort += job.cores
+                    coresshort += job.ram
                     continue
 
-                commandBus.handle(commandFactory.newClaimResourcesOnNode(node, taskinfo["cores"], taskinfo["ram"]))
-                commandBus.handle(commandFactory.newStartTaskOnNode(node, taskinfo["taskid"]))
-                runningTasks[taskinfo["taskid"]] = True
-                cache.set("tasks.running", runningTasks, 3600)
+                commandBus.handle(commandFactory.newStartJobOnVm(vm_id, job.job_id))
 
         if coresshort > 0:
             # scaleout
