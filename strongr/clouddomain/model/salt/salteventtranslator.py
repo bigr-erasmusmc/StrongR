@@ -40,7 +40,7 @@ class SaltEventTranslator(threading.Thread):
             elif fnmatch.fnmatch(ret['tag'], 'salt/cloud/*/created'):
                 data = ret['data']
                 from pprint import pprint
-                pprint data
+                pprint(data)
                 if 'name' in data:
                     vmready_event = inter_domain_event_factory.newVmReadyEvent(data['name'])
                     strongr.core.Core.inter_domain_events_publisher().publish(vmready_event)
