@@ -19,5 +19,5 @@ class Gateways(containers.DeclarativeContainer):
     redis = providers.Singleton(Redis.from_url, url=strongr.core.Core.config().redis.url)
 
     sqlalchemy_engine = providers.Singleton(engine_from_config, configuration=strongr.core.Core.config().db.engine.as_dict(), prefix='') # construct engine from config
-    sqlalchemy_session = providers.Factory(sessionmaker(bind=sqlalchemy_engine()))
+    sqlalchemy_session = providers.Singleton(sessionmaker(bind=sqlalchemy_engine()))
     sqlalchemy_base = providers.Singleton(declarative_base)
