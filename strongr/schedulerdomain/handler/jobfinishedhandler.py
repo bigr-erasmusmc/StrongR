@@ -4,10 +4,12 @@ from strongr.schedulerdomain.model import Job, JobState
 
 class JobFinishedHandler(object):
     def __init__(self, command):
-        db = strongr.core.gateways.Gateways.sqlalchemy_session()
+        print('Dragons! 1')
+        session = strongr.core.gateways.Gateways.sqlalchemy_session()
         try:
+            print('Dragons! 2')
             jobstate = (JobState.FINISHED if command.retcode == 0 else JobState.FAILED)
-            db.query(Job).filter(Job.job_id == command.job_id).update(
+            session.query(Job).filter(Job.job_id == command.job_id).update(
                 {
                     Job.state: jobstate,
                     Job.stdout: command.ret,
@@ -15,9 +17,10 @@ class JobFinishedHandler(object):
                 },
                 synchronize_session='evaluate'
             )
-            from pprint import pprint
-            pprint(command)
-            db.commit()
+            print('Dragons! 3')
+            session.commit()
         except:
-            db.rollback()
+            session.rollback()
             raise
+
+        print('Dragons! 4')
