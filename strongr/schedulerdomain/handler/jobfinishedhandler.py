@@ -6,7 +6,7 @@ class JobFinishedHandler(object):
     def __init__(self, command):
         db = strongr.core.gateways.Gateways.sqlalchemy_session()
         try:
-            db.query().filter(Job.job_id == command.job_id).update(
+            db.query(Job).filter(Job.job_id == command.job_id).update(
                 {
                     Job.state: (JobState.FINISHED if command.retcode == 0 else JobState.FAILED),
                     Job.stdout: command.ret,
