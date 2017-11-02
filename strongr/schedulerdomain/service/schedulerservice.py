@@ -5,19 +5,20 @@ from strongr.schedulerdomain.command import ScheduleJob, DoDelayedTasks,\
                                             StartJobOnVm, CheckJobRunning, \
                                             EnsureMinAmountOfNodes, ScaleOut, \
                                             JobFinished, VmCreated,\
-                                            VmReady, VmDestroyed
+                                            VmReady, VmDestroyed, VmNew
 
 from strongr.schedulerdomain.handler import ScheduleJobHandler, DoDelayedTasksHandler,\
                                             ClaimResourcesOnNodeHandler, ReleaseResourcesOnNodeHandler,\
                                             StartJobOnVmHandler, CheckJobRunningHandler,\
                                             EnsureMinAmountOfNodesHandler, ScaleOutHandler, \
-                                            RequestFinishedJobsHandler, JobFinishedHandler
+                                            RequestFinishedJobsHandler, JobFinishedHandler,\
+                                            VmDestroyedHandler, VmReadyHandler,\
+                                            VmCreatedHandler, VmNewHandler
 
 from strongr.schedulerdomain.query import RequestScheduledJobs, RequestJobInfo,\
                                             FindNodeWithAvailableResources, RequestFinishedJobs
 from strongr.schedulerdomain.handler import RequestScheduledTasksHandler, RequestTaskInfoHandler,\
-                                            FindNodeWithAvailableResourcesHandler, VmDestroyedHandler,\
-                                            VmReadyHandler, VmCreatedHandler
+                                            FindNodeWithAvailableResourcesHandler
 
 class SchedulerService(AbstractService):
     _command_bus = None
@@ -41,7 +42,8 @@ class SchedulerService(AbstractService):
                         JobFinishedHandler: JobFinished,
                         VmCreatedHandler: VmCreated,
                         VmDestroyedHandler: VmDestroyed,
-                        VmReadyHandler: VmReady
+                        VmReadyHandler: VmReady,
+                        VmNewHandler: VmNew
                     })
         return self._command_bus
 

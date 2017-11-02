@@ -14,3 +14,4 @@ from .jobfinishedhandler import JobFinishedHandler
 from .vmcreatedhandler import VmCreatedHandler
 from .vmdestroyedhandler import VmDestroyedHandler
 from .vmreadyhandler import VmReadyHandler
+from .vmnewhandler import VmNewHandler
