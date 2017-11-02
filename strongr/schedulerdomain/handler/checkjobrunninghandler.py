@@ -20,8 +20,6 @@ class CheckJobRunningHandler:
             # job not finished yet
             return
 
-        os.remove('/tmp/strongr/' + command.job_id)
-
         db = strongr.core.gateways.Gateways.sqlalchemy_session()
         db.query().filter(Job.job_id==command.job_id).update({Job.state: JobState.FINISHED})
         db.commit()
