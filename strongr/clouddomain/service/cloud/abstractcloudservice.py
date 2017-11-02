@@ -45,13 +45,13 @@ class AbstractCloudService():
         for event in event_bindings:
             if 'command' in event_bindings[event]:
                 for command_generator in event_bindings[event]['command']:
-                    gateways.Gateways.intra_domain_events_publisher().subscribe(event, (lambda event: self.getCommandBus().handle(command_generator(event))))
+                    gateways.Gateways.intra_domain_events_publisher().subscribe(event, (lambda event, command_generator=command_generator: self.getCommandBus().handle(command_generator(event))))
             if 'query' in event_bindings[event]:
                 for query_generator in event_bindings[event]['query']:
-                    gateways.Gateways.intra_domain_events_publisher().subscribe(event, (lambda event: self.getQueryBus().handle(query_generator(event))))
+                    gateways.Gateways.intra_domain_events_publisher().subscribe(event, (lambda event, query_generator=query_generator: self.getQueryBus().handle(query_generator(event))))
             if 'escalate-to-inter' in event_bindings[event]: # escalate intra-event to inter-event
                 for inter_domain_event_generator in event_bindings[event]['escalate-to-inter']:
-                    gateways.Gateways.intra_domain_events_publisher().subscribe(event, (lambda event: core.Core.inter_domain_events_publisher().publish(inter_domain_event_generator(event))))
+                    gateways.Gateways.intra_domain_events_publisher().subscribe(event, (lambda event, inter_domain_event_generator=inter_domain_event_generator: core.Core.inter_domain_events_publisher().publish(inter_domain_event_generator(event))))
 
 
 
