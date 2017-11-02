@@ -19,12 +19,12 @@ class Gateways(containers.DeclarativeContainer):
     intra_domain_events_publisher = providers.Singleton(strongr.core.eventspublisher.EventsPublisher, 'CloudDomain')
     domain_event_bindings = providers.Object({
         saltjobfinished.SaltJobFinished: { # command / query generators based on event
-            'command': [
-                #(lambda event: strongr.core.domain.clouddomain.CloudDomain.commandFactory().newJobFinishedCommand(event.jid, event.ret, event.retcode))
-            ],
-            'escalate-to-inter': [ # escalate event to inter-domain event
-                #(lambda event: Gateways.inter_domain_event_factory().newJobFinishedEvent(event.jid, event.ret, event.retcode))
-            ]
+            #'command': [
+            #    #(lambda event: strongr.core.domain.clouddomain.CloudDomain.commandFactory().newJobFinishedCommand(event.jid, event.ret, event.retcode))
+            #],
+            #'escalate-to-inter': [ # escalate event to inter-domain event
+            #    #(lambda event: Gateways.inter_domain_event_factory().newJobFinishedEvent(event.jid, event.ret, event.retcode))
+            #]
         }
     })
     salt_event_translator = providers.Singleton(strongr.clouddomain.model.salt.salteventtranslator.SaltEventTranslator, name="SaltEventTranslator")

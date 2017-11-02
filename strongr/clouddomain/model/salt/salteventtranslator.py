@@ -13,7 +13,6 @@ import strongr.clouddomain.model.gateways
 class SaltEventTranslator(threading.Thread):
     def run(self):
         opts = salt.config.client_config(strongr.core.Core.config().clouddomain.OpenNebula.salt_config + '/master')
-        intra_domain_event_factory = strongr.clouddomain.model.gateways.Gateways.intra_domain_event_factory()
         inter_domain_event_factory = strongr.clouddomain.model.gateways.Gateways.inter_domain_event_factory()
 
         event = salt.utils.event.get_event(
