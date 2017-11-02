@@ -9,7 +9,7 @@ class EnsureMinAmountOfNodesHandler(object):
         templates = config.schedulerdomain.simplescaler.templates.as_dict()
         logger = logging.getLogger('schedulerdomain.' + self.__class__.__name__)
 
-        cloudQueryBus = strongr.core.domain.clouddomain.CloudDomain.cloudService().getCloudServiceByName(config.clouddomain.driver).getQueryBus()
+        cloudQueryBus = strongr.core.domain.clouddomain.CloudDomain.cloudService().getQueryBus()
         cloudQueryFactory = strongr.core.domain.clouddomain.CloudDomain.queryFactory()
 
         machines = cloudQueryBus.handle(cloudQueryFactory.newListDeployedVms())
@@ -35,7 +35,7 @@ class EnsureMinAmountOfNodesHandler(object):
         if len(machines_needed) > 0:
             logger.info('Machines needed: {}'.format(machines_needed))
             for machine in machines_needed:
-                cloudServices = strongr.core.domain.clouddomain.CloudDomain.cloudService()
+                cloudService = strongr.core.domain.clouddomain.CloudDomain.cloudService()
                 commandFactory = strongr.core.domain.clouddomain.CloudDomain.commandFactory()
                 cloudProviderName = config.clouddomain.driver
                 profile = getattr(config.clouddomain, cloudProviderName).default_profile if 'profile' not in templates[machine] else templates[machine]['profile']
@@ -45,7 +45,6 @@ class EnsureMinAmountOfNodesHandler(object):
 
                 deployVmsCommand = commandFactory.newDeployVmsCommand(names=names, profile=profile, cores=templates[machine]['cores'], ram=templates[machine]['ram'])
 
-                cloudService = cloudServices.getCloudServiceByName(cloudProviderName)
                 commandBus = cloudService.getCommandBus()
 
                 logger.info('Deploying VMs {0} cores={1} ram={2}GiB'.format(names, templates[machine]['cores'], templates[machine]['ram']))

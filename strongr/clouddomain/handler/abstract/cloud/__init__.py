@@ -5,3 +5,4 @@ from .abstractlistdeployedvmshandler import AbstractListDeployedVmsHandler
 from .abstractrunshellcodehandler import AbstractRunShellCodeHandler
 from .abstractrequestjidstatushandler import AbstractRequestJidStatusHandler
 from .abstractdestroyvmshandler import AbstractDestroyVmsHandler
+from .abstractjobfinishedhandler import AbstractJobFinishedHandler

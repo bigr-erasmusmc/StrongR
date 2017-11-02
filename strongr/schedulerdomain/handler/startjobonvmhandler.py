@@ -9,7 +9,7 @@ class StartJobOnVmHandler:
     def __call__(self, command):
         db = strongr.core.gateways.Gateways.sqlalchemy_session()
         try:
-            db.query().filter(Job.job_id == command.job_id).update({Job.vm_id: command.vm_id}, synchronize_session=False)
+            db.query().filter(Job.job_id == command.job_id).update({Job.vm_id: command.vm_id}, synchronize_session='evaluate')
             db.commit()
         except:
             db.rollback()

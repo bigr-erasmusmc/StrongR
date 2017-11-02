@@ -10,16 +10,13 @@ class DestroyManyCommand(Command):
         {machines* : The names of the VMs to be destroyed}
     """
     def handle(self):
-        cloudServices = CloudDomain.cloudService()
+        cloudService = CloudDomain.cloudService()
         commandFactory = CloudDomain.commandFactory()
 
         machines = self.argument('machines')
 
         destroyVmsCommand = commandFactory.newDestroyVmsCommand(names=machines)
 
-        cloudProviderName = Core.config().clouddomain.driver
-
-        cloudService = cloudServices.getCloudServiceByName(cloudProviderName)
         commandBus = cloudService.getCommandBus()
 
         self.info('Destroying VMs {0}'.format(machines))

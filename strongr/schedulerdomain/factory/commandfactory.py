@@ -1,12 +1,84 @@
 from strongr.schedulerdomain.command import ScheduleJob, DoDelayedTasks,\
                                             ClaimResourcesOnNode, ReleaseResourcesOnNode,\
                                             StartJobOnVm, CheckJobRunning,\
-                                            EnsureMinAmountOfNodes, ScaleOut
+                                            EnsureMinAmountOfNodes, ScaleOut,\
+                                            JobFinished, VmDestroyed,\
+                                            VmReady, VmCreated
 
 from strongr.core.exception import InvalidParameterException
 
+# try-except for py 2 / 3 compatibility
+try:
+    basestring
+except NameError:
+    basestring = str
+
 class CommandFactory:
     """ This factory instantiates command objects to be sent to a scheduler commandbus. """
+
+    def newVmReady(self, job_id):
+        """ Generates a new VmReady command
+
+        :param job_id: An identifier token for the job
+        :type job_id: string
+
+        :returns: A VmReady command object
+        :rtype: VmReady
+        """
+        if not isinstance(job_id, basestring) or len(job_id.strip()) == 0:
+            raise InvalidParameterException('job_id is invalid')
+        return VmReady(job_id)
+
+    def newVmDestroyed(self, job_id):
+        """ Generates a new VmDestroyed command
+
+        :param job_id: An identifier token for the job
+        :type job_id: string
+
+        :returns: A VmDestroyed command object
+        :rtype: VmDestroyed
+        """
+        if not isinstance(job_id, basestring) or len(job_id.strip()) == 0:
+            raise InvalidParameterException('job_id is invalid')
+        return VmDestroyed(job_id)
+
+    def newVmCreated(self, job_id):
+        """ Generates a new VmCreated command
+
+        :param job_id: An identifier token for the job
+        :type job_id: string
+
+        :returns: A VmCreated command object
+        :rtype: VmCreated
+        """
+        if not isinstance(job_id, basestring) or len(job_id.strip()) == 0:
+            raise InvalidParameterException('job_id is invalid')
+        return VmCreated(job_id)
+
+    def newJobFinished(self, job_id, ret, retcode):
+        """ Generates a new JobFinished command
+
+        :param job_id: An identifier token for the job
+        :type job_id: string
+
+        :param ret: Usually the stdout of the job
+        :type ret: string
+
+        :param retcode: The exit code of the job
+        :type ret: int
+
+        :returns: A JobFinished command object
+        :rtype: JobFinished
+        """
+        if not isinstance(job_id, basestring) or len(job_id.strip()) == 0:
+            raise InvalidParameterException('jid is invalid')
+        elif not isinstance(ret, basestring) or len(ret.strip()) == 0:
+            raise InvalidParameterException('ret is invalid')
+        elif not isinstance(retcode, int):
+            raise InvalidParameterException('retcode is invalid')
+
+        return JobFinished(job_id, ret, retcode)
+
     def newScaleOut(self, cores, ram):
         if not cores > 0:
             raise InvalidParameterException('Cores should be higher than 0')

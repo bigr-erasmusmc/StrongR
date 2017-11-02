@@ -3,9 +3,9 @@ from strongr.core.exception import IsNotCallableException
 import logging
 
 class EventsPublisher:
-    def __init__(self):
+    def __init__(self, domain):
         self._subscribers = {}
-        self._logger = logging.getLogger(self.__class__.__name__)
+        self._logger = logging.getLogger(domain + self.__class__.__name__)
 
     def unsubscribe(self, event, subscriber):
         if not callable(subscriber):
@@ -29,10 +29,10 @@ class EventsPublisher:
 
     def publish(self, event):
         event_class = event.__class__.__name__
-        self._logger.debug('publishing event {} {}'.format(event_class, event))
+        self._logger.debug('publishing event {} {}'.format(event_class, event.__dict__))
         if event_class in self._subscribers:
             for subscriber in self._subscribers[event_class]:
-                if not subscriber(event_class):
-                    # stop eventClass bubbling on false
+                if subscriber(event):
+                    # stop eventClass bubbling on True
                     return False
         return True

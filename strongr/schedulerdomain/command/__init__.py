@@ -6,3 +6,7 @@ from .startjobonvm import StartJobOnVm
 from .checkjobrunning import CheckJobRunning
 from .ensureminamountofnodes import EnsureMinAmountOfNodes
 from .scaleout import ScaleOut
+from .jobfinished import JobFinished
+from .vmcreated import VmCreated
+from .vmready import VmReady
+from .vmdestroyed import VmDestroyed

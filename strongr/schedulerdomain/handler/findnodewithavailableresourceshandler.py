@@ -41,7 +41,6 @@ class FindNodeWithAvailableResourcesHandler:
                 )
             ).order_by(Vm.ram - subquery.c.ram)
 
-
         results = query.all()
 
         if len(results) == 0:

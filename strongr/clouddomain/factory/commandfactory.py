@@ -1,9 +1,33 @@
-from strongr.clouddomain.command import DeployVms, RunShellCode, DestroyVms
+from strongr.clouddomain.command import DeployVms, RunShellCode, DestroyVms, JobFinished
 
 from strongr.core.exception import InvalidParameterException
 
 class CommandFactory:
     """ This factory instantiates command objects to be sent to a cloud commandbus. """
+
+    def newJobFinishedCommand(self, job_id, ret, retcode):
+        """ Generates a new JobFinished command
+
+        :param job_id: An identifier token for the job
+        :type job_id: string
+
+        :param ret: Usually the stdout of the job
+        :type ret: string
+
+        :param retcode: The exit code of the job
+        :type ret: int
+
+        :returns: A JobFinished command object
+        :rtype: JobFinished
+        """
+        if not isinstance(job_id, basestring) or len(job_id.strip()) == 0:
+            raise InvalidParameterException('jid is invalid')
+        elif not isinstance(ret, basestring) or len(ret.strip()) == 0:
+            raise InvalidParameterException('ret is invalid')
+        elif not isinstance(retcode, int):
+            raise InvalidParameterException('retcode is invalid')
+
+        return JobFinished(job_id, ret, retcode)
 
     def newDestroyVmsCommand(self, names):
         """ Generates a new DestroyVm command

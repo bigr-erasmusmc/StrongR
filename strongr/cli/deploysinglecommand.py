@@ -11,7 +11,7 @@ class DeploySingleCommand(Command):
     deploy:single
     """
     def handle(self):
-        cloudServices = CloudDomain.cloudService()
+        cloudService = CloudDomain.cloudService()
         commandFactory = CloudDomain.commandFactory()
 
         cores = int(self.ask('How many processing cores should the VM have? (default 1): ', 1))
@@ -28,7 +28,6 @@ class DeploySingleCommand(Command):
         profile = getattr(Core.config().clouddomain, cloudProviderName).default_profile
         deployVmsCommand = commandFactory.newDeployVmsCommand(names=[name], profile=profile, cores=cores, ram = ram)
 
-        cloudService = cloudServices.getCloudServiceByName(cloudProviderName)
         commandBus = cloudService.getCommandBus()
 
         self.info('Deploying VM {0} cores={1} ram={2}GiB'.format(name, cores, ram))

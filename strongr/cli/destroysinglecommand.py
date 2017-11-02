@@ -10,15 +10,12 @@ class DestroySingleCommand(Command):
         {machine : The name of the VM to be destroyed}
     """
     def handle(self):
-        cloudServices = CloudDomain.cloudService()
+        cloudService = CloudDomain.cloudService()
         commandFactory = CloudDomain.commandFactory()
 
         machine = self.argument('machine')
         destroyVmsCommand = commandFactory.newDestroyVmsCommand(names=[machine])
 
-        cloudProviderName = Core.config().clouddomain.driver
-
-        cloudService = cloudServices.getCloudServiceByName(cloudProviderName)
         commandBus = cloudService.getCommandBus()
 
         self.info('Destroying VM {0}'.format(machine))

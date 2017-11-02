@@ -14,6 +14,18 @@ from strongr.core.middlewares.logging.loggingmiddleware import LoggingMiddleware
 class AbstractService():
     __metaclass__ = ABCMeta
 
+    def __init__(self, inter_domain_event_bindings=None):
+        if inter_domain_event_bindings is not None:
+            for event in inter_domain_event_bindings:
+                if 'command' in inter_domain_event_bindings[event]:
+                    for command_generator in inter_domain_event_bindings[event]['command']:
+                        strongr.core.Core.inter_domain_events_publisher().subscribe(event, (
+                        lambda event: self.getCommandBus().handle(command_generator(event))))
+                if 'query' in inter_domain_event_bindings[event]:
+                    for query_generator in inter_domain_event_bindings[event]['query']:
+                        strongr.core.Core.inter_domain_events_publisher().subscribe(event, (
+                        lambda event: self.getQueryBus().handle(query_generator(event))))
+
     @abstractmethod
     def register_models(self):
         """

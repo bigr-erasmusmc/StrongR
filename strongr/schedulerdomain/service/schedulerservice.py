@@ -3,20 +3,21 @@ from strongr.core.abstracts.abstractservice import AbstractService
 from strongr.schedulerdomain.command import ScheduleJob, DoDelayedTasks,\
                                             ClaimResourcesOnNode, ReleaseResourcesOnNode,\
                                             StartJobOnVm, CheckJobRunning, \
-                                            EnsureMinAmountOfNodes, ScaleOut
+                                            EnsureMinAmountOfNodes, ScaleOut, \
+                                            JobFinished, VmCreated,\
+                                            VmReady, VmDestroyed
 
 from strongr.schedulerdomain.handler import ScheduleJobHandler, DoDelayedTasksHandler,\
                                             ClaimResourcesOnNodeHandler, ReleaseResourcesOnNodeHandler,\
                                             StartJobOnVmHandler, CheckJobRunningHandler,\
                                             EnsureMinAmountOfNodesHandler, ScaleOutHandler, \
-                                            RequestFinishedJobsHandler
+                                            RequestFinishedJobsHandler, JobFinishedHandler
 
 from strongr.schedulerdomain.query import RequestScheduledJobs, RequestJobInfo,\
                                             FindNodeWithAvailableResources, RequestFinishedJobs
 from strongr.schedulerdomain.handler import RequestScheduledTasksHandler, RequestTaskInfoHandler,\
-                                            FindNodeWithAvailableResourcesHandler
-
-import strongr.core.domain.clouddomain
+                                            FindNodeWithAvailableResourcesHandler, VmDestroyedHandler,\
+                                            VmReadyHandler, VmCreatedHandler
 
 class SchedulerService(AbstractService):
     _command_bus = None
@@ -36,7 +37,11 @@ class SchedulerService(AbstractService):
                         StartJobOnVmHandler: StartJobOnVm,
                         CheckJobRunningHandler: CheckJobRunning,
                         EnsureMinAmountOfNodesHandler: EnsureMinAmountOfNodes,
-                        ScaleOutHandler: ScaleOut
+                        ScaleOutHandler: ScaleOut,
+                        JobFinishedHandler: JobFinished,
+                        VmCreatedHandler: VmCreated,
+                        VmDestroyedHandler: VmDestroyed,
+                        VmReadyHandler: VmReady
                     })
         return self._command_bus
 
