@@ -11,6 +11,15 @@ class StartJobOnVmHandler:
         try:
             db.query(Job).filter(Job.job_id == command.job_id).update({Job.vm_id: command.vm_id, Job.state: JobState.RUNNING}, synchronize_session='evaluate')
             db.commit()
+
+            job = db.query(Job).filter(Job.job_id == command.job_id).all()[0]
+
+            cloudCommandBus = strongr.core.domains().cloudDomain().cloudService().getCommandBus()
+            cloudCommandFactory = strongr.core.domains().cloudDomain().commandFactory()
+
+            cloudCommandBus.handle(cloudCommandFactory.newRunShellCodeCommand(job_id=job.job_id, sh=job.cmd, host=job.vm_id))
         except:
             db.rollback()
             raise
+
+
