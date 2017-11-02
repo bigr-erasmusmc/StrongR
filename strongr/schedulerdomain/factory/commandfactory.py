@@ -49,9 +49,9 @@ class CommandFactory:
         :returns: A VmReady command object
         :rtype: VmReady
         """
-        if not isinstance(vm_id, basestring) or len(job_id.strip()) == 0:
+        if not isinstance(vm_id, basestring) or len(vm_id.strip()) == 0:
             raise InvalidParameterException('job_id is invalid')
-        return VmReady(job_id)
+        return VmReady(vm_id)
 
     def newVmDestroyed(self, vm_id):
         """ Generates a new VmDestroyed command
