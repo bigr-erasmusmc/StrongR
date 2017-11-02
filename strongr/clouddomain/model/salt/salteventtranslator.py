@@ -39,11 +39,13 @@ class SaltEventTranslator(threading.Thread):
                     strongr.core.Core.inter_domain_events_publisher().publish(vmcreated_event)
             elif fnmatch.fnmatch(ret['tag'], 'salt/cloud/*/created'):
                 data = ret['data']
+                from pprint import pprint
+                pprint data
                 if 'name' in data:
                     vmready_event = inter_domain_event_factory.newVmReadyEvent(data['name'])
                     strongr.core.Core.inter_domain_events_publisher().publish(vmready_event)
             elif fnmatch.fnmatch(ret['tag'], 'salt/cloud/*/destroyed'):
                 data = ret['data']
                 if 'name' in data:
-                    vmready_event = inter_domain_event_factory.newVmReadyEvent(data['name'])
-                    strongr.core.Core.inter_domain_events_publisher().publish(vmready_event)
+                    vmdestroyed_event = inter_domain_event_factory.newVmReadyEvent(data['name'])
+                    strongr.core.Core.inter_domain_events_publisher().publish(vmdestroyed_event)
