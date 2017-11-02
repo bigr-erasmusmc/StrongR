@@ -10,3 +10,4 @@ from .jobfinished import JobFinished
 from .vmcreated import VmCreated
 from .vmready import VmReady
 from .vmdestroyed import VmDestroyed
+from .vmnew import VmNew
