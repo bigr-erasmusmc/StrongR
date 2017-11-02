@@ -1,3 +1,3 @@
 class VmReady(object):
-    def __init__(self, job_id):
-        self.job_id = job_id
+    def __init__(self, vm_id):
+        self.vm_id = vm_id
