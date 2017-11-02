@@ -1,5 +1,4 @@
 import strongr
-import strongr.core.domain.schedulerdomain
 import strongr.core.domain.clouddomain
 from strongr.core.gateways import Gateways
 from strongr.schedulerdomain.model import Job, JobState
@@ -14,8 +13,8 @@ class StartJobOnVmHandler:
 
             job = db.query(Job).filter(Job.job_id == command.job_id).all()[0]
 
-            cloudCommandBus = strongr.core.domains().cloudDomain().cloudService().getCommandBus()
-            cloudCommandFactory = strongr.core.domains().cloudDomain().commandFactory()
+            cloudCommandBus = strongr.core.domain.clouddomain.CloudDomain.cloudService().getCommandBus()
+            cloudCommandFactory = strongr.core.domain.clouddomain.CloudDomain.commandFactory()
 
             cloudCommandBus.handle(cloudCommandFactory.newRunShellCodeCommand(job_id=job.job_id, sh=job.cmd, host=job.vm_id))
         except:
