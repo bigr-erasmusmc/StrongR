@@ -30,8 +30,8 @@ class SaltEventTranslator(threading.Thread):
             if fnmatch.fnmatch(ret['tag'], 'salt/job/*/ret/*'):
                 data = ret['data']
                 if 'jid' in data and 'return' in data and 'retcode' in data:
-                    salt_job_finished_event = intra_domain_event_factory.newSaltJobFinished(data['jid'], data['return'], data['retcode'])
-                    strongr.clouddomain.model.gateways.Gateways.intra_domain_events_publisher().publish(salt_job_finished_event)
+                    job_finished_event = inter_domain_event_factory.newJobFinished(data['jid'], data['return'], data['retcode'])
+                    strongr.core.Core.inter_domain_events_publisher().publish(job_finished_event)
             elif fnmatch.fnmatch(ret['tag'], 'salt/cloud/*/creating'):
                 data = ret['data']
                 if 'name' in data:

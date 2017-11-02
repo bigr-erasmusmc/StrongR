@@ -20,10 +20,10 @@ class Gateways(containers.DeclarativeContainer):
     domain_event_bindings = providers.Object({
         saltjobfinished.SaltJobFinished: { # command / query generators based on event
             'command': [
-                (lambda event: strongr.core.domain.clouddomain.CloudDomain.commandFactory().newJobFinishedCommand(event.jid, event.ret, event.retcode))
+                #(lambda event: strongr.core.domain.clouddomain.CloudDomain.commandFactory().newJobFinishedCommand(event.jid, event.ret, event.retcode))
             ],
             'escalate-to-inter': [ # escalate event to inter-domain event
-                (lambda event: Gateways.inter_domain_event_factory().newJobFinishedEvent(event.jid, event.ret, event.retcode))
+                #(lambda event: Gateways.inter_domain_event_factory().newJobFinishedEvent(event.jid, event.ret, event.retcode))
             ]
         }
     })
