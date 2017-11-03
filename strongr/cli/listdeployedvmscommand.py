@@ -12,9 +12,6 @@ class ListDeployedVmsCommand(Command):
         cloudService = CloudDomain.cloudService()
         queryFactory = CloudDomain.queryFactory()
 
-        cloudProviderName = Core.config().clouddomain.driver
-
-        cloudService = cloudService.getCloudServiceByName(cloudProviderName)
         queryBus = cloudService.getQueryBus()
         listDeployedVms = queryFactory.newListDeployedVms()
         print(queryBus.handle(listDeployedVms))

@@ -11,5 +11,6 @@ class Core(containers.DeclarativeContainer):
     config = providers.Configuration('config')
     logger = providers.Singleton(logging.Logger, name='root', level=logging.DEBUG)
 
-    inter_domain_events_publisher = providers.Singleton(EventsPublisher)
+    inter_domain_events_publisher = providers.Singleton(EventsPublisher, 'InterDomain')
+
     command_router = providers.Singleton(CommandRouter)

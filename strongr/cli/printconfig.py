@@ -11,4 +11,4 @@ class PrintConfig(Command):
     def handle(self):
         config = Core.config().as_dict()
         del config['internal']
-        print(json.dumps(config, indent=2, sort_keys=True))
+        print(json.dumps(config, sort_keys=True))

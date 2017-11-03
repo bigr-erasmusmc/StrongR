@@ -17,8 +17,9 @@ class Job(Base):
     vm_id = Column(String(255), ForeignKey('vms.vm_id'))
     vm = relationship('Vm', back_populates='jobs')
 
-    stdout_file = Column(String(64))
-    stderr_file = Column(String(64))
+    return_code = Column(Integer)
+
+    stdout = Column(Text) # we should update this to point to a file at some point as it will bloat the database pretty quickly
 
     _state = Column('state', Enum(JobState))
 

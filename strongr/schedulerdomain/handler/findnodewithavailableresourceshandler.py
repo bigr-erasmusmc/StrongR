@@ -6,7 +6,7 @@ import strongr.core.domain.clouddomain
 import strongr.core.gateways
 
 from strongr.core.lock.redis import RedisLock
-from strongr.schedulerdomain.model import Job, Vm, VmState
+from strongr.schedulerdomain.model import Job, Vm, VmState, JobState
 
 from sqlalchemy.sql import func
 from sqlalchemy import and_, or_
@@ -18,7 +18,7 @@ class FindNodeWithAvailableResourcesHandler:
         db = strongr.core.gateways.Gateways.sqlalchemy_session()
 
         # subquery to see whats already running on vm
-        subquery = db.query(Job.vm_id, func.sum(Job.cores).label('cores'), func.sum(Job.ram).label('ram')).group_by(Job.vm_id).subquery('j')
+        subquery = db.query(Job.vm_id, func.sum(Job.cores).label('cores'), func.sum(Job.ram).label('ram')).filter(Job.state.in_([JobState.RUNNING])).group_by(Job.vm_id).subquery('j')
 
 
         query = db.query(Vm.vm_id)\
@@ -40,7 +40,6 @@ class FindNodeWithAvailableResourcesHandler:
                     Vm.state.in_([VmState.READY]) # vm should be in state ready before we push jobs to it
                 )
             ).order_by(Vm.ram - subquery.c.ram)
-
 
         results = query.all()
 

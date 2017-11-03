@@ -6,6 +6,8 @@ import logging
 
 class ScaleOutHandler(object):
     def __call__(self, command):
+        return # turn off for testing purposes
+
         if strongr.core.gateways.Gateways.lock('scaleout-lock').exists():
             return # only every run one of these commands at once
 
@@ -55,13 +57,12 @@ class ScaleOutHandler(object):
             scaleout['spawned'][template] += 1
             cache.set('scaleout', scaleout, 3600)
 
-            cloudServices = strongr.core.domain.clouddomain.CloudDomain.cloudService()
+            cloudService = strongr.core.domain.clouddomain.CloudDomain.cloudService()
             cloudCommandFactory = strongr.core.domain.clouddomain.CloudDomain.commandFactory()
             cloudProviderName = config.clouddomain.driver
             profile = getattr(config.clouddomain, cloudProviderName).default_profile if 'profile' not in templates[template] else templates[template]['profile']
             deployVmsCommand = cloudCommandFactory.newDeployVmsCommand(names=[template + '-' + str(uuid.uuid4())], profile=profile, cores=templates[template]['cores'], ram=templates[template]['ram'])
 
-            cloudService = cloudServices.getCloudServiceByName(cloudProviderName)
             cloudCommandBus = cloudService.getCommandBus()
 
             logger.info('Deploying VM {0} cores={1} ram={2}GiB'.format(deployVmsCommand.names[0], deployVmsCommand.cores, deployVmsCommand.ram))

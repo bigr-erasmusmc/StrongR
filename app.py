@@ -23,20 +23,19 @@ ConfigDomain.configService().getCommandBus().handle(ConfigDomain.commandFactory(
 logging.config.dictConfig(core.config().logger.as_dict())
 
 from strongr.cli import DeploySingleCommand, ListDeployedVmsCommand,\
-        RunShellCodeCommand, DeployManyCommand,\
+        DeployManyCommand,\
         AddJobCommand, GetFinishedJobsCommand,\
         RunResourceManager, PrintConfig,\
         IsValidUserCommand, RunRestServerCommand,\
         RunCeleryCommand, DestroySingleCommand,\
         DestroyManyCommand, EnsureMinAmountOfNodesCommand, \
-        MakeDbCommand
+        MakeDbCommand, RunTestsCommand
 
 
 application = Application()
 
 application.add(DeploySingleCommand())
 application.add(ListDeployedVmsCommand())
-application.add(RunShellCodeCommand())
 application.add(DeployManyCommand())
 application.add(AddJobCommand())
 application.add(GetFinishedJobsCommand())
@@ -49,6 +48,7 @@ application.add(DestroySingleCommand())
 application.add(DestroyManyCommand())
 application.add(EnsureMinAmountOfNodesCommand())
 application.add(MakeDbCommand())
+application.add(RunTestsCommand())
 
 if __name__ == '__main__':
     application.run(input_=argvInputs)

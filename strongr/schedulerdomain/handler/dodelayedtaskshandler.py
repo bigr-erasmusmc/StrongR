@@ -23,18 +23,14 @@ class DoDelayedTasksHandler:
         jobs = queryBus.handle(queryFactory.newRequestScheduledJobs()) # this query only gives us enqueued, assigned and running jobs
 
         for job in jobs:
-            if job.state == JobState.RUNNING:
-                # check if task is running or finished
-                commandBus.handle(commandFactory.newCheckJobRunning(job.job_id))
-            else:
-                # task is not running, let's try to execute it on an available node
-                vm_id = queryBus.handle(queryFactory.newFindNodeWithAvailableResources(job.cores, job.ram))
-                if vm_id == None:
-                    memshort += job.cores
-                    coresshort += job.ram
-                    continue
+            # task is not running, let's try to execute it on an available node
+            vm_id = queryBus.handle(queryFactory.newFindNodeWithAvailableResources(job.cores, job.ram))
+            if vm_id == None:
+                memshort += job.cores
+                coresshort += job.ram
+                continue
 
-                commandBus.handle(commandFactory.newStartJobOnVm(vm_id, job.job_id))
+            commandBus.handle(commandFactory.newStartJobOnVm(vm_id, job.job_id))
 
         if coresshort > 0:
             # scaleout

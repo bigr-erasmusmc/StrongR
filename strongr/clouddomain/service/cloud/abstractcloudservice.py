@@ -8,10 +8,13 @@ from cmndr.handlers.nameextractors import ClassNameExtractor
 
 from strongr.clouddomain.handler.abstract.cloud import AbstractDestroyVmsHandler, AbstractDeployVmsHandler, \
                                                         AbstractListDeployedVmsHandler, AbstractRunShellCodeHandler,\
-                                                        AbstractRequestJidStatusHandler
+                                                        AbstractRequestJidStatusHandler, AbstractJobFinishedHandler
 
-from strongr.clouddomain.command import DestroyVms, DeployVms, RunShellCode
+from strongr.clouddomain.command import DestroyVms, DeployVms, RunShellCode, JobFinished
 from strongr.clouddomain.query import ListDeployedVms, RequestJidStatus
+
+import strongr.clouddomain.model.gateways as gateways
+import strongr.core as core
 
 class AbstractCloudService():
     __metaclass__ = ABCMeta
@@ -20,20 +23,36 @@ class AbstractCloudService():
 
 
     _mappings = {
-        AbstractListDeployedVmsHandler: ListDeployedVms.__name__, \
-        AbstractRunShellCodeHandler: RunShellCode.__name__, \
-        AbstractDeployVmsHandler: DeployVms.__name__, \
+        AbstractListDeployedVmsHandler: ListDeployedVms.__name__,
+        AbstractRunShellCodeHandler: RunShellCode.__name__,
+        AbstractDeployVmsHandler: DeployVms.__name__,
         AbstractRequestJidStatusHandler: RequestJidStatus.__name__,
-        AbstractDestroyVmsHandler: DestroyVms.__name__
+        AbstractDestroyVmsHandler: DestroyVms.__name__,
+        AbstractJobFinishedHandler: JobFinished.__name__
     }
 
     def __init__(self):
+        # map commands and handlers
         for handler in self.getCommandHandlers():
             command = self._getCommandForHandler(handler)
             self._commands[handler] = command
         for handler in self.getQueryHandlers():
             command = self._getCommandForHandler(handler)
             self._queries[handler] = command
+
+        # map events to commands / queries
+        event_bindings = gateways.Gateways.domain_event_bindings()
+        for event in event_bindings:
+            if 'command' in event_bindings[event]:
+                for command_generator in event_bindings[event]['command']:
+                    gateways.Gateways.intra_domain_events_publisher().subscribe(event, (lambda event, command_generator=command_generator: self.getCommandBus().handle(command_generator(event))))
+            if 'query' in event_bindings[event]:
+                for query_generator in event_bindings[event]['query']:
+                    gateways.Gateways.intra_domain_events_publisher().subscribe(event, (lambda event, query_generator=query_generator: self.getQueryBus().handle(query_generator(event))))
+            if 'escalate-to-inter' in event_bindings[event]: # escalate intra-event to inter-event
+                for inter_domain_event_generator in event_bindings[event]['escalate-to-inter']:
+                    gateways.Gateways.intra_domain_events_publisher().subscribe(event, (lambda event, inter_domain_event_generator=inter_domain_event_generator: core.Core.inter_domain_events_publisher().publish(inter_domain_event_generator(event))))
+
 
 
     @abstractmethod
@@ -63,7 +82,11 @@ class AbstractCloudService():
         return CommandBus([handler])
 
     def getCommandBus(self, middlewares=None):
-        return self._makeBus(self._commands, middlewares)
+        if not hasattr(self, '_commandbus'):
+            self._commandbus = self._makeBus(self._commands, middlewares)
+        return self._commandbus
 
     def getQueryBus(self, middlewares=None):
-        return self._makeBus(self._queries, middlewares)
+        if not hasattr(self, '_querybus'):
+            self._querybus = self._makeBus(self._queries, middlewares)
+        return self._querybus
