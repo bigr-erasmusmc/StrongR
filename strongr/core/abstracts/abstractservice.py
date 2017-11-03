@@ -20,11 +20,11 @@ class AbstractService():
                 if 'command' in inter_domain_event_bindings[event]:
                     for command_generator in inter_domain_event_bindings[event]['command']:
                         strongr.core.Core.inter_domain_events_publisher().subscribe(event, (
-                        lambda event, self=self, command_generator=command_generator: self.getCommandBus().handle(command_generator(event))))
+                        lambda event, command_generator=command_generator: self.getCommandBus().handle(command_generator(event))))
                 if 'query' in inter_domain_event_bindings[event]:
                     for query_generator in inter_domain_event_bindings[event]['query']:
                         strongr.core.Core.inter_domain_events_publisher().subscribe(event, (
-                        lambda event, self=self, command_generator=command_generator: self.getQueryBus().handle(query_generator(event))))
+                        lambda event, command_generator=command_generator: self.getQueryBus().handle(query_generator(event))))
 
     @abstractmethod
     def register_models(self):
