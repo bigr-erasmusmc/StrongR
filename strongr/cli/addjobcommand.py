@@ -10,7 +10,7 @@ class AddJobCommand(Command):
     """
     Add a task to the resource manager
 
-    task:add
+    job:add
         {shell : Shellcode to execute}
         {cores : Amount of cores required for the task}
         {mem : Amount of ram in GiB required for the task}

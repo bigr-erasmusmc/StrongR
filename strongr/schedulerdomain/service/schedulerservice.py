@@ -1,19 +1,19 @@
 from strongr.core.abstracts.abstractservice import AbstractService
 
-from strongr.schedulerdomain.command import ScheduleJob, DoDelayedTasks,\
+from strongr.schedulerdomain.command import ScheduleJob, RunEnqueuedJobs,\
                                             ClaimResourcesOnNode, ReleaseResourcesOnNode,\
                                             StartJobOnVm, CheckJobRunning, \
                                             EnsureMinAmountOfNodes, ScaleOut, \
                                             JobFinished, VmCreated,\
-                                            VmReady, VmDestroyed, VmNew
+                                            VmReady, VmDestroyed, VmNew, CheckScaling
 
-from strongr.schedulerdomain.handler import ScheduleJobHandler, DoDelayedTasksHandler,\
+from strongr.schedulerdomain.handler import ScheduleJobHandler, RunEnqueuedJobsHandler,\
                                             ClaimResourcesOnNodeHandler, ReleaseResourcesOnNodeHandler,\
                                             StartJobOnVmHandler, CheckJobRunningHandler,\
                                             EnsureMinAmountOfNodesHandler, ScaleOutHandler, \
                                             RequestFinishedJobsHandler, JobFinishedHandler,\
                                             VmDestroyedHandler, VmReadyHandler,\
-                                            VmCreatedHandler, VmNewHandler
+                                            VmCreatedHandler, VmNewHandler, CheckScalingHandler
 
 from strongr.schedulerdomain.query import RequestScheduledJobs, RequestJobInfo,\
                                             FindNodeWithAvailableResources, RequestFinishedJobs
@@ -32,7 +32,7 @@ class SchedulerService(AbstractService):
         if self._command_bus is None:
             self._command_bus = self._make_default_commandbus({
                         ScheduleJobHandler: ScheduleJob,
-                        DoDelayedTasksHandler: DoDelayedTasks,
+                        RunEnqueuedJobsHandler: RunEnqueuedJobs,
                         ClaimResourcesOnNodeHandler: ClaimResourcesOnNode,
                         ReleaseResourcesOnNodeHandler: ReleaseResourcesOnNode,
                         StartJobOnVmHandler: StartJobOnVm,
@@ -43,7 +43,8 @@ class SchedulerService(AbstractService):
                         VmCreatedHandler: VmCreated,
                         VmDestroyedHandler: VmDestroyed,
                         VmReadyHandler: VmReady,
-                        VmNewHandler: VmNew
+                        VmNewHandler: VmNew,
+                        CheckScalingHandler: CheckScaling
                     })
         return self._command_bus
 

@@ -20,7 +20,6 @@ class FindNodeWithAvailableResourcesHandler:
         # subquery to see whats already running on vm
         subquery = db.query(Job.vm_id, func.sum(Job.cores).label('cores'), func.sum(Job.ram).label('ram')).filter(Job.state.in_([JobState.RUNNING])).group_by(Job.vm_id).subquery('j')
 
-
         query = db.query(Vm.vm_id)\
             .outerjoin(subquery, subquery.c.vm_id == Vm.vm_id)\
             .filter(

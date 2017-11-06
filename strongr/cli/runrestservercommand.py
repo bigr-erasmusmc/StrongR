@@ -56,3 +56,4 @@ class RunRestServerCommand(Command):
                 def load(self):
                     return self.application
             WSGIServer(app).run()
+v
