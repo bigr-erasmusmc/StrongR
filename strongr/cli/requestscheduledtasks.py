@@ -7,7 +7,7 @@ class RequestScheduledTasks(Command):
     """
     Shows the task queue.
 
-    task:list
+    job:list
     """
     def handle(self):
         schedulerService = SchedulerDomain.schedulerService()

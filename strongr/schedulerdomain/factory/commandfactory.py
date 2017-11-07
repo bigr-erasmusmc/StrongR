@@ -1,9 +1,9 @@
-from strongr.schedulerdomain.command import ScheduleJob, DoDelayedTasks,\
+from strongr.schedulerdomain.command import ScheduleJob, RunEnqueuedJobs,\
                                             ClaimResourcesOnNode, ReleaseResourcesOnNode,\
                                             StartJobOnVm, CheckJobRunning,\
                                             EnsureMinAmountOfNodes, ScaleOut,\
                                             JobFinished, VmDestroyed,\
-                                            VmReady, VmCreated, VmNew
+                                            VmReady, VmCreated, VmNew, CheckScaling
 
 from strongr.core.exception import InvalidParameterException
 
@@ -15,6 +15,14 @@ except NameError:
 
 class CommandFactory:
     """ This factory instantiates command objects to be sent to a scheduler commandbus. """
+
+    def newCheckScaling(self):
+        """ Generates a new CheckScaling command
+
+        :returns: A CheckScaling command object
+        :rtype: CheckScaling
+        """
+        return CheckScaling()
 
     def newVmNew(self, vm_id, cores, ram):
         """ Generates a new VmNew command
@@ -114,13 +122,13 @@ class CommandFactory:
     def newEnsureMinAmountOfNodes(self):
         return EnsureMinAmountOfNodes()
 
-    def newDoDelayedTasks(self):
-        """ Generates a new DoDelayedTasks command
+    def newRunEnqueuedJobs(self):
+        """ Generates a new RunEnqueuedJobs command
 
-        :returns: A DoDelayedTasks command object
-        :rtype: DoDelayedTasks
+        :returns: A RunEnqueuedJobs command object
+        :rtype: RunEnqueuedJobs
         """
-        return DoDelayedTasks()
+        return RunEnqueuedJobs()
 
     def newScheduleJobCommand(self, job_id, cmd, cores, ram):
         """ Generates a new ScheduleTask command

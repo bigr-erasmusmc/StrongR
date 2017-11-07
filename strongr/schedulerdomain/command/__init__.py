@@ -1,5 +1,5 @@
 from .schedulejob import ScheduleJob
-from .dodelayedtasks import DoDelayedTasks
+from .runenqueuedjobs import RunEnqueuedJobs
 from .claimresourcesonnode import ClaimResourcesOnNode
 from .releaseresourcesonnode import ReleaseResourcesOnNode
 from .startjobonvm import StartJobOnVm
@@ -11,3 +11,4 @@ from .vmcreated import VmCreated
 from .vmready import VmReady
 from .vmdestroyed import VmDestroyed
 from .vmnew import VmNew
+from .checkscaling import CheckScaling

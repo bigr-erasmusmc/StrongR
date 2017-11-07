@@ -1,5 +1,5 @@
 from .schedulejobhandler import ScheduleJobHandler
-from .dodelayedtaskshandler import DoDelayedTasksHandler
+from .runenqueuedjobshandler import RunEnqueuedJobsHandler
 from .requestscheduledtaskshandler import RequestScheduledTasksHandler
 from .requesttaskinfohandler import RequestTaskInfoHandler
 from .findnodewithavailableresourceshandler import FindNodeWithAvailableResourcesHandler
@@ -15,3 +15,4 @@ from .vmcreatedhandler import VmCreatedHandler
 from .vmdestroyedhandler import VmDestroyedHandler
 from .vmreadyhandler import VmReadyHandler
 from .vmnewhandler import VmNewHandler
+from .checkscalinghandler import CheckScalingHandler
