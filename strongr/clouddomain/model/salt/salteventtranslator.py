@@ -28,23 +28,21 @@ class SaltEventTranslator(threading.Thread):
 
             if fnmatch.fnmatch(ret['tag'], 'salt/job/*/ret/*'):
                 data = ret['data']
-                if 'jid' in data and 'return' in data and 'retcode' in data:
+                if 'jid' in data and 'return' in data and 'retcode' in data and data['jid'] and data['return'] and data['retcode']:
                     job_finished_event = inter_domain_event_factory.newJobFinishedEvent(data['jid'], data['return'], data['retcode'])
                     strongr.core.Core.inter_domain_events_publisher().publish(job_finished_event)
             elif fnmatch.fnmatch(ret['tag'], 'salt/cloud/*/creating'):
                 data = ret['data']
-                if 'name' in data:
+                if 'name' in data and data['name']:
                     vmcreated_event = inter_domain_event_factory.newVmCreatedEvent(data['name'])
                     strongr.core.Core.inter_domain_events_publisher().publish(vmcreated_event)
             elif fnmatch.fnmatch(ret['tag'], 'salt/cloud/*/created'):
                 data = ret['data']
-                from pprint import pprint
-                pprint(data)
-                if 'name' in data:
+                if 'name' in data and data['name']:
                     vmready_event = inter_domain_event_factory.newVmReadyEvent(data['name'])
                     strongr.core.Core.inter_domain_events_publisher().publish(vmready_event)
             elif fnmatch.fnmatch(ret['tag'], 'salt/cloud/*/destroyed'):
                 data = ret['data']
-                if 'name' in data:
+                if 'name' in data and data['name']:
                     vmdestroyed_event = inter_domain_event_factory.newVmReadyEvent(data['name'])
                     strongr.core.Core.inter_domain_events_publisher().publish(vmdestroyed_event)
