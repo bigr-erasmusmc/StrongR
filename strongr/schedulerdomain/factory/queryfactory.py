@@ -1,9 +1,17 @@
-from strongr.schedulerdomain.query import RequestScheduledJobs, RequestFinishedJobs, RequestJobInfo, FindNodeWithAvailableResources
+from strongr.schedulerdomain.query import RequestScheduledJobs, RequestFinishedJobs, RequestJobInfo, FindNodeWithAvailableResources, RequestResourcesRequired
 
 from strongr.core.exception import InvalidParameterException
 
 class QueryFactory:
     """ This factory instantiates query objects to be sent to a scheduler querybus. """
+
+    def newRequestResourcesRequired(self):
+        """ Generates a new RequestResourcesRequired query
+        :returns: A RequestResourcesRequired query object
+        :rtype: RequestResourcesRequired
+        """
+        return RequestResourcesRequired()
+
     def newFindNodeWithAvailableResources(self, cores, ram):
         """ Generates a new FindNodeWithAvailableResources query
 

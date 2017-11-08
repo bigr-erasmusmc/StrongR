@@ -2,9 +2,6 @@ import strongr.core
 import strongr.core.domain.schedulerdomain
 import strongr.core.gateways
 
-from strongr.schedulerdomain.model import Job, JobState
-
-
 class RunEnqueuedJobsHandler:
     def __call__(self, command):
         # this command should be simplified at some point
@@ -36,12 +33,3 @@ class RunEnqueuedJobsHandler:
                 continue
 
             commandBus.handle(commandFactory.newStartJobOnVm(vm_id, job.job_id))
-
-
-        # move scaleout / scalin to separate command
-        if coresshort > 0:
-            # scaleout
-            commandBus.handle(commandFactory.newScaleOut(coresshort, memshort))
-        else:
-            # scalein
-            pass

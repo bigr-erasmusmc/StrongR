@@ -16,9 +16,11 @@ from strongr.schedulerdomain.handler import ScheduleJobHandler, RunEnqueuedJobsH
                                             VmCreatedHandler, VmNewHandler, CheckScalingHandler
 
 from strongr.schedulerdomain.query import RequestScheduledJobs, RequestJobInfo,\
-                                            FindNodeWithAvailableResources, RequestFinishedJobs
+                                            FindNodeWithAvailableResources, RequestFinishedJobs,\
+                                            RequestResourcesRequired
+
 from strongr.schedulerdomain.handler import RequestScheduledTasksHandler, RequestTaskInfoHandler,\
-                                            FindNodeWithAvailableResourcesHandler
+                                            FindNodeWithAvailableResourcesHandler, RequestResourcesRequiredHandler
 
 class SchedulerService(AbstractService):
     _command_bus = None
@@ -54,6 +56,7 @@ class SchedulerService(AbstractService):
                     RequestScheduledTasksHandler: RequestScheduledJobs,
                     RequestTaskInfoHandler: RequestJobInfo,
                     FindNodeWithAvailableResourcesHandler: FindNodeWithAvailableResources,
-                    RequestFinishedJobsHandler: RequestFinishedJobs
+                    RequestFinishedJobsHandler: RequestFinishedJobs,
+                    RequestResourcesRequiredHandler: RequestResourcesRequired
                 })
         return self._query_bus

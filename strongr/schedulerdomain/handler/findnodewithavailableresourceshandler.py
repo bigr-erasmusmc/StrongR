@@ -1,11 +1,8 @@
 import strongr.core
 
-import time
-
 import strongr.core.domain.clouddomain
 import strongr.core.gateways
 
-from strongr.core.lock.redis import RedisLock
 from strongr.schedulerdomain.model import Job, Vm, VmState, JobState
 
 from sqlalchemy.sql import func

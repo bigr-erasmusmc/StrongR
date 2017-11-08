@@ -2,3 +2,4 @@ from .requestscheduledjobs import RequestScheduledJobs
 from .requestjobinfo import RequestJobInfo
 from .findnodewithavailableresources import FindNodeWithAvailableResources
 from .requestfinishedjobs import RequestFinishedJobs
+from .requestresourcesrequired import RequestResourcesRequired

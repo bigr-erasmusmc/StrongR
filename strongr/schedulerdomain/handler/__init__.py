@@ -16,3 +16,4 @@ from .vmdestroyedhandler import VmDestroyedHandler
 from .vmreadyhandler import VmReadyHandler
 from .vmnewhandler import VmNewHandler
 from .checkscalinghandler import CheckScalingHandler
+from .requestresourcesrequiredhandler import RequestResourcesRequiredHandler
