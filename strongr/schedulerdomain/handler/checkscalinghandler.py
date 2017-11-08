@@ -2,11 +2,11 @@ import strongr.core.domain.schedulerdomain
 
 class CheckScalingHandler(object):
     def __call__(self, command):
-        query_bus = strongr.core.domain.schedulerdomain.Schedulerdomain.schedulerService().getQueryBus()
-        command_bus = strongr.core.domain.schedulerdomain.Schedulerdomain().schedulerService().getCommandBus()
+        query_bus = strongr.core.domain.schedulerdomain.SchedulerDomain.schedulerService().getQueryBus()
+        command_bus = strongr.core.domain.schedulerdomain.SchedulerDomain.schedulerService().getCommandBus()
 
-        query_factory = strongr.core.domain.schedulerdomain.Schedulerdomain.queryFactory()
-        command_factory = strongr.core.domain.schedulerdomain.Schedulerdomain.commandFactory()
+        query_factory = strongr.core.domain.schedulerdomain.SchedulerDomain.queryFactory()
+        command_factory = strongr.core.domain.schedulerdomain.SchedulerDomain.commandFactory()
 
         resources_required = query_bus.handle(query_factory.newRequestResourcesRequired())
 
