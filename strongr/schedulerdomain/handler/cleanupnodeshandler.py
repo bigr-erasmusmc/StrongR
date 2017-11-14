@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 class CleanupNodesHandler(object):
     def __call__(self, command):
         cloud_command_factory = strongr.core.domain.clouddomain.CloudDomain.commandFactory()
-        cloud_command_handler = strongr.core.domain.clouddomain.CloudDomain.cloudService()
+        cloud_command_bus = strongr.core.domain.clouddomain.CloudDomain.cloudService().getCommandBus()
 
 
         deadline = datetime.now() - timedelta(hours=3)
@@ -19,4 +19,4 @@ class CleanupNodesHandler(object):
 
         if len(vm_ids) > 0:
             command = cloud_command_factory.newDestroyVmsCommand(vm_ids)
-            cloud_command_handler.handle(command)
+            cloud_command_bus.handle(command)
