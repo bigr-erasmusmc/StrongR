@@ -16,8 +16,8 @@ class CleanupNodesHandler(object):
         vm_ids = []
         for vm in result:
             vm_ids.append(vm.vm_id)
+            session.delete(vm)
 
-        session.delete(result)
         session.commit()
 
         command = cloud_command_factory.newDestroyVms(vm_ids)
