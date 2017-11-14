@@ -17,3 +17,4 @@ from .vmreadyhandler import VmReadyHandler
 from .vmnewhandler import VmNewHandler
 from .checkscalinghandler import CheckScalingHandler
 from .requestresourcesrequiredhandler import RequestResourcesRequiredHandler
+from .cleanupnodeshandler import CleanupNodesHandler

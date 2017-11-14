@@ -12,3 +12,4 @@ from .vmready import VmReady
 from .vmdestroyed import VmDestroyed
 from .vmnew import VmNew
 from .checkscaling import CheckScaling
+from .cleanupnodes import CleanupNodes

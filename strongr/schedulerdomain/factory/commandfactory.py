@@ -3,7 +3,8 @@ from strongr.schedulerdomain.command import ScheduleJob, RunEnqueuedJobs,\
                                             StartJobOnVm, CheckJobRunning,\
                                             EnsureMinAmountOfNodes, ScaleOut,\
                                             JobFinished, VmDestroyed,\
-                                            VmReady, VmCreated, VmNew, CheckScaling
+                                            VmReady, VmCreated, VmNew, CheckScaling,\
+                                            CleanupNodes
 
 from strongr.core.exception import InvalidParameterException
 
@@ -15,6 +16,14 @@ except NameError:
 
 class CommandFactory:
     """ This factory instantiates command objects to be sent to a scheduler commandbus. """
+
+    def newCleanupNodes(self):
+        """ Generates a new Cleanupnodes command
+
+        :return: A CleanupNodes command object
+        :rtype: CleanupNodes
+        """
+        return CleanupNodes()
 
     def newCheckScaling(self):
         """ Generates a new CheckScaling command

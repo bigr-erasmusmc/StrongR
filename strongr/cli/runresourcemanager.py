@@ -17,11 +17,13 @@ class RunResourceManager(Command):
         commandBus = schedulerService.getCommandBus()
         run_enqueued_jobs_command = commandFactory.newRunEnqueuedJobs()
         check_scaling_command = commandFactory.newCheckScaling()
+        cleanup_nodes = commandFactory.newCleanupNodes()
 
         self.info('Running.')
 
         schedule.every(1).seconds.do(commandBus.handle, run_enqueued_jobs_command)
         schedule.every(5).seconds.do(commandBus.handle, check_scaling_command)
+        schedule.every(1).seconds.do(commandBus.handle, cleanup_nodes)
 
         while True:
             schedule.run_pending()
