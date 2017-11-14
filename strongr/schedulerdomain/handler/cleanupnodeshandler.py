@@ -15,8 +15,9 @@ class CleanupNodesHandler(object):
 
         vm_ids = []
         for vm in result:
-            vm_ids.append(vm.vm_id)
-
-        if len(vm_ids) > 0:
-            command = cloud_command_factory.newDestroyVmsCommand(vm_ids)
-            cloud_command_bus.handle(command)
+            try:
+                command = cloud_command_factory.newDestroyVmsCommand(vm_ids)
+                cloud_command_bus.handle(command)
+            except:
+                # sometimes VM doesn't exist in salt-cloud triggering this exception
+                pass
