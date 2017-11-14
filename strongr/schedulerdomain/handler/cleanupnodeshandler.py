@@ -9,16 +9,17 @@ class CleanupNodesHandler(object):
         cloud_command_handler = strongr.core.domain.clouddomain.CloudDomain.cloudService()
 
 
-        since = datetime.now() - timedelta(hours=3)
+        deadline = datetime.now() - timedelta(hours=3)
         session = strongr.core.gateways.Gateways.sqlalchemy_session()
-        result = session.query(Vm).filter(and_(Vm.state.in_([VmState.NEW, VmState.PROVISION]), Vm.state_date > since)).all()
+        result = session.query(Vm).filter(and_(Vm.state.in_([VmState.NEW, VmState.PROVISION]), Vm.state_date < deadline)).all()
 
         vm_ids = []
         for vm in result:
             vm_ids.append(vm.vm_id)
             session.delete(vm)
 
-        session.commit()
 
-        command = cloud_command_factory.newDestroyVmsCommand(vm_ids)
-        cloud_command_handler.handle(command)
+        if len(vm_ids) > 0:
+            session.commit()
+            command = cloud_command_factory.newDestroyVmsCommand(vm_ids)
+            cloud_command_handler.handle(command)
