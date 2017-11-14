@@ -47,7 +47,7 @@ class SaltEventTranslator(threading.Thread):
                 elif fnmatch.fnmatch(ret['tag'], 'salt/cloud/*/destroyed'):
                     data = ret['data']
                     if 'name' in data:
-                        vmdestroyed_event = inter_domain_event_factory.newVmReadyEvent(data['name'])
+                        vmdestroyed_event = inter_domain_event_factory.newVmDestroyedEvent(data['name'])
                         strongr.core.Core.inter_domain_events_publisher().publish(vmdestroyed_event)
             except Exception as e: # thread must always continue running
                 logging.getLogger('SaltEventTranslator').warning(str(e))
