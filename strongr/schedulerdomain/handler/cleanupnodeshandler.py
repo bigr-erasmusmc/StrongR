@@ -20,5 +20,5 @@ class CleanupNodesHandler(object):
 
         session.commit()
 
-        command = cloud_command_factory.newDestroyVms(vm_ids)
+        command = cloud_command_factory.newDestroyVmsCommand(vm_ids)
         cloud_command_handler.handle(command)
