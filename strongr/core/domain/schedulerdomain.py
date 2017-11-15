@@ -11,7 +11,8 @@ class SchedulerDomain(containers.DeclarativeContainer):
     inter_domain_event_bindings = providers.Object({
         strongr.core.domain.clouddomain.CloudDomain.events()['jobfinished']: {  # command / query generators based on event
             'command': [
-                (lambda event: SchedulerDomain.commandFactory().newJobFinished(event.job_id, event.ret, event.retcode))
+                (lambda event: SchedulerDomain.commandFactory().newJobFinished(event.job_id, event.ret, event.retcode)),
+                (lambda event: SchedulerDomain.commandFactory().newRunEnqueuedJobs())
             ]
         },
         strongr.core.domain.clouddomain.CloudDomain.events()['vmnew']: {
