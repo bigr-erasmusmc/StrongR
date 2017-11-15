@@ -30,4 +30,4 @@ class ListDeployedVmsHandler(AbstractListDeployedVmsHandler):
             else:
                 output['up'].append(machine)
 
-        return names
+        return output
