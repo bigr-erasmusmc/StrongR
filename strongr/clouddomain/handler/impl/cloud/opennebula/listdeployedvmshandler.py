@@ -23,8 +23,11 @@ class ListDeployedVmsHandler(AbstractListDeployedVmsHandler):
 
         result = runner.cmd('manage.up')
 
+        output = {'up': [], 'down': []}
         for machine in list(names):
             if machine not in result:
-                del names[machine]
+                output['down'].append(machine)
+            else:
+                output['up'].append(machine)
 
         return names
