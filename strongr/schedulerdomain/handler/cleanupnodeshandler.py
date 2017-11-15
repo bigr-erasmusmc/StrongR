@@ -3,6 +3,8 @@ from sqlalchemy import and_, func
 from strongr.schedulerdomain.model import Vm, VmState
 from datetime import datetime, timedelta
 
+import logging
+
 class CleanupNodesHandler(object):
     def __call__(self, command):
         cloud_command_factory = strongr.core.domain.clouddomain.CloudDomain.commandFactory()
@@ -17,6 +19,6 @@ class CleanupNodesHandler(object):
             try:
                 command = cloud_command_factory.newDestroyVmsCommand(vm.vm_id)
                 cloud_command_bus.handle(command)
-            except:
+            except Exception as e:
                 # sometimes VM doesn't exist in salt-cloud triggering this exception
-                pass
+                logging.getLogger("CleanupNodesHandler").warning(e)

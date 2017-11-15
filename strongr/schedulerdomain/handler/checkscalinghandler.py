@@ -3,7 +3,7 @@ import strongr.core.domain.schedulerdomain
 class CheckScalingHandler(object):
     def __call__(self, command):
         return
-        
+
         query_bus = strongr.core.domain.schedulerdomain.SchedulerDomain.schedulerService().getQueryBus()
         command_bus = strongr.core.domain.schedulerdomain.SchedulerDomain.schedulerService().getCommandBus()
 
