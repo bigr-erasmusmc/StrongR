@@ -22,3 +22,5 @@ class CleanupNodesHandler(object):
             except Exception as e:
                 # sometimes VM doesn't exist in salt-cloud triggering this exception
                 logging.getLogger("CleanupNodesHandler").warning(e)
+                vm.state = VmState.DESTROYED
+        session.commit()
