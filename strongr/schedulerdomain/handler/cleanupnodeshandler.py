@@ -9,18 +9,24 @@ class CleanupNodesHandler(object):
     def __call__(self, command):
         cloud_command_factory = strongr.core.domain.clouddomain.CloudDomain.commandFactory()
         cloud_command_bus = strongr.core.domain.clouddomain.CloudDomain.cloudService().getCommandBus()
+        cloud_query_factory = strongr.core.domain.clouddomain.CloudDomain.queryFactory()
+        cloud_query_bus = strongr.core.domain.clouddomain.CloudDomain.cloudService().getQueryBus()
 
 
         deadline = datetime.now() - timedelta(hours=3) # give cloud domain 3 hours to provision a machine, if it isn't online by then it will probably never be
         session = strongr.core.gateways.Gateways.sqlalchemy_session()
-        result = session.query(Vm).filter(and_(Vm.state.in_([VmState.NEW, VmState.PROVISION]), Vm.state_date < deadline)).all()
+        vms_in_db = session.query(Vm).filter(and_(Vm.state.in_([VmState.NEW, VmState.PROVISION]), Vm.state_date < deadline)).all()
 
-        for vm in result:
-            try:
-                command = cloud_command_factory.newDestroyVmsCommand([vm.vm_id])
-                cloud_command_bus.handle(command)
-            except Exception as e:
-                # sometimes VM doesn't exist in salt-cloud triggering this exception
-                logging.getLogger("CleanupNodesHandler").warning(e)
+        vms_in_cloud = cloud_query_bus.handle(cloud_query_factory.newListDeployedVms())
+
+        parallel_remove_list = []
+        for vm in vms_in_db:
+            if vm in vms_in_cloud['up'] or vm in vms_in_cloud['down']:
+                parallel_remove_list.append(vm)
+            else: # vm was never up or manually destroyed
                 vm.state = VmState.DESTROYED
-        session.commit()
+                session.commit()
+
+        if len(parallel_remove_list) > 0:
+            command = cloud_command_factory.newDestroyVmsCommand(parallel_remove_list)
+            cloud_command_bus.handle(command)
