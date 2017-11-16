@@ -18,12 +18,6 @@ class CleanupNodesHandler(object):
         session = strongr.core.gateways.Gateways.sqlalchemy_session()
         vms_in_db = session.query(Vm).filter(and_(Vm.state.in_([VmState.NEW, VmState.PROVISION]), Vm.state_date < deadline)).all()
         ready_vms_in_db = [vm[0] for vm in session.query(Vm.vm_id).filter(and_(Vm.state.in_([VmState.READY]))).all()]
-
-        from pprint import pprint
-        pprint(ready_vms_in_db)
-
-        return
-
         vms_in_cloud = cloud_query_bus.handle(cloud_query_factory.newListDeployedVms())
 
         parallel_remove_list = []
@@ -36,6 +30,8 @@ class CleanupNodesHandler(object):
             else: # vm was never up or manually destroyed
                 vm.state = VmState.FAILURE
                 session.commit()
+
+        vms_in_db_ids = vms_in_db_ids + ready_vms_in_db
 
         # cleanup unsynced / unregistered VM's
         for template in vm_templates:
