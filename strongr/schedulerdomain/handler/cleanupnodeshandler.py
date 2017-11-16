@@ -16,7 +16,7 @@ class CleanupNodesHandler(object):
 
         deadline = datetime.now() - timedelta(hours=3) # give cloud domain 3 hours to provision a machine, if it isn't online by then it will probably never be
         session = strongr.core.gateways.Gateways.sqlalchemy_session()
-        vms_in_db = session.query(Vm).filter(and_(Vm.state.in_([VmState.NEW, VmState.PROVISION]), Vm.state_date < deadline)).all()
+        vms_in_db = session.query(Vm).filter(and_(Vm.state.in_([VmState.NEW, VmState.PROVISION, VmState.READY]), Vm.state_date < deadline)).all()
 
         vms_in_cloud = cloud_query_bus.handle(cloud_query_factory.newListDeployedVms())
 
@@ -24,10 +24,13 @@ class CleanupNodesHandler(object):
         vms_in_db_ids = []
         for vm in vms_in_db:
             vms_in_db_ids.append(vm.vm_id)
+            if vm.state in [VmState.READY]:
+                continue # don't destroy these VM's
+
             if vm.vm_id in vms_in_cloud['up'] or vm in vms_in_cloud['down']:
                 parallel_remove_list.append(vm)
             else: # vm was never up or manually destroyed
-                vm.state = VmState.DESTROYED
+                vm.state = VmState.FAILURE
                 session.commit()
 
 
