@@ -14,3 +14,4 @@ from .ensureminamountofnodescommand import EnsureMinAmountOfNodesCommand
 from .makedbcommand import MakeDbCommand
 from .runtestscommand import RunTestsCommand
 from .testcommand import TestCommand
+from .cleanupcommand import CleanupCommand
