@@ -41,19 +41,11 @@ class ScaleOutHandler(object):
             if not templates:
                 return # max env size reached or no templates defined in config
 
-            print(config.schedulerdomain.simplescaler.scaleoutmincoresneeded)
-            print(command.cores)
-            print(config.schedulerdomain.simplescaler.scaleoutminramneeded)
-            print(command.ram)
-
             if command.cores <= 0 or command.cores < config.schedulerdomain.simplescaler.scaleoutmincoresneeded:
                 return
 
             if command.ram <= 0 or command.ram < config.schedulerdomain.simplescaler.scaleoutminramneeded:
                 return
-
-            from pprint import pprint
-            pprint(templates)
 
             for template in templates:
                 templates[template]['distance'] = templates[template]['ram'] / templates[template]['cores']
@@ -74,4 +66,4 @@ class ScaleOutHandler(object):
 
             logger.info('Deploying VM {0} cores={1} ram={2}GiB'.format(deployVmsCommand.names[0], deployVmsCommand.cores, deployVmsCommand.ram))
 
-            #cloudCommandBus.handle(deployVmsCommand)
+            cloudCommandBus.handle(deployVmsCommand)
