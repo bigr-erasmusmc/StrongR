@@ -40,7 +40,5 @@ class CleanupNodesHandler(object):
 
 
         if len(parallel_remove_list) > 0:
-            import pprint
-            pprint.pprint(parallel_remove_list)
-            #command = cloud_command_factory.newDestroyVmsCommand(parallel_remove_list)
-            #cloud_command_bus.handle(command)
+            command = cloud_command_factory.newDestroyVmsCommand(parallel_remove_list)
+            cloud_command_bus.handle(command)
