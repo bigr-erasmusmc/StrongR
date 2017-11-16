@@ -38,9 +38,6 @@ class ScaleOutHandler(object):
                 if 'spawned' in templates[template] and templates[template]['spawned'] >= templates[template]['spawned-max']:
                     del(templates[template]) # we already have the max amount of vms for this template
 
-            from pprint import pprint
-            pprint(templates)
-
             if not templates:
                 return # max env size reached or no templates defined in config
 
@@ -49,6 +46,9 @@ class ScaleOutHandler(object):
 
             if command.ram <= 0 or command.ram < config.schedulerdomain.simplescaler.scaleoutminramneeded:
                 return
+
+            from pprint import pprint
+            pprint(templates)
 
             for template in templates:
                 templates[template]['distance'] = templates[template]['ram'] / templates[template]['cores']
