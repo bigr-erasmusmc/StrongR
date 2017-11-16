@@ -34,6 +34,9 @@ class ScaleOutHandler(object):
                     else:
                         templates[template]['spawned'] = 1
 
+            from pprint import pprint
+            pprint(templates)
+
             for template in list(templates): # make copy of list so that we can edit original
                 if 'spawned' in templates[template] and templates[template]['spawned'] >= templates[template]['spawned-max']:
                     del(templates[template]) # we already have the max amount of vms for this template
