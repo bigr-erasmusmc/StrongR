@@ -9,7 +9,6 @@ from strongr.schedulerdomain.model import VmState
 
 class ScaleOutHandler(object):
     def __call__(self, command):
-        return # turn off for now
         if strongr.core.gateways.Gateways.lock('scaleout-lock').exists():
             return # only every run one of these commands at once
 
@@ -68,4 +67,4 @@ class ScaleOutHandler(object):
 
             logger.info('Deploying VM {0} cores={1} ram={2}GiB'.format(deployVmsCommand.names[0], deployVmsCommand.cores, deployVmsCommand.ram))
 
-            cloudCommandBus.handle(deployVmsCommand)
+            #cloudCommandBus.handle(deployVmsCommand)
