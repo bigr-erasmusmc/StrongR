@@ -24,7 +24,7 @@ class ScaleOutHandler(object):
             active_vms = query_bus.handle(query_factory.newRequestVms([VmState.NEW, VmState.PROVISION, VmState.READY]))
 
             for vm in active_vms:
-                if vm.state in [VmState.NEW, VmState.READY]:
+                if vm.state in [VmState.NEW, VmState.PROVISION]:
                     command.cores -= vm.cores
                     command.ram -= vm.ram
                 template = vm.vm_id.split('-')[0]

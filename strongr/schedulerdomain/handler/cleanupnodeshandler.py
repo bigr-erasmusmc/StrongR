@@ -14,7 +14,7 @@ class CleanupNodesHandler(object):
 
         vm_templates = strongr.core.Core.config().schedulerdomain.simplescaler.templates.as_dict()
 
-        deadline = datetime.now() - timedelta(hours=3) # give cloud domain 3 hours to provision a machine, if it isn't online by then it will probably never be
+        deadline = datetime.now() - timedelta(minutes=30) # give cloud domain time to provision a machine, if it isn't online by then it will probably never be
         session = strongr.core.gateways.Gateways.sqlalchemy_session()
         unprovisioned_vms_in_db = session.query(Vm).filter(and_(Vm.state.in_([VmState.NEW, VmState.PROVISION]), Vm.state_date < deadline)).all()
         vms_in_db = [vm[0] for vm in session.query(Vm.vm_id).filter(and_(Vm.state.in_([VmState.NEW, VmState.PROVISION, VmState.READY]))).all()]
