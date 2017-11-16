@@ -1,9 +1,24 @@
-from strongr.schedulerdomain.query import RequestScheduledJobs, RequestFinishedJobs, RequestJobInfo, FindNodeWithAvailableResources, RequestResourcesRequired
+from strongr.schedulerdomain.model import VmState
+from strongr.schedulerdomain.query import RequestScheduledJobs, RequestFinishedJobs, RequestJobInfo, FindNodeWithAvailableResources, RequestResourcesRequired, RequestVmsByState
 
 from strongr.core.exception import InvalidParameterException
 
 class QueryFactory:
     """ This factory instantiates query objects to be sent to a scheduler querybus. """
+
+    def newRequestVms(self, states):
+        """ Generates a new RequestVms query
+        :returns: A RequestVms query object
+        :rtype: RequestVmsByState
+        """
+        if not isinstance(states, list):
+            raise InvalidParameterException("states invalid")
+
+        for state in states:
+            if state not in VmState:
+                raise InvalidParameterException("{} is not a valid VmState".format(state))
+
+        return RequestVmsByState(states)
 
     def newRequestResourcesRequired(self):
         """ Generates a new RequestResourcesRequired query

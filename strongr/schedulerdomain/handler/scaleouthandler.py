@@ -3,28 +3,42 @@ import uuid
 import strongr.core
 import strongr.core.gateways
 import logging
+import strongr.core.domain.schedulerdomain
+from strongr.schedulerdomain.model import VmState
+
 
 class ScaleOutHandler(object):
     def __call__(self, command):
-        return # turn off for testing purposes
-
+        return # turn off for now
         if strongr.core.gateways.Gateways.lock('scaleout-lock').exists():
             return # only every run one of these commands at once
 
         with strongr.core.gateways.Gateways.lock('scaleout-lock'):  # only ever run one of these commands at once
             config = strongr.core.Core.config()
-            cache = strongr.core.gateways.Gateways.cache()
             logger = logging.getLogger('schedulerdomain.' + self.__class__.__name__)
+
+            query_factory = strongr.core.domain.schedulerdomain.SchedulerDomain.queryFactory()
+            query_bus = strongr.core.domain.schedulerdomain.SchedulerDomain.schedulerService().getQueryBus()
 
             templates = dict(config.schedulerdomain.simplescaler.templates.as_dict()) # make a copy because we want to manipulate the list
 
-            if cache.exists('scaleout'):
-                scaleout = cache.get('scaleout')
-                command.cores -= scaleout['cores']
-                command.ram -= scaleout['ram']
-                for template in list(templates):
-                    if template in scaleout['spawned'] and templates[template]['spawned-max'] <= scaleout['spawned'][template]:
-                        del(templates[template]) # we already have the max amount of vms for this template
+            active_vms = query_bus.handle(query_factory.newRequestVms([VmState.NEW, VmState.PROVISION, VmState.READY]))
+
+            for vm in active_vms:
+                if vm.state in [VmState.NEW, VmState.READY]:
+                    command.cores -= vm.cores
+                    command.ram -= vm.ram
+                template = vm.vm_id.split('-')[0]
+                if template in templates:
+                    if 'spawned' in templates[template]:
+                        templates[template]['spawned'] += 1
+                    else:
+                        templates[template]['spawned'] = 1
+
+
+            for template in list(templates): # make copy of list so that we can edit original
+                if 'spawned' in templates[template] and templates[template]['spawned'] >= templates[template]['spawned-max']:
+                    del(templates[template]) # we already have the max amount of vms for this template
 
             if not templates:
                 return # max env size reached or no templates defined in config
@@ -36,27 +50,14 @@ class ScaleOutHandler(object):
                 return
 
             for template in templates:
-                templates[template]['ram_per_core'] = templates[template]['ram'] / templates[template]['cores']
+                templates[template]['distance'] = templates[template]['ram'] / templates[template]['cores']
 
             ram_per_core_needed = command.ram / command.cores
 
             # find best fit based on templates
-            template = min(templates, key=lambda key: abs(templates[key]['ram_per_core'] - ram_per_core_needed))
+            template = min(templates, key=lambda key: abs(templates[key]['distance'] - ram_per_core_needed))
 
             # scaleout by one instance
-
-            if not cache.exists('scaleout'):
-                scaleout = {'cores': 0, 'ram': 0, 'spawned': {template: 0}}
-            else:
-                # make sure we have the most recent version of scaleout
-                scaleout = cache.get('scaleout')
-                if template not in scaleout['spawned']:
-                    scaleout['spawned'][template] = 0
-            scaleout['cores'] += templates[template]['cores']
-            scaleout['ram'] += templates[template]['ram']
-            scaleout['spawned'][template] += 1
-            cache.set('scaleout', scaleout, 3600)
-
             cloudService = strongr.core.domain.clouddomain.CloudDomain.cloudService()
             cloudCommandFactory = strongr.core.domain.clouddomain.CloudDomain.commandFactory()
             cloudProviderName = config.clouddomain.driver

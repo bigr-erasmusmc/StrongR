@@ -3,7 +3,7 @@ from sqlalchemy import and_, func
 from strongr.schedulerdomain.model import Vm, VmState
 from datetime import datetime, timedelta
 
-import logging
+import strongr.core
 
 class CleanupNodesHandler(object):
     def __call__(self, command):
@@ -12,6 +12,7 @@ class CleanupNodesHandler(object):
         cloud_query_factory = strongr.core.domain.clouddomain.CloudDomain.queryFactory()
         cloud_query_bus = strongr.core.domain.clouddomain.CloudDomain.cloudService().getQueryBus()
 
+        vm_templates = strongr.core.Core.config().schedulerdomain.simplescaler.templates.as_dict()
 
         deadline = datetime.now() - timedelta(hours=3) # give cloud domain 3 hours to provision a machine, if it isn't online by then it will probably never be
         session = strongr.core.gateways.Gateways.sqlalchemy_session()
@@ -26,6 +27,18 @@ class CleanupNodesHandler(object):
             else: # vm was never up or manually destroyed
                 vm.state = VmState.DESTROYED
                 session.commit()
+
+
+        # cleanup unsynced / unregistered VM's
+        for template in vm_templates:
+            for vm in vms_in_cloud['up']:
+                if vm not in vms_in_db and vm.startswith(template + '-'):
+                    parallel_remove_list.append(vm)
+
+            for vm in vms_in_cloud['down']:
+                if  vm not in vms_in_db and vm.startswith(template + '-'):
+                    parallel_remove_list.append(vm)
+
 
         if len(parallel_remove_list) > 0:
             command = cloud_command_factory.newDestroyVmsCommand(parallel_remove_list)

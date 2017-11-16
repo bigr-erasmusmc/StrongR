@@ -18,3 +18,4 @@ from .vmnewhandler import VmNewHandler
 from .checkscalinghandler import CheckScalingHandler
 from .requestresourcesrequiredhandler import RequestResourcesRequiredHandler
 from .cleanupnodeshandler import CleanupNodesHandler
+from requestvmsbystatehandler import RequestVmsByStateHandler
