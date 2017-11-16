@@ -42,7 +42,9 @@ class ScaleOutHandler(object):
                 return # max env size reached or no templates defined in config
 
             print(config.schedulerdomain.simplescaler.scaleoutmincoresneeded)
+            print(command.cores)
             print(config.schedulerdomain.simplescaler.scaleoutminramneeded)
+            print(command.ram)
 
             if command.cores <= 0 or command.cores < config.schedulerdomain.simplescaler.scaleoutmincoresneeded:
                 return
