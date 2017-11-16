@@ -19,7 +19,7 @@ class ScaleOutHandler(object):
             session = strongr.core.gateways.Gateways.sqlalchemy_session()
 
             # subquery to see whats already running on vm
-            subquery = session.query(Job.vm_id, func.sum(Job.cores).label('cores'), func.sum(Job.ram).label('ram')).filter(
+            subquery = session.query(Job.vm_id, func.count(Job.job_id).label('jobs'), func.sum(Job.cores).label('cores'), func.sum(Job.ram).label('ram')).filter(
                 Job.state.in_([JobState.RUNNING])).group_by(Job.vm_id).subquery('j')
 
             query = session.query(Vm.vm_id) \
