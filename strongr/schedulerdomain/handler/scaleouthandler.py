@@ -13,6 +13,7 @@ class ScaleOutHandler(object):
             return # only every run one of these commands at once
 
         with strongr.core.gateways.Gateways.lock('scaleout-lock'):  # only ever run one of these commands at once
+            print('asd 1')
             config = strongr.core.Core.config()
             logger = logging.getLogger('schedulerdomain.' + self.__class__.__name__)
 
@@ -21,6 +22,7 @@ class ScaleOutHandler(object):
 
             templates = dict(config.schedulerdomain.simplescaler.templates.as_dict()) # make a copy because we want to manipulate the list
 
+            print('asd 2')
             active_vms = query_bus.handle(query_factory.newRequestVms([VmState.NEW, VmState.PROVISION, VmState.READY]))
 
             for vm in active_vms:
@@ -34,6 +36,7 @@ class ScaleOutHandler(object):
                     else:
                         templates[template]['spawned'] = 1
 
+            print('asd 3')
 
             for template in list(templates): # make copy of list so that we can edit original
                 if 'spawned' in templates[template] and templates[template]['spawned'] >= templates[template]['spawned-max']:
