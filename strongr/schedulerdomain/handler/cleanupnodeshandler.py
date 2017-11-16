@@ -21,8 +21,10 @@ class CleanupNodesHandler(object):
         vms_in_cloud = cloud_query_bus.handle(cloud_query_factory.newListDeployedVms())
 
         parallel_remove_list = []
+        vms_in_db_ids = []
         for vm in vms_in_db:
-            if vm in vms_in_cloud['up'] or vm in vms_in_cloud['down']:
+            vms_in_db_ids.append(vm.vm_id)
+            if vm.vm_id in vms_in_cloud['up'] or vm in vms_in_cloud['down']:
                 parallel_remove_list.append(vm)
             else: # vm was never up or manually destroyed
                 vm.state = VmState.DESTROYED
@@ -32,11 +34,11 @@ class CleanupNodesHandler(object):
         # cleanup unsynced / unregistered VM's
         for template in vm_templates:
             for vm in vms_in_cloud['up']:
-                if vm not in vms_in_db and vm.startswith(template + '-'):
+                if vm not in vms_in_db_ids and vm.startswith(template + '-'):
                     parallel_remove_list.append(vm)
 
             for vm in vms_in_cloud['down']:
-                if  vm not in vms_in_db and vm.startswith(template + '-'):
+                if vm not in vms_in_db_ids and vm.startswith(template + '-'):
                     parallel_remove_list.append(vm)
 
 

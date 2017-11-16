@@ -10,7 +10,6 @@ from strongr.schedulerdomain.model import JobState, Job, Vm, VmState
 
 class ScaleOutHandler(object):
     def __call__(self, command):
-        return # turn off for now
         if strongr.core.gateways.Gateways.lock('scaleout-lock').exists():
             return # only every run one of these commands at once
 
