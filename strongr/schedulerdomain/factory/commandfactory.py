@@ -4,7 +4,7 @@ from strongr.schedulerdomain.command import ScheduleJob, RunEnqueuedJobs,\
                                             EnsureMinAmountOfNodes, ScaleOut,\
                                             JobFinished, VmDestroyed,\
                                             VmReady, VmCreated, VmNew, CheckScaling,\
-                                            CleanupNodes
+                                            CleanupNodes, ScaleIn
 
 from strongr.core.exception import InvalidParameterException
 
@@ -119,6 +119,9 @@ class CommandFactory:
             raise InvalidParameterException('retcode is invalid')
 
         return JobFinished(job_id, ret, retcode)
+
+    def newScaleIn(self):
+        return ScaleIn()
 
     def newScaleOut(self, cores, ram):
         if not cores > 0:

@@ -14,4 +14,4 @@ class TestCommand(Command):
         command_bus = strongr.core.domain.schedulerdomain.SchedulerDomain.schedulerService().getCommandBus()
         command_factory = strongr.core.domain.schedulerdomain.SchedulerDomain.commandFactory()
 
-        command_bus.handle(command_factory.newScaleOut(32, 128))
+        command_bus.handle(command_factory.newScaleIn())

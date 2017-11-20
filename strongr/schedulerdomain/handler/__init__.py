@@ -19,3 +19,4 @@ from .checkscalinghandler import CheckScalingHandler
 from .requestresourcesrequiredhandler import RequestResourcesRequiredHandler
 from .cleanupnodeshandler import CleanupNodesHandler
 from .requestvmsbystatehandler import RequestVmsByStateHandler
+from .scaleinhandler import ScaleInHandler
