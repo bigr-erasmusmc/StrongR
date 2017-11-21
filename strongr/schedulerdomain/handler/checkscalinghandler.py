@@ -13,7 +13,7 @@ class CheckScalingHandler(object):
         from pprint import pprint
         pprint(resources_required)
 
-        if resources_required is None:
+        if resources_required is None or (resources_required['cores'] == 0 and resources_required['ram'] == 0):
             # scalein
             command_bus.handle(command_factory.newScaleIn())
         elif resources_required['cores'] - 16 > 0: # only scaleout if we are 16 cores or more short
