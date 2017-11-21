@@ -9,7 +9,7 @@ class Envelope(celery.Task):
         # register ourselves with celery
         # this way celery knows about this command
         celery_app.tasks.register(self)
-        print('{} ignore result: {}'.format(name, ignore_result))
+        #print('{} ignore result: {}'.format(name, ignore_result))
         self._ignore_result = ignore_result
 
     def run(self, command, *args, **kwargs):

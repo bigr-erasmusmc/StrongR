@@ -6,16 +6,16 @@ from celery import Celery
 
 class RunCeleryCommand(Command):
     """
-    Runs a celery worker.
+    Runs a strongr worker.
 
-    celery:run
+    worker:run
     """
     def handle(self):
         config = strongr.core.Core.config()
         broker = config.celery.broker
         backend = config.celery.backend
 
-        celery = Celery('celery_test', broker=broker, backend=backend)
+        celery = Celery('celery', broker=broker, backend=backend)
 
         scheduler = SchedulerDomain.schedulerService()
         scheduler.getCommandBus() # we need to initiate this so that celery knows where to send its commands

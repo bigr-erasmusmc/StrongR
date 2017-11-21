@@ -3,6 +3,8 @@ from .wrapper import Command
 
 import time
 import schedule
+from celery import Celery
+import strongr.core
 
 class RunResourceManager(Command):
     """
@@ -20,6 +22,12 @@ class RunResourceManager(Command):
         cleanup_nodes = commandFactory.newCleanupNodes()
 
         self.info('Running.')
+
+
+
+        #celery = Celery('celery', broker=strongr.core.Core.config().celery.broker, backend=strongr.core.Core.config().celery.backend)
+        #strongr.core.Core.command_router().enable_route_for_command(celery, command.__module__ + '.' + command.__class__.__name__)
+
 
         schedule.every(1).seconds.do(commandBus.handle, run_enqueued_jobs_command)
         schedule.every(5).seconds.do(commandBus.handle, check_scaling_command)

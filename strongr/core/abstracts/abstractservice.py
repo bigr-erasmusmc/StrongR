@@ -51,7 +51,7 @@ class AbstractService():
         remotable_mappings = []
         for key in mappings.keys():
             handlers[key] = mappings[key].__name__
-            remotable_mappings.append(mappings[key].__module__ + '.' + mappings[key].__name__)
+            remotable_mappings.append(mappings[key].__module__.split('.')[1] + '.' + mappings[key].__name__.lower())
 
         extractor = ClassNameExtractor()
         locator = LazyLoadingInMemoryLocator(handlers)
@@ -64,6 +64,8 @@ class AbstractService():
 
         # this is needed to get remotable (celery) commands working
         # it takes care of routing celery tasks to the appropriate command bus
-        strongr.core.getCore().command_router().append_route(remotable_mappings, bus)
+        strongr.core.Core.command_router().append_route(remotable_mappings, bus)
+        from pprint import pprint
+        pprint(remotable_mappings)
 
         return bus
