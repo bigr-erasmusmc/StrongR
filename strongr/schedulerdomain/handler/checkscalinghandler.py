@@ -10,6 +10,9 @@ class CheckScalingHandler(object):
 
         resources_required = query_bus.handle(query_factory.newRequestResourcesRequired())
 
+        from pprint import pprint
+        pprint(resources_required)
+
         if resources_required is None:
             # scalein
             command_bus.handle(command_factory.newScaleIn())
