@@ -13,11 +13,11 @@ class Envelope(celery.Task):
         self._ignore_result = ignore_result
 
     def run(self, command, *args, **kwargs):
-        core = strongr.core.getCore()
+        core = strongr.core.Core()
 
         command = jsonpickle.decode(command)
 
-        result = core.commandRouter().handle_command(command)
+        result = core.command_router().handle_command(command)
         # ignore return value if flag is true
         # workaround from https://github.com/celery/celery/issues/1904
         if self._ignore_result:
