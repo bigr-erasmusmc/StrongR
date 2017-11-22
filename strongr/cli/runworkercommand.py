@@ -1,3 +1,5 @@
+from celery.signals import worker_process_init
+
 from strongr.core.domain.schedulerdomain import SchedulerDomain
 from .wrapper import Command
 
@@ -37,4 +39,11 @@ class RunWorkerCommand(Command):
             '--loglevel=DEBUG',
             '-Q=' + ','.join(commands)
         ]
+
+        @worker_process_init.connect
+        def fix_multiprocessing(**kwargs):
+            # don't be a daemon, so we can create new subprocesses
+            from multiprocessing import current_process
+            current_process().daemon = False
+            
         celery.worker_main(argv)
