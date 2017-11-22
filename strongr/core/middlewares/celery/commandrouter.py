@@ -10,11 +10,9 @@ class CommandRouter:
             self._routes[name] = commandbus
 
     def handle_command(self, command):
-        name = command.__module__ + '.' + command.__class__.__name__
+        name = command.__module__.split('.')[1] + '.' + command.__class__.__name__.lower()
         if name in self._routes:
             return self._routes[name].handle(command)
-        else:
-            raise Exception('Command invalid!')
 
     def bind_all_routes(self, celery_app):
         for route in self._routes.keys():
@@ -52,7 +50,4 @@ class CommandRouter:
         return self._envelopes[name]
 
     def has_remotable_command_registered(self, name):
-        from pprint import pprint
-        pprint(self._envelopes)
-        pprint(name)
         return name in self._envelopes and name not in self._worker_envelopes
