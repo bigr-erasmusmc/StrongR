@@ -36,13 +36,13 @@ class RunWorkerCommand(Command):
         for command in commands:
             strongr.core.Core.command_router().enable_worker_route_for_command(celery, command)
 
-        workername = '%%h@{}'.format(uuid.uuid4())
+        workername = '%h@{}'.format(uuid.uuid4())
 
         argv = [
             'worker',
             '--loglevel=DEBUG',
             '-Q=' + ','.join(commands),
-            '--pool=eventlet',
+            '--pool=gevent',
             '--concurrency=1',
             '--max-tasks-per-child=1',
             '--loglevel=INFO',
@@ -51,10 +51,10 @@ class RunWorkerCommand(Command):
 
         # crude fix for celery daemonized threads causing salt to fail
         # https://github.com/celery/celery/issues/1709
-        @worker_process_init.connect
-        def fix_multiprocessing(**kwargs):
+        #@worker_process_init.connect
+        #def fix_multiprocessing(**kwargs):
             # don't be a daemon, so we can create new subprocesses
-            from multiprocessing import current_process
-            current_process().daemon = False
+        #    from multiprocessing import current_process
+         #   current_process().daemon = False
 
         celery.worker_main(argv)
