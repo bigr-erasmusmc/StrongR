@@ -13,6 +13,8 @@ class CommandRouter:
         name = command.__module__ + '.' + command.__class__.__name__
         if name in self._routes:
             return self._routes[name].handle(command)
+        else:
+            raise Exception('Command invalid!')
 
     def bind_all_routes(self, celery_app):
         for route in self._routes.keys():
