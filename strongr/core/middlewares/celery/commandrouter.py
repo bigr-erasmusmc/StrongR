@@ -52,4 +52,7 @@ class CommandRouter:
         return self._envelopes[name]
 
     def has_remotable_command_registered(self, name):
+        from pprint import pprint
+        pprint(name)
+        pprint(self._envelopes)
         return name in self._envelopes and name not in self._worker_envelopes
