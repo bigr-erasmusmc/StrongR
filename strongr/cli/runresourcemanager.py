@@ -1,4 +1,5 @@
 from strongr.core.domain.schedulerdomain import SchedulerDomain
+from strongr.core.domain.clouddomain import CloudDomain
 from .wrapper import Command
 
 import time
@@ -16,13 +17,14 @@ class RunResourceManager(Command):
         schedulerService = SchedulerDomain.schedulerService()
         commandFactory = SchedulerDomain.commandFactory()
 
+        CloudDomain.cloudService().start_reactor() # enable salt reactor
+
         commandBus = schedulerService.getCommandBus()
         run_enqueued_jobs_command = commandFactory.newRunEnqueuedJobs()
         check_scaling_command = commandFactory.newCheckScaling()
         cleanup_nodes = commandFactory.newCleanupNodes()
 
         self.info('Running.')
-
 
         celery = Celery('strongr', broker=strongr.core.Core.config().celery.broker, backend=strongr.core.Core.config().celery.backend)
 
