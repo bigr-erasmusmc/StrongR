@@ -32,7 +32,6 @@ class RunWorkerCommand(Command):
         for command in commands:
             strongr.core.Core.command_router().enable_worker_route_for_command(celery, command)
 
-        return
         argv = [
             'worker',
             '--loglevel=DEBUG',
