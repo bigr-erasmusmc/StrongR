@@ -36,13 +36,15 @@ class RunWorkerCommand(Command):
         for command in commands:
             strongr.core.Core.command_router().enable_worker_route_for_command(celery, command)
 
-        workername = '%h@{}'.format(uuid.uuid4())
+        workername = '%%h@{}'.format(uuid.uuid4())
 
         argv = [
             'worker',
             '--loglevel=DEBUG',
             '-Q=' + ','.join(commands),
+            '--pool=solo',
             '--concurrency=1',
+            '--max-tasks-per-child=1',
             '-n {}'.format(workername)
         ]
 
