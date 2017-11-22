@@ -65,7 +65,5 @@ class AbstractService():
         # this is needed to get remotable (celery) commands working
         # it takes care of routing celery tasks to the appropriate command bus
         strongr.core.Core.command_router().append_route(remotable_mappings, bus)
-        from pprint import pprint
-        pprint(remotable_mappings)
 
         return bus

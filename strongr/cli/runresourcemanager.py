@@ -24,10 +24,12 @@ class RunResourceManager(Command):
         self.info('Running.')
 
 
+        celery = Celery('strongr', broker=strongr.core.Core.config().celery.broker, backend=strongr.core.Core.config().celery.backend)
 
-        #celery = Celery('celery', broker=strongr.core.Core.config().celery.broker, backend=strongr.core.Core.config().celery.backend)
-        #strongr.core.Core.command_router().enable_route_for_command(celery, command.__module__ + '.' + command.__class__.__name__)
-
+        remotable_commands = strongr.core.Core.config().celery.remotable_commands.as_dict()
+        for domain in remotable_commands:
+            for command in remotable_commands[domain]:
+                strongr.core.Core.command_router().enable_route_for_command(celery, '{}.{}'.format(domain, command))
 
         schedule.every(1).seconds.do(commandBus.handle, run_enqueued_jobs_command)
         schedule.every(5).seconds.do(commandBus.handle, check_scaling_command)
