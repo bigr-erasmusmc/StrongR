@@ -6,7 +6,8 @@ from strongr.core.domain.schedulerdomain import SchedulerDomain
 from .wrapper import Command
 
 import strongr.core
-from celery import Celery
+from celery import Celery, signals
+
 
 class RunWorkerCommand(Command):
     """
@@ -56,5 +57,9 @@ class RunWorkerCommand(Command):
             # don't be a daemon, so we can create new subprocesses
         #    from multiprocessing import current_process
          #   current_process().daemon = False
+
+        @signals.setup_logging.connect
+        def setup_celery_logging(**kwargs):
+            pass
 
         celery.worker_main(argv)
