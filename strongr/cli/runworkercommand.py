@@ -52,11 +52,11 @@ class RunWorkerCommand(Command):
 
         # crude fix for celery daemonized threads causing salt to fail
         # https://github.com/celery/celery/issues/1709
-        #@worker_process_init.connect
-        #def fix_multiprocessing(**kwargs):
+        @worker_process_init.connect
+        def fix_multiprocessing(**kwargs):
             # don't be a daemon, so we can create new subprocesses
-        #    from multiprocessing import current_process
-         #   current_process().daemon = False
+            from multiprocessing import current_process
+            current_process().daemon = False
 
         @signals.setup_logging.connect
         def setup_celery_logging(**kwargs):
