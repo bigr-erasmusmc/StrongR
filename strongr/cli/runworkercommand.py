@@ -43,9 +43,9 @@ class RunWorkerCommand(Command):
             'worker',
             '--loglevel=DEBUG',
             '-Q=' + ','.join(commands),
-            '--pool=solo',
-            '--concurrency=1',
-            '--max-tasks-per-child=1',
+            #'--pool=solo',
+            #'--concurrency=1',
+            #'--max-tasks-per-child=1',
             '--loglevel=INFO',
             '-n {}'.format(workername)
         ]
