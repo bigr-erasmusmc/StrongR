@@ -8,7 +8,7 @@ class StatsDDriver(AbstractStats):
     def __init__(self, config):
         self._statsd = statsd.StatsClient(**config)
 
-    def decr(self, namespace, amount, rate=None):
+    def decr(self, namespace, amount, rate=1):
         self._statsd.decr(namespace, amount, rate)
 
     def gauge(self, namespace, amount, delta=False):
@@ -23,5 +23,5 @@ class StatsDDriver(AbstractStats):
     def timing(self, namespace, timems):
         self._statsd.timing(namespace, timems)
 
-    def incr(self, namespace, amount, rate=None):
+    def incr(self, namespace, amount, rate=1):
         self._statsd.incr(namespace, amount, rate)
