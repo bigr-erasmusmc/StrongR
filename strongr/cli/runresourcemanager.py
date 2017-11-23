@@ -23,6 +23,7 @@ class RunResourceManager(Command):
         run_enqueued_jobs_command = commandFactory.newRunEnqueuedJobs()
         check_scaling_command = commandFactory.newCheckScaling()
         cleanup_nodes = commandFactory.newCleanupNodes()
+        log_stats = commandFactory.newLogStats()
 
         self.info('Running.')
 
@@ -36,6 +37,7 @@ class RunResourceManager(Command):
         schedule.every(1).seconds.do(commandBus.handle, run_enqueued_jobs_command)
         schedule.every(5).seconds.do(commandBus.handle, check_scaling_command)
         schedule.every(5).minutes.do(commandBus.handle, cleanup_nodes)
+        schedule.every(10).seconds.do(commandBus.handle, log_stats)
 
         while True:
             schedule.run_pending()

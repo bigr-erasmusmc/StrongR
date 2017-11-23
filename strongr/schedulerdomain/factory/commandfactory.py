@@ -4,7 +4,7 @@ from strongr.schedulerdomain.command import ScheduleJob, RunEnqueuedJobs,\
                                             EnsureMinAmountOfNodes, ScaleOut,\
                                             JobFinished, VmDestroyed,\
                                             VmReady, VmCreated, VmNew, CheckScaling,\
-                                            CleanupNodes, ScaleIn
+                                            CleanupNodes, ScaleIn, LogStats
 
 from strongr.core.exception import InvalidParameterException
 
@@ -16,6 +16,10 @@ except NameError:
 
 class CommandFactory:
     """ This factory instantiates command objects to be sent to a scheduler commandbus. """
+
+    def newLogStats(self):
+        """Generates a new LogStats command"""
+        return LogStats()
 
     def newCleanupNodes(self):
         """ Generates a new Cleanupnodes command

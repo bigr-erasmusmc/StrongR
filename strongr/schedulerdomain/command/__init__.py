@@ -14,3 +14,4 @@ from .vmnew import VmNew
 from .checkscaling import CheckScaling
 from .cleanupnodes import CleanupNodes
 from .scalein import ScaleIn
+from .logstats import LogStats
