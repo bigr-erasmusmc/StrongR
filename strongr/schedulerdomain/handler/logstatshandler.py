@@ -7,7 +7,7 @@ from strongr.schedulerdomain.model import Vm, VmState, Job, JobState
 
 class LogStatsHandler(object):
     def __call__(self, command):
-        if strongr.core.Core.config().stats.driver.lower == 'null':
+        if strongr.core.Core.config().stats.driver.lower() == 'null':
             return # skip collecting stats, nulldriver is selected
 
         session = Gateways.sqlalchemy_session()
@@ -19,6 +19,9 @@ class LogStatsHandler(object):
             func.sum(Vm.cores),
             func.sum(Vm.ram)
         ).filter(Vm.state == VmState.READY).all()
+        from pprint import pprint
+        pprint(active_vms)
+        exit(0)
 
         if len(active_vms) > 0:
             active_vms = active_vms[0] # only 1 row is returned
