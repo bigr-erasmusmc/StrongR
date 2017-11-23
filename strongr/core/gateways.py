@@ -16,10 +16,10 @@ from strongr.core.stats.null import Null
 class Gateways(containers.DeclarativeContainer):
     """IoC container of gateway components."""
 
-    _stats_drivers = {
-        "statsd": StatsD,
+    _stats_drivers = providers.Object({
+        "stats": StatsD,
         "null": Null
-    }
+    })
 
     cache = providers.Singleton(get_cache)
     lock = providers.Factory(get_lock)
@@ -30,4 +30,4 @@ class Gateways(containers.DeclarativeContainer):
     sqlalchemy_session = providers.ThreadLocalSingleton(sessionmaker(bind=sqlalchemy_engine()))
     sqlalchemy_base = providers.Singleton(declarative_base)
 
-    stats = providers.ThreadLocalSingleton(_stats_drivers[strongr.core.Core.config().stats.driver], strongr.core.Core.config().stats.config)
+    stats = providers.ThreadLocalSingleton(_stats_drivers()[strongr.core.Core.config().stats.driver], strongr.core.Core.config().stats.config)

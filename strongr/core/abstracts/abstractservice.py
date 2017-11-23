@@ -10,6 +10,7 @@ import strongr.core
 
 from strongr.core.middlewares.celery.celerymiddleware import CeleryMiddleware
 from strongr.core.middlewares.logging.loggingmiddleware import LoggingMiddleware
+from strongr.core.middlewares.stats.statsmiddleware import StatsMiddleware
 
 class AbstractService():
     __metaclass__ = ABCMeta
@@ -36,6 +37,7 @@ class AbstractService():
 
     def _default_middlewares(self, will_return_values):
         return [
+                StatsMiddleware(),
                 LoggingMiddleware(),
                 CeleryMiddleware(will_return_values)
             ]
