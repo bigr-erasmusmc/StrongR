@@ -11,8 +11,8 @@ class StatsDDriver(AbstractStats):
     def decr(self, namespace, amount, rate=1):
         self._statsd.decr(namespace, amount, rate)
 
-    def gauge(self, namespace, amount, delta=False):
-        self._statsd.gauge(namespace, amount, delta)
+    def gauge(self, namespace, amount, rate=1, delta=False):
+        self._statsd.gauge(namespace, amount, rate, delta)
 
     def set(self, namespace, arr):
         self._statsd.set(namespace, arr)

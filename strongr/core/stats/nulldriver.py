@@ -16,7 +16,7 @@ class NullDriver(AbstractStats):
     def decr(self, namespace, amount, rate=None):
         pass
 
-    def gauge(self, namespace, amount, delta=False):
+    def gauge(self, namespace, amount, rate=False, delta=False):
         pass
 
     def set(self, namespace, arr):

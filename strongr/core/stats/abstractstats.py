@@ -25,7 +25,7 @@ class AbstractStats():
         pass
 
     @abstractmethod
-    def gauge(self, namespace, amount, delta=False):
+    def gauge(self, namespace, amount, rate=False, delta=False):
         pass
 
     @abstractmethod
