@@ -20,13 +20,8 @@ class LogStatsHandler(object):
             func.sum(Vm.ram)
         ).filter(Vm.state == VmState.READY).all()
 
-        from pprint import pprint
-
         if len(active_vms) > 0:
             active_vms = active_vms[0] # only 1 row is returned
-            pprint(active_vms)
-            pprint(active_vms[0])
-            exit(0)
             namespace = 'stats.vms.active.'
             stats.gauge(namespace + 'count', active_vms[0] if active_vms[0] is not None else 0)
             stats.gauge(namespace + 'cores', active_vms[1] if active_vms[1] is not None else 0)
