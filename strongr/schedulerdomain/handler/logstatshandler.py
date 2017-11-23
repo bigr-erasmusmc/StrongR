@@ -21,7 +21,7 @@ class LogStatsHandler(object):
         ).filter(Vm.state == VmState.READY).all()
 
         if len(active_vms) > 0:
-            active_vms = active_vms[1] # only 1 row is returned
+            active_vms = active_vms[0] # only 1 row is returned
             namespace = 'stats.vms.active.'
             stats.gauge(namespace + 'count', active_vms[0] if active_vms[0] is not None else 0)
             stats.gauge(namespace + 'cores', active_vms[1] if active_vms[1] is not None else 0)
@@ -35,7 +35,7 @@ class LogStatsHandler(object):
         ).filter(Job.state == JobState.RUNNING).all()
 
         if len(active_jobs) > 0:
-            active_jobs = active_jobs[1] # only 1 row is returned
+            active_jobs = active_jobs[0] # only 1 row is returned
             namespace = 'stats.jobs.running.'
             stats.gauge(namespace + 'count', active_jobs[0] if active_jobs[0] is not None else 0)
             stats.gauge(namespace + 'cores', active_jobs[1] if active_jobs[1] is not None else 0)
@@ -49,7 +49,7 @@ class LogStatsHandler(object):
         ).filter(Job.state == JobState.ENQUEUED).all()
 
         if len(enqueued_jobs) > 0:
-            enqueued_jobs = enqueued_jobs[1]  # only 1 row is returned
+            enqueued_jobs = enqueued_jobs[0]  # only 1 row is returned
             namespace = 'stats.jobs.enqueued.'
             stats.gauge(namespace + 'count', enqueued_jobs[0] if enqueued_jobs[0] is not None else 0)
             stats.gauge(namespace + 'cores', enqueued_jobs[1] if enqueued_jobs[1] is not None else 0)
@@ -61,6 +61,6 @@ class LogStatsHandler(object):
         ).filter(Job.state == JobState.FAILED).all()
 
         if len(failed_jobs) > 0:
-            failed_jobs = failed_jobs[1]  # only 1 row is returned
+            failed_jobs = failed_jobs[0]  # only 1 row is returned
             namespace = 'stats.jobs.failed.'
             stats.gauge(namespace + 'count', failed_jobs[0] if failed_jobs[0] is not None else 0)
