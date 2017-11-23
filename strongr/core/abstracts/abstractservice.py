@@ -37,7 +37,7 @@ class AbstractService():
 
     def _default_middlewares(self, will_return_values):
         return [
-                StatsMiddleware(),
+                StatsMiddleware(strongr.core.gateways.Gateways.stats()),
                 LoggingMiddleware(),
                 CeleryMiddleware(will_return_values)
             ]
