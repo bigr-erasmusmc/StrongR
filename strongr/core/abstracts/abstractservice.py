@@ -35,20 +35,25 @@ class AbstractService():
         """
         pass
 
-    def _default_middlewares(self, will_return_values):
-        return [
-                StatsMiddleware(strongr.core.gateways.Gateways.stats()),
-                LoggingMiddleware(),
-                CeleryMiddleware(will_return_values)
-            ]
+    def _default_middlewares(self, will_return_values, enable_stats=True):
+        middlewares = [
+            LoggingMiddleware(),
+            CeleryMiddleware(will_return_values)
+        ]
 
-    def _make_default_querybus(self, mappings, middlewares=None):
-        return self._make_default_bus(mappings, middlewares, True)
+        if enable_stats:
+            import strongr.core.gateways
+            middlewares.append(StatsMiddleware(strongr.core.gateways.Gateways.stats()))
 
-    def _make_default_commandbus(self, mappings, middlewares=None):
-        return self._make_default_bus(mappings, middlewares, False)
+        return middlewares
 
-    def _make_default_bus(self, mappings, middlewares, will_return_values):
+    def _make_default_querybus(self, mappings, middlewares=None, enable_stats=True):
+        return self._make_default_bus(mappings, middlewares, True, enable_stats)
+
+    def _make_default_commandbus(self, mappings, middlewares=None, enable_stats=True):
+        return self._make_default_bus(mappings, middlewares, False, enable_stats)
+
+    def _make_default_bus(self, mappings, middlewares, will_return_values, enable_stats=True):
         handlers = {}
         remotable_mappings = []
         for key in mappings.keys():
@@ -59,10 +64,10 @@ class AbstractService():
         locator = LazyLoadingInMemoryLocator(handlers)
         inflector = CallableInflector()
         handler = CommandHandler(extractor, locator, inflector)
-        if middlewares != None:
-            bus = CommandBus(middlewares + self._default_middlewares(will_return_values) + [handler])
+        if middlewares is not None:
+            bus = CommandBus(middlewares + self._default_middlewares(will_return_values, enable_stats) + [handler])
         else:
-            bus = CommandBus(self._default_middlewares(will_return_values) + [handler])
+            bus = CommandBus(self._default_middlewares(will_return_values, enable_stats) + [handler])
 
         # this is needed to get remotable (celery) commands working
         # it takes care of routing celery tasks to the appropriate command bus

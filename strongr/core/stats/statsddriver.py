@@ -2,11 +2,11 @@ import statsd
 
 from strongr.core.stats.abstractstats import AbstractStats
 
-class StatsD(AbstractStats):
+class StatsDDriver(AbstractStats):
     _statsd = None
 
     def __init__(self, config):
-        self._statsd = statsd.StatsClient(config)
+        self._statsd = statsd.StatsClient(**config)
 
     def decr(self, namespace, amount, rate=None):
         self._statsd.decr(namespace, amount, rate)
@@ -18,7 +18,7 @@ class StatsD(AbstractStats):
         self._statsd.set(namespace, arr)
 
     def time(self, namespace):
-        return self._statsd.time(namespace)
+        return self._statsd.timer(namespace)
 
     def timing(self, namespace, timems):
         self._statsd.timing(namespace, timems)

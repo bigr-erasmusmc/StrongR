@@ -9,7 +9,10 @@ class NullContextManager:
         pass
 
 
-class Null(AbstractStats):
+class NullDriver(AbstractStats):
+    def __init__(self, *args, **kwargs):
+        pass
+
     def decr(self, namespace, amount, rate=None):
         pass
 

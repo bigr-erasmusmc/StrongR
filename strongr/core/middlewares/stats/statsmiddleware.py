@@ -5,7 +5,7 @@ class StatsMiddleware(Middleware):
         self._stats = stats
 
     def execute(self, command, next_callable):
-        namespace = command.__module__.split('.')[1] + '.' + command.__class__.lower
+        namespace = command.__module__.split('.')[1] + '.' + command.__class__.__name__.lower()
         stats = self._stats
 
         stats.incr(namespace, 1)
