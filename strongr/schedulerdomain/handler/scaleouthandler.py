@@ -23,16 +23,22 @@ class ScaleOutHandler(object):
 
             active_vms = query_bus.handle(query_factory.newRequestVms([VmState.NEW, VmState.PROVISION, VmState.READY]))
 
+            provision_counter = 0
             for vm in active_vms:
                 if vm.state in [VmState.NEW, VmState.PROVISION]:
                     command.cores -= vm.cores
                     command.ram -= vm.ram
+                    provision_counter += 1
                 template = vm.vm_id.split('-')[0]
                 if template in templates:
                     if 'spawned' in templates[template]:
                         templates[template]['spawned'] += 1
                     else:
                         templates[template]['spawned'] = 1
+
+            if provision_counter >= 6:
+                # don't provision more than 6 VM's at the same time
+                return
 
             for template in list(templates): # make copy of list so that we can edit original
                 if 'spawned' in templates[template] and templates[template]['spawned'] >= templates[template]['spawned-max']:
