@@ -52,7 +52,7 @@ class ScaleInHandler(object):
             vms_to_update = []
             mark_for_death_counter = 0
             for vm in results:
-                if vm[1] is None or vm[1] == 0:
+                if (vm[1] is None or vm[1] == 0) and (vm[2] is None or deadline > vm[2]):
                     vms_to_update.append(vm[0])
                 elif deadline > vm[2]:
                     if mark_for_death_counter % 2 == 0:

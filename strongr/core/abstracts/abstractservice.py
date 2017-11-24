@@ -45,6 +45,9 @@ class AbstractService():
             import strongr.core.gateways
             middlewares.append(StatsMiddleware(strongr.core.gateways.Gateways.stats()))
 
+            import strongr.core.middlewares.transaction.transactionmiddleware
+            middlewares.append(strongr.core.middlewares.transaction.transactionmiddleware.TransactionMiddleware())
+
         return middlewares
 
     def _make_default_querybus(self, mappings, middlewares=None, enable_stats=True):
