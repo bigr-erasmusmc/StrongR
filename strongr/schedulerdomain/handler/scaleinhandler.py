@@ -53,8 +53,6 @@ class ScaleInHandler(object):
             mark_for_death_counter = 0
             for vm in results:
                 if (vm[1] is None or vm[1] == 0) and (vm[2] is None or deadline > vm[2]):
-                    from pprint import pprint
-                    pprint(vm)
                     vms_to_update.append(vm[0])
                 elif deadline > vm[2]:
                     if mark_for_death_counter % 2 == 0:
