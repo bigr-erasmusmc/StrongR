@@ -47,7 +47,7 @@ class ScaleInHandler(object):
             if not results:
                 return # no VM's to scalein
 
-            deadline = datetime.now() + timedelta(minutes=-10)
+            deadline = datetime.utcnow() + timedelta(minutes=-10)
 
             vms_to_update = []
             mark_for_death_counter = 0
