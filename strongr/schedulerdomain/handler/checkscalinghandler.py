@@ -16,6 +16,6 @@ class CheckScalingHandler(object):
         if resources_required is None or (resources_required['cores'] == 0 and resources_required['ram'] == 0):
             # scalein
             command_bus.handle(command_factory.newScaleIn())
-        elif resources_required['cores'] - 16 > 0: # only scaleout if we are 16 cores or more short
+        elif resources_required['cores'] > 0: # only scaleout if we are 16 cores or more short
             # scaleout
             command_bus.handle(command_factory.newScaleOut(resources_required['cores'], resources_required['ram']))
