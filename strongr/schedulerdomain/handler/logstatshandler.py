@@ -18,7 +18,7 @@ class LogStatsHandler(object):
             func.count(Vm.vm_id),
             func.sum(Vm.cores),
             func.sum(Vm.ram)
-        ).filter(Vm.state == VmState.READY).all()
+        ).filter(Vm.state.in_([VmState.READY, VmState.MARKED_FOR_DEATH])).all()
 
         if len(active_vms) > 0:
             active_vms = active_vms[0] # only 1 row is returned
