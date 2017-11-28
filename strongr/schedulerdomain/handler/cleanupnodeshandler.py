@@ -40,6 +40,10 @@ class CleanupNodesHandler(object):
                 if vm not in vms_in_db and vm.startswith(template + '-'):
                     parallel_remove_list.append(vm)
 
+        # check for expired VM's
+        expired_vms = session.query(Vm).filter(and_(func.now() > Vm.deadline, Vm.state.in_([VmState.NEW, VmState.PROVISION, VmState.READY]))).all()
+        for vm in expired_vms:
+            parallel_remove_list.append(vm.vm_id)
 
         # check for VM's marked for death without jobs
         subquery = session.query(Job.vm_id,
