@@ -49,7 +49,7 @@ class CleanupNodesHandler(object):
         subquery = session.query(Job.vm_id,
                                  func.count(Job.job_id).label('jobs'))\
                                 .filter(
-                                    Job.state.notin_([JobState.ASSIGNED, JobState.RUNNING])
+                                    Job.state.in_([JobState.ASSIGNED, JobState.RUNNING])
                                 ).group_by(Job.vm_id).subquery('j')
         marked_for_death_vms = session.query(Vm)\
             .outerjoin(subquery, subquery.c.vm_id == Vm.vm_id)\
