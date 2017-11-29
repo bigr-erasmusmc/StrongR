@@ -54,7 +54,6 @@ class CleanupNodesHandler(object):
         for vm in marked_for_death_vms:
             parallel_remove_list.append(vm.vm_id)
 
-
         # check for expired VM's
         expired_vms = session.query(Vm).filter(and_(func.now() > Vm.deadline, Vm.state.in_([VmState.NEW, VmState.PROVISION, VmState.READY]))).all()
         for vm in expired_vms:

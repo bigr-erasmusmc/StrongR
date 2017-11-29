@@ -29,6 +29,3 @@ class TestCommand(Command):
             .outerjoin(subquery, subquery.c.vm_id == Vm.vm_id) \
             .filter(and_(Vm.state == VmState.MARKED_FOR_DEATH, or_(subquery.c.jobs is None, subquery.c.jobs == 0))) \
             .all()
-
-        from pprint import pprint
-        pprint(marked_for_death_vms)

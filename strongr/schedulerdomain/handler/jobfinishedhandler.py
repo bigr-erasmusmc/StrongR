@@ -13,7 +13,7 @@ class JobFinishedHandler(object):
                     Job.stdout: command.ret,
                     Job.return_code: command.retcode
                 },
-                synchronize_session='evaluate'
+                synchronize_session='fetch'
             )
             session.commit()
         except:
