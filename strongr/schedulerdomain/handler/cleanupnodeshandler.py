@@ -40,12 +40,6 @@ class CleanupNodesHandler(object):
                 if vm not in vms_in_db and vm.startswith(template + '-'):
                     parallel_remove_list.append(vm)
 
-        # check for expired VM's
-        expired_vms = session.query(Vm).filter(and_(func.now() > Vm.deadline, Vm.state.in_([VmState.NEW, VmState.PROVISION, VmState.READY]))).all()
-        for vm in expired_vms:
-            vm.state = VmState.MARKED_FOR_DEATH
-        session.commit()
-
         # check for VM's marked for death without jobs
         subquery = session.query(Job.vm_id,
                                  func.count(Job.job_id).label('jobs'))\
@@ -59,6 +53,14 @@ class CleanupNodesHandler(object):
 
         for vm in marked_for_death_vms:
             parallel_remove_list.append(vm.vm_id)
+
+
+        # check for expired VM's
+        expired_vms = session.query(Vm).filter(and_(func.now() > Vm.deadline, Vm.state.in_([VmState.NEW, VmState.PROVISION, VmState.READY]))).all()
+        for vm in expired_vms:
+            vm.state = VmState.MARKED_FOR_DEATH
+        session.commit()
+
 
         if len(parallel_remove_list) > 0:
             command = cloud_command_factory.newDestroyVmsCommand(parallel_remove_list)
