@@ -18,17 +18,20 @@ class CleanupNodesHandler(object):
 
         deadline = datetime.now() - timedelta(minutes=30) # give cloud domain time to provision a machine, if it isn't online by then it will probably never be
         session = strongr.core.gateways.Gateways.sqlalchemy_session()
-        unprovisioned_vms_in_db = session.query(Vm).filter(and_(Vm.state.in_([VmState.NEW, VmState.PROVISION]), Vm.state_date < deadline)).all()
-        vms_in_db = [vm[0] for vm in session.query(Vm.vm_id).filter(and_(Vm.state.in_([VmState.NEW, VmState.PROVISION, VmState.READY]))).all()]
+        unprovisioned_vms_in_db = session.query(Vm).filter(and_(Vm.state.in_([VmState.NEW, VmState.PROVISION]), deadline > Vm.state_date)).all()
         vms_in_cloud = cloud_query_bus.handle(cloud_query_factory.newListDeployedVms())
 
         parallel_remove_list = []
         for vm in unprovisioned_vms_in_db:
             if vm.vm_id in vms_in_cloud['up'] or vm in vms_in_cloud['down']:
-                parallel_remove_list.append(vm)
+                vm.state = VmState.MARKED_FOR_DEATH
             else: # vm was never up or manually destroyed
                 vm.state = VmState.FAILURE
-                session.commit()
+
+        session.commit() # execute update queries
+
+        vms_in_db = [vm[0] for vm in session.query(Vm.vm_id).filter(
+            and_(Vm.state.in_([VmState.NEW, VmState.PROVISION, VmState.READY, VmState.MARKED_FOR_DEATH]))).all()]
 
         # cleanup unsynced / unregistered VM's
         for template in vm_templates:

@@ -22,14 +22,9 @@ class RunEnqueuedJobsHandler:
 
         failed_to_find_vm_count = 0
         for job in jobs:
-            if failed_to_find_vm_count > 1500:
-                # if we weren't able to start last 1500 jobs give up
-                return
-
             # task is not running, let's try to execute it on an available node
             vm_id = queryBus.handle(queryFactory.newFindNodeWithAvailableResources(job.cores, job.ram))
             if vm_id == None:
-                failed_to_find_vm_count += 1
                 continue
 
             commandBus.handle(commandFactory.newStartJobOnVm(vm_id, job.job_id))

@@ -60,10 +60,5 @@ class ScaleInHandler(object):
                     mark_for_death_counter += 1
 
             if len(vms_to_update) > 0:
-                try:
                     session.commit()
                     session.query(Vm).filter(Vm.vm_id.in_(vms_to_update)).update({Vm.state: VmState.MARKED_FOR_DEATH}, synchronize_session='fetch')
-                    session.commit()
-                except Exception as e:
-                    session.rollback()
-                    logger.warning(e)
