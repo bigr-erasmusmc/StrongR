@@ -1,0 +1,2 @@
+class ScaleIn(object):
+    pass

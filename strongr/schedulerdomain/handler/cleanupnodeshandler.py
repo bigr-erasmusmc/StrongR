@@ -44,6 +44,7 @@ class CleanupNodesHandler(object):
                     parallel_remove_list.append(vm)
 
         # check for VM's marked for death without jobs
+        deadline = datetime.utcnow() + timedelta(minutes=-5) # vm's need to be marked for death for at least 5 mins before we clean them up else we run into race conditions
         subquery = session.query(Job.vm_id,
                                  func.count(Job.job_id).label('jobs'))\
                                 .filter(
@@ -51,7 +52,7 @@ class CleanupNodesHandler(object):
                                 ).group_by(Job.vm_id).subquery('j')
         marked_for_death_vms = session.query(Vm)\
             .outerjoin(subquery, subquery.c.vm_id == Vm.vm_id)\
-            .filter(and_(Vm.state == VmState.MARKED_FOR_DEATH, or_(subquery.c.jobs == None, subquery.c.jobs == 0)))\
+            .filter(and_(Vm.state == VmState.MARKED_FOR_DEATH, or_(subquery.c.jobs == None, subquery.c.jobs == 0),  deadline > Vm.state_date))\
             .all()
 
         for vm in marked_for_death_vms:
