@@ -20,7 +20,6 @@ class RunEnqueuedJobsHandler:
 
         jobs = queryBus.handle(queryFactory.newRequestScheduledJobs()) # this query only gives us JobState enqueued and assigned jobs
 
-        failed_to_find_vm_count = 0
         for job in jobs:
             # task is not running, let's try to execute it on an available node
             vm_id = queryBus.handle(queryFactory.newFindNodeWithAvailableResources(job.cores, job.ram))

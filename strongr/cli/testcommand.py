@@ -18,8 +18,9 @@ class TestCommand(Command):
         #command_bus.handle(command_factory.newScaleIn())
 
         # check for VM's marked for death without jobs
-
+        from pprint import pprint
         session = strongr.core.gateways.Gateways.sqlalchemy_session()
+        # check for VM's marked for death without jobs
         subquery = session.query(Job.vm_id,
                                  func.count(Job.job_id).label('jobs')) \
             .filter(
@@ -29,3 +30,5 @@ class TestCommand(Command):
             .outerjoin(subquery, subquery.c.vm_id == Vm.vm_id) \
             .filter(and_(Vm.state == VmState.MARKED_FOR_DEATH, or_(subquery.c.jobs is None, subquery.c.jobs == 0))) \
             .all()
+
+        pprint(marked_for_death_vms)

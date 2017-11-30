@@ -11,4 +11,3 @@ class VmNewHandler(object):
         vm.ram = command.ram
 
         session.add(vm)
-        session.commit()

@@ -16,7 +16,7 @@ class CleanupNodesHandler(object):
 
         vm_templates = strongr.core.Core.config().schedulerdomain.simplescaler.templates.as_dict()
 
-        deadline = datetime.now() - timedelta(minutes=30) # give cloud domain time to provision a machine, if it isn't online by then it will probably never be
+        deadline = datetime.utcnow() - timedelta(minutes=30) # give cloud domain time to provision a machine, if it isn't online by then it will probably never be
         session = strongr.core.gateways.Gateways.sqlalchemy_session()
         unprovisioned_vms_in_db = session.query(Vm).filter(and_(Vm.state.in_([VmState.NEW, VmState.PROVISION]), deadline > Vm.state_date)).all()
         vms_in_cloud = cloud_query_bus.handle(cloud_query_factory.newListDeployedVms())
@@ -63,7 +63,7 @@ class CleanupNodesHandler(object):
             vm.state = VmState.MARKED_FOR_DEATH
         session.commit()
 
-
+        # send vm destroy command to clouddomain
         if len(parallel_remove_list) > 0:
             command = cloud_command_factory.newDestroyVmsCommand(parallel_remove_list)
             cloud_command_bus.handle(command)

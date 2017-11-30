@@ -1,7 +1,6 @@
 from strongr.core.abstracts.abstractservice import AbstractService
 
 from strongr.schedulerdomain.command import ScheduleJob, RunEnqueuedJobs,\
-                                            ClaimResourcesOnNode, ReleaseResourcesOnNode,\
                                             StartJobOnVm, CheckJobRunning, \
                                             EnsureMinAmountOfNodes, ScaleOut, \
                                             JobFinished, VmCreated,\
@@ -9,7 +8,6 @@ from strongr.schedulerdomain.command import ScheduleJob, RunEnqueuedJobs,\
                                             CleanupNodes, ScaleIn, LogStats
 
 from strongr.schedulerdomain.handler import ScheduleJobHandler, RunEnqueuedJobsHandler,\
-                                            ClaimResourcesOnNodeHandler, ReleaseResourcesOnNodeHandler,\
                                             StartJobOnVmHandler, CheckJobRunningHandler,\
                                             EnsureMinAmountOfNodesHandler, ScaleOutHandler, \
                                             RequestFinishedJobsHandler, JobFinishedHandler,\
@@ -38,8 +36,6 @@ class SchedulerService(AbstractService):
             self._command_bus = self._make_default_commandbus({
                         ScheduleJobHandler: ScheduleJob,
                         RunEnqueuedJobsHandler: RunEnqueuedJobs,
-                        ClaimResourcesOnNodeHandler: ClaimResourcesOnNode,
-                        ReleaseResourcesOnNodeHandler: ReleaseResourcesOnNode,
                         StartJobOnVmHandler: StartJobOnVm,
                         CheckJobRunningHandler: CheckJobRunning,
                         EnsureMinAmountOfNodesHandler: EnsureMinAmountOfNodes,
