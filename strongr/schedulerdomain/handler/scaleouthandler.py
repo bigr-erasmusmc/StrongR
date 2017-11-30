@@ -59,7 +59,22 @@ class ScaleOutHandler(object):
             ram_per_core_needed = command.ram / command.cores
 
             # find best fit based on templates
-            template = min(templates, key=lambda key: abs(templates[key]['distance'] - ram_per_core_needed))
+
+            # first we calculate the distance based on optimal mem / core distribution
+            distances = {}
+            for template in templates:
+                distance = abs(templates[template]['distance'] - ram_per_core_needed)
+                if distance not in distances:
+                    distances[distance] = []
+                distances[distance].append(template)
+
+            templates = distances[min(distances)] # get templates with least distance
+
+            # now find the templates with resources that best fit what we need
+            # we simply select the best fitting template with the most resources
+            template = min(templates, key=lambda el: (command.cores - el['cores']) + (command.ram - el['ram']))
+
+            #template = min(templates, key=lambda key: abs(templates[key]['distance'] - ram_per_core_needed))
 
             # scaleout by one instance
             cloudService = strongr.core.domain.clouddomain.CloudDomain.cloudService()
