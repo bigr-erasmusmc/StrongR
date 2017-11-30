@@ -29,23 +29,23 @@ class ScaleOutHandler(object):
                     command.cores -= vm.cores
                     command.ram -= vm.ram
                     provision_counter += 1
-                template = vm.vm_id.split('-')[0]
-                if template in templates:
-                    if 'spawned' in templates[template]:
-                        templates[template]['spawned'] += 1
-                    else:
-                        templates[template]['spawned'] = 1
+                # template = vm.vm_id.split('-')[0]
+                # if template in templates:
+                #     if 'spawned' in templates[template]:
+                #         templates[template]['spawned'] += 1
+                #     else:
+                #         templates[template]['spawned'] = 1
 
             if provision_counter >= 6:
                 # don't provision more than 6 VM's at the same time
                 return
 
-            for template in list(templates): # make copy of list so that we can edit original
-                if 'spawned' in templates[template] and templates[template]['spawned'] >= templates[template]['spawned-max']:
-                    del(templates[template]) # we already have the max amount of vms for this template
+            # for template in list(templates): # make copy of list so that we can edit original
+            #     if 'spawned' in templates[template] and templates[template]['spawned'] >= templates[template]['spawned-max']:
+            #         del(templates[template]) # we already have the max amount of vms for this template
 
-            if not templates:
-                return # max env size reached or no templates defined in config
+            # if not templates:
+            #     return # max env size reached or no templates defined in config
 
             if command.cores <= 0 or command.cores < config.schedulerdomain.simplescaler.scaleoutmincoresneeded:
                 return
