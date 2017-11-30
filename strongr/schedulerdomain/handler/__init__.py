@@ -3,8 +3,6 @@ from .runenqueuedjobshandler import RunEnqueuedJobsHandler
 from .requestscheduledtaskshandler import RequestScheduledTasksHandler
 from .requesttaskinfohandler import RequestTaskInfoHandler
 from .findnodewithavailableresourceshandler import FindNodeWithAvailableResourcesHandler
-from .claimresourcesonnodehandler import ClaimResourcesOnNodeHandler
-from .releaseresourcesonnode import ReleaseResourcesOnNodeHandler
 from .startjobonvmhandler import StartJobOnVmHandler
 from .checkjobrunninghandler import CheckJobRunningHandler
 from .ensureminamountofnodeshandler import EnsureMinAmountOfNodesHandler
