@@ -51,7 +51,7 @@ class CleanupNodesHandler(object):
                                 ).group_by(Job.vm_id).subquery('j')
         marked_for_death_vms = session.query(Vm)\
             .outerjoin(subquery, subquery.c.vm_id == Vm.vm_id)\
-            .filter(and_(Vm.state == VmState.MARKED_FOR_DEATH, or_(subquery.c.jobs is None, subquery.c.jobs == 0)))\
+            .filter(and_(Vm.state == VmState.MARKED_FOR_DEATH, or_(subquery.c.jobs == None, subquery.c.jobs == 0)))\
             .all()
 
         for vm in marked_for_death_vms:
