@@ -68,14 +68,11 @@ class ScaleOutHandler(object):
                     distances[distance] = []
                 distances[distance].append(template)
 
-            templates = distances[min(distances)] # get templates with least distance
-
-            from pprint import pprint
-            pprint(templates)
+            min_distance_templates = distances[min(distances)] # get templates with least distance
 
             # now find the templates with resources that best fit what we need
             # we simply select the best fitting template with the most resources
-            template = min(templates, key=lambda el: (command.cores - el['cores']) + (command.ram - el['ram']))
+            template = min(min_distance_templates, key=lambda key: (command.cores - templates[key]['cores']) + (command.ram - templates[key]['ram']))
 
             #template = min(templates, key=lambda key: abs(templates[key]['distance'] - ram_per_core_needed))
 
