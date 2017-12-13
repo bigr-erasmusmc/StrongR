@@ -19,3 +19,4 @@ from .cleanupnodeshandler import CleanupNodesHandler
 from .requestvmsbystatehandler import RequestVmsByStateHandler
 from .scaleinhandler import ScaleInHandler
 from .logstatshandler import LogStatsHandler
+from .cleanupoldjobs import CleanupOldJobs

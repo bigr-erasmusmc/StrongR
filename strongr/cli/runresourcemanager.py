@@ -19,10 +19,11 @@ class RunResourceManager(Command):
 
         CloudDomain.cloudService().start_reactor() # enable salt reactor
 
-        commandBus = schedulerService.getCommandBus()
+        command_bus = schedulerService.getCommandBus()
         run_enqueued_jobs_command = commandFactory.newRunEnqueuedJobs()
         check_scaling_command = commandFactory.newCheckScaling()
         cleanup_nodes = commandFactory.newCleanupNodes()
+        cleanup_jobs = commandFactory.newCleanupOldJobs()
         log_stats = commandFactory.newLogStats()
 
         self.info('Running.')
@@ -34,10 +35,11 @@ class RunResourceManager(Command):
             for command in remotable_commands[domain]:
                 strongr.core.Core.command_router().enable_route_for_command(celery, '{}.{}'.format(domain, command))
 
-        schedule.every(1).seconds.do(commandBus.handle, run_enqueued_jobs_command)
-        schedule.every(5).seconds.do(commandBus.handle, check_scaling_command)
-        schedule.every(5).minutes.do(commandBus.handle, cleanup_nodes)
-        schedule.every(10).seconds.do(commandBus.handle, log_stats)
+        schedule.every(1).seconds.do(command_bus.handle, run_enqueued_jobs_command)
+        schedule.every(5).seconds.do(command_bus.handle, check_scaling_command)
+        schedule.every(10).seconds.do(command_bus.handle, log_stats)
+        schedule.every(5).minutes.do(command_bus.handle, cleanup_nodes)
+        schedule.every(30).minutes.do(command_bus.handle, cleanup_jobs)
 
         while True:
             schedule.run_pending()

@@ -13,3 +13,4 @@ from .checkscaling import CheckScaling
 from .cleanupnodes import CleanupNodes
 from .scalein import ScaleIn
 from .logstats import LogStats
+from .cleanupoldjobs import CleanupOldJobs

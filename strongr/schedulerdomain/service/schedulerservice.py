@@ -5,7 +5,7 @@ from strongr.schedulerdomain.command import ScheduleJob, RunEnqueuedJobs,\
                                             EnsureMinAmountOfNodes, ScaleOut, \
                                             JobFinished, VmCreated,\
                                             VmReady, VmDestroyed, VmNew, CheckScaling,\
-                                            CleanupNodes, ScaleIn, LogStats
+                                            CleanupNodes, ScaleIn, LogStats, CleanupOldJobs
 
 from strongr.schedulerdomain.handler import ScheduleJobHandler, RunEnqueuedJobsHandler,\
                                             StartJobOnVmHandler, CheckJobRunningHandler,\
@@ -13,7 +13,8 @@ from strongr.schedulerdomain.handler import ScheduleJobHandler, RunEnqueuedJobsH
                                             RequestFinishedJobsHandler, JobFinishedHandler,\
                                             VmDestroyedHandler, VmReadyHandler,\
                                             VmCreatedHandler, VmNewHandler, CheckScalingHandler,\
-                                            CleanupNodesHandler, ScaleInHandler, LogStatsHandler
+                                            CleanupNodesHandler, ScaleInHandler, LogStatsHandler,\
+                                            CleanupOldJobs
 
 from strongr.schedulerdomain.query import RequestScheduledJobs, RequestJobInfo,\
                                             FindNodeWithAvailableResources, RequestFinishedJobs,\
@@ -48,7 +49,8 @@ class SchedulerService(AbstractService):
                         CheckScalingHandler: CheckScaling,
                         CleanupNodesHandler: CleanupNodes,
                         ScaleInHandler: ScaleIn,
-                        LogStatsHandler: LogStats
+                        LogStatsHandler: LogStats,
+                        CleanupNodesHandler: CleanupOldJobs
                     })
         return self._command_bus
 
