@@ -45,8 +45,8 @@ class DefaultsLoader:
             'schedulerdomain': {
                 'driver': 'simplescaler',
                 'simplescaler': {
-                    'scaleoutmincoresneeded': 16,
-                    'scaleoutminramneeded': 16
+                    'scaleoutmincoresneeded': 1,
+                    'scaleoutminramneeded': 1
                 }
             },
             'logger': {

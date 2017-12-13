@@ -13,10 +13,12 @@ class OpenNebula(AbstractCloudService):
 
     def __init__(self, *args, **kwargs):
         super(OpenNebula, self).__init__(*args, **kwargs)
+
+    def start_reactor(self):
         salt_event_translator = strongr.clouddomain.model.gateways.Gateways.salt_event_translator()
         if not salt_event_translator.is_alive():
             salt_event_translator.setDaemon(True)
-            salt_event_translator.start() # start event translator thread if it wasn't running
+            salt_event_translator.start()  # start event translator thread if it wasn't running
 
     def getCommandHandlers(self):
         return [RunShellCodeHandler, DeployVmsHandler, DestroyVmsHandler, JobFinishedHandler]

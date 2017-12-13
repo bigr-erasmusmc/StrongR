@@ -3,8 +3,6 @@ from .runenqueuedjobshandler import RunEnqueuedJobsHandler
 from .requestscheduledtaskshandler import RequestScheduledTasksHandler
 from .requesttaskinfohandler import RequestTaskInfoHandler
 from .findnodewithavailableresourceshandler import FindNodeWithAvailableResourcesHandler
-from .claimresourcesonnodehandler import ClaimResourcesOnNodeHandler
-from .releaseresourcesonnode import ReleaseResourcesOnNodeHandler
 from .startjobonvmhandler import StartJobOnVmHandler
 from .checkjobrunninghandler import CheckJobRunningHandler
 from .ensureminamountofnodeshandler import EnsureMinAmountOfNodesHandler
@@ -16,3 +14,9 @@ from .vmdestroyedhandler import VmDestroyedHandler
 from .vmreadyhandler import VmReadyHandler
 from .vmnewhandler import VmNewHandler
 from .checkscalinghandler import CheckScalingHandler
+from .requestresourcesrequiredhandler import RequestResourcesRequiredHandler
+from .cleanupnodeshandler import CleanupNodesHandler
+from .requestvmsbystatehandler import RequestVmsByStateHandler
+from .scaleinhandler import ScaleInHandler
+from .logstatshandler import LogStatsHandler
+from .cleanupoldjobs import CleanupOldJobs

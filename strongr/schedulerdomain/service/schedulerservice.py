@@ -1,24 +1,28 @@
 from strongr.core.abstracts.abstractservice import AbstractService
 
 from strongr.schedulerdomain.command import ScheduleJob, RunEnqueuedJobs,\
-                                            ClaimResourcesOnNode, ReleaseResourcesOnNode,\
                                             StartJobOnVm, CheckJobRunning, \
                                             EnsureMinAmountOfNodes, ScaleOut, \
                                             JobFinished, VmCreated,\
-                                            VmReady, VmDestroyed, VmNew, CheckScaling
+                                            VmReady, VmDestroyed, VmNew, CheckScaling,\
+                                            CleanupNodes, ScaleIn, LogStats, CleanupOldJobs
 
 from strongr.schedulerdomain.handler import ScheduleJobHandler, RunEnqueuedJobsHandler,\
-                                            ClaimResourcesOnNodeHandler, ReleaseResourcesOnNodeHandler,\
                                             StartJobOnVmHandler, CheckJobRunningHandler,\
                                             EnsureMinAmountOfNodesHandler, ScaleOutHandler, \
                                             RequestFinishedJobsHandler, JobFinishedHandler,\
                                             VmDestroyedHandler, VmReadyHandler,\
-                                            VmCreatedHandler, VmNewHandler, CheckScalingHandler
+                                            VmCreatedHandler, VmNewHandler, CheckScalingHandler,\
+                                            CleanupNodesHandler, ScaleInHandler, LogStatsHandler,\
+                                            CleanupOldJobs
 
 from strongr.schedulerdomain.query import RequestScheduledJobs, RequestJobInfo,\
-                                            FindNodeWithAvailableResources, RequestFinishedJobs
+                                            FindNodeWithAvailableResources, RequestFinishedJobs,\
+                                            RequestResourcesRequired, RequestVmsByState
+
 from strongr.schedulerdomain.handler import RequestScheduledTasksHandler, RequestTaskInfoHandler,\
-                                            FindNodeWithAvailableResourcesHandler
+                                            FindNodeWithAvailableResourcesHandler, RequestResourcesRequiredHandler,\
+                                            RequestVmsByStateHandler
 
 class SchedulerService(AbstractService):
     _command_bus = None
@@ -33,8 +37,6 @@ class SchedulerService(AbstractService):
             self._command_bus = self._make_default_commandbus({
                         ScheduleJobHandler: ScheduleJob,
                         RunEnqueuedJobsHandler: RunEnqueuedJobs,
-                        ClaimResourcesOnNodeHandler: ClaimResourcesOnNode,
-                        ReleaseResourcesOnNodeHandler: ReleaseResourcesOnNode,
                         StartJobOnVmHandler: StartJobOnVm,
                         CheckJobRunningHandler: CheckJobRunning,
                         EnsureMinAmountOfNodesHandler: EnsureMinAmountOfNodes,
@@ -44,7 +46,11 @@ class SchedulerService(AbstractService):
                         VmDestroyedHandler: VmDestroyed,
                         VmReadyHandler: VmReady,
                         VmNewHandler: VmNew,
-                        CheckScalingHandler: CheckScaling
+                        CheckScalingHandler: CheckScaling,
+                        CleanupNodesHandler: CleanupNodes,
+                        ScaleInHandler: ScaleIn,
+                        LogStatsHandler: LogStats,
+                        CleanupNodesHandler: CleanupOldJobs
                     })
         return self._command_bus
 
@@ -54,6 +60,8 @@ class SchedulerService(AbstractService):
                     RequestScheduledTasksHandler: RequestScheduledJobs,
                     RequestTaskInfoHandler: RequestJobInfo,
                     FindNodeWithAvailableResourcesHandler: FindNodeWithAvailableResources,
-                    RequestFinishedJobsHandler: RequestFinishedJobs
+                    RequestFinishedJobsHandler: RequestFinishedJobs,
+                    RequestResourcesRequiredHandler: RequestResourcesRequired,
+                    RequestVmsByStateHandler: RequestVmsByState
                 })
         return self._query_bus

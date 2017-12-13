@@ -10,14 +10,24 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy import engine_from_config
 from sqlalchemy.ext.declarative import declarative_base
 
+from strongr.core.stats.statsddriver import StatsDDriver
+from strongr.core.stats.nulldriver import NullDriver
+
 class Gateways(containers.DeclarativeContainer):
     """IoC container of gateway components."""
+
+    _stats_drivers = providers.Object({
+        "statsd": StatsDDriver,
+        "null": NullDriver
+    })
 
     cache = providers.Singleton(get_cache)
     lock = providers.Factory(get_lock)
 
     redis = providers.Singleton(Redis.from_url, url=strongr.core.Core.config().redis.url)
 
-    sqlalchemy_engine = providers.Singleton(engine_from_config, configuration=strongr.core.Core.config().db.engine.as_dict(), prefix='') # construct engine from config
-    sqlalchemy_session = providers.Singleton(sessionmaker(bind=sqlalchemy_engine()))
+    sqlalchemy_engine = providers.ThreadLocalSingleton(engine_from_config, configuration=strongr.core.Core.config().db.engine.as_dict(), prefix='') # construct engine from config
+    sqlalchemy_session = providers.ThreadLocalSingleton(sessionmaker(bind=sqlalchemy_engine()))
     sqlalchemy_base = providers.Singleton(declarative_base)
+
+    stats = providers.Singleton(_stats_drivers()[strongr.core.Core.config().stats.driver], config=strongr.core.Core.config().stats.config.as_dict())

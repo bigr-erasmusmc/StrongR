@@ -14,4 +14,3 @@ class ScheduleJobHandler:
 
         session = strongr.core.gateways.Gateways.sqlalchemy_session()
         session.add(job)
-        session.commit()

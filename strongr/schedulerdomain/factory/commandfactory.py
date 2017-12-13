@@ -1,9 +1,9 @@
 from strongr.schedulerdomain.command import ScheduleJob, RunEnqueuedJobs,\
-                                            ClaimResourcesOnNode, ReleaseResourcesOnNode,\
                                             StartJobOnVm, CheckJobRunning,\
                                             EnsureMinAmountOfNodes, ScaleOut,\
                                             JobFinished, VmDestroyed,\
-                                            VmReady, VmCreated, VmNew, CheckScaling
+                                            VmReady, VmCreated, VmNew, CheckScaling,\
+                                            CleanupNodes, ScaleIn, LogStats, CleanupOldJobs
 
 from strongr.core.exception import InvalidParameterException
 
@@ -15,6 +15,21 @@ except NameError:
 
 class CommandFactory:
     """ This factory instantiates command objects to be sent to a scheduler commandbus. """
+
+    def newCleanupOldJobs(self):
+        return CleanupOldJobs()
+
+    def newLogStats(self):
+        """Generates a new LogStats command"""
+        return LogStats()
+
+    def newCleanupNodes(self):
+        """ Generates a new Cleanupnodes command
+
+        :return: A CleanupNodes command object
+        :rtype: CleanupNodes
+        """
+        return CleanupNodes()
 
     def newCheckScaling(self):
         """ Generates a new CheckScaling command
@@ -111,6 +126,9 @@ class CommandFactory:
 
         return JobFinished(job_id, ret, retcode)
 
+    def newScaleIn(self):
+        return ScaleIn()
+
     def newScaleOut(self, cores, ram):
         if not cores > 0:
             raise InvalidParameterException('Cores should be higher than 0')
@@ -156,50 +174,6 @@ class CommandFactory:
             raise InvalidParameterException('Taskid invalid')
 
         return ScheduleJob(job_id=job_id, cmd=cmd, cores=cores, ram=ram)
-
-    def newClaimResourcesOnNode(self, node, cores, ram):
-        """ Generates a new ClaimResourcesOnNode command
-
-        :param node: the node name
-        :type node: string
-        :param cores: the amount of cores claimed
-        :type cores: int
-        :param ram: the amount of ram claimed
-        :type ram: int
-
-        :returns: A ClaimResourcesOnNode command object
-        :rtype: ClaimResourcesOnNode
-        """
-        if not len(node) > 0:
-            raise InvalidParameterException('Node is invalid')
-        elif not cores > 0:
-            raise InvalidParameterException('Cores should be higher than 0')
-        elif not ram > 0:
-            raise InvalidParameterException('Ram should be higher than 0')
-
-        return ClaimResourcesOnNode(node=node,cores=cores, ram=ram)
-
-    def newReleaseResourcesOnNode(self, node, cores, ram):
-        """ Generates a new ReleaseResourcesOnNode command
-
-        :param node: the node name
-        :type node: string
-        :param cores: the amount of cores claimed
-        :type cores: int
-        :param ram: the amount of ram claimed
-        :type ram: int
-
-        :returns: A ReleaseResourcesOnNode command object
-        :rtype: ReleaseResourcesOnNode
-        """
-        if not len(node) > 0:
-            raise InvalidParameterException('Node is invalid')
-        elif not cores > 0:
-            raise InvalidParameterException('Cores should be higher than 0')
-        elif not ram > 0:
-            raise InvalidParameterException('Ram should be higher than 0')
-
-        return ReleaseResourcesOnNode(node=node,cores=cores, ram=ram)
 
     def newStartJobOnVm(self, vm_id, job_id):
         """ Generates a new StartJobOnVm command

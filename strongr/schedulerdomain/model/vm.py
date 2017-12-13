@@ -12,6 +12,7 @@ class Vm(Base):
     vm_id = Column(String(64), primary_key=True)
     cores = Column(Integer)
     ram = Column(Integer)
+    deadline = Column(DateTime())
 
     jobs = relationship('Job', back_populates='vm')
 

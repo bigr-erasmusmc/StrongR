@@ -14,11 +14,11 @@ class ConfigService(AbstractService):
         if self._command_bus is None:
             self._command_bus = self._make_default_commandbus({
                     LoadConfigHandler: LoadConfig,
-                    })
+                    }, None, False)
         return self._command_bus
 
     def getQueryBus(self):
         if self._query_bus is None:
             self._query_bus = self._make_default_querybus({
-                })
+                }, None, False)
         return self._query_bus

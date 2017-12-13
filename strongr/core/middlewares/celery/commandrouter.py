@@ -10,7 +10,7 @@ class CommandRouter:
             self._routes[name] = commandbus
 
     def handle_command(self, command):
-        name = command.__module__ + '.' + command.__class__.__name__
+        name = command.__module__.split('.')[1] + '.' + command.__class__.__name__.lower()
         if name in self._routes:
             return self._routes[name].handle(command)
 

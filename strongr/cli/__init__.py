@@ -7,9 +7,11 @@ from .runresourcemanager import RunResourceManager
 from .printconfig import PrintConfig
 from .isvalidusercommand import IsValidUserCommand
 from .runrestservercommand import RunRestServerCommand
-from .runcelerycommand import RunCeleryCommand
+from .runworkercommand import RunWorkerCommand
 from .destroysinglecommand import DestroySingleCommand
 from .destroymanycommand import DestroyManyCommand
 from .ensureminamountofnodescommand import EnsureMinAmountOfNodesCommand
 from .makedbcommand import MakeDbCommand
 from .runtestscommand import RunTestsCommand
+from .testcommand import TestCommand
+from .cleanupcommand import CleanupCommand

@@ -27,9 +27,9 @@ from strongr.cli import DeploySingleCommand, ListDeployedVmsCommand,\
         AddJobCommand, GetFinishedJobsCommand,\
         RunResourceManager, PrintConfig,\
         IsValidUserCommand, RunRestServerCommand,\
-        RunCeleryCommand, DestroySingleCommand,\
+        RunWorkerCommand, DestroySingleCommand,\
         DestroyManyCommand, EnsureMinAmountOfNodesCommand, \
-        MakeDbCommand, RunTestsCommand
+        MakeDbCommand, RunTestsCommand, TestCommand, CleanupCommand
 
 
 application = Application()
@@ -43,12 +43,14 @@ application.add(RunResourceManager())
 application.add(PrintConfig())
 application.add(IsValidUserCommand())
 application.add(RunRestServerCommand())
-application.add(RunCeleryCommand())
+application.add(RunWorkerCommand())
 application.add(DestroySingleCommand())
 application.add(DestroyManyCommand())
 application.add(EnsureMinAmountOfNodesCommand())
 application.add(MakeDbCommand())
 application.add(RunTestsCommand())
+application.add(TestCommand())
+application.add(CleanupCommand())
 
 if __name__ == '__main__':
     application.run(input_=argvInputs)
