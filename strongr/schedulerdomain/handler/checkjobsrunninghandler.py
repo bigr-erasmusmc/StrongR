@@ -24,7 +24,7 @@ class CheckJobsRunningHandler:
 
             status = cloudQueryBus.handle(cloudQueryFactory.newRequestJidStatus(job.job_id))
 
-            if status is None:
+            if status is None or not status:
                 # job not finished yet
                 continue
 
