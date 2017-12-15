@@ -29,4 +29,5 @@ class CheckJobsRunningHandler:
             job.stdout = status[list(status.keys())[0]]
             job.return_code = 0
             job.state = JobState.FINISHED
+            session.add(job)
 
