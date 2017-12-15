@@ -1,5 +1,4 @@
 from functools import wraps
-import flask
 
 # oauth2 lib does not support blueprints so we need a hack
 # https://github.com/lepture/flask-oauthlib/issues/180

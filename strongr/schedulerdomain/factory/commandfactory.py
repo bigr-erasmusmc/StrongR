@@ -1,5 +1,5 @@
 from strongr.schedulerdomain.command import ScheduleJob, RunEnqueuedJobs,\
-                                            StartJobOnVm, CheckJobRunning,\
+                                            StartJobOnVm, CheckJobsRunning,\
                                             EnsureMinAmountOfNodes, ScaleOut,\
                                             JobFinished, VmDestroyed,\
                                             VmReady, VmCreated, VmNew, CheckScaling,\
@@ -193,18 +193,11 @@ class CommandFactory:
 
         return StartJobOnVm(vm_id=vm_id, job_id=job_id)
 
-    def newCheckJobRunning(self, job_id):
-        """ Generates a new CheckJobRunning command
-
-        :param node: the node name
-        :type node: string
-        :param job_id: the taskid to be started
-        :type job_id: string
+    def newCheckJobsRunning(self):
+        """ Generates a new CheckJobsRunning command
 
         :returns: A CheckJobRunning command object
-        :rtype: CheckJobRunning
+        :rtype: CheckJobsRunning
         """
-        if not len(job_id) > 0:
-            raise InvalidParameterException('taskid is invalid')
 
-        return CheckJobRunning(job_id=job_id)
+        return CheckJobsRunning()

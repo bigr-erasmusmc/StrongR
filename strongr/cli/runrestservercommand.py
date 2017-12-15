@@ -1,3 +1,4 @@
+import strongr.core
 from strongr.core.domain.restdomain import RestDomain
 from .wrapper import Command
 from flask import Flask
@@ -9,7 +10,7 @@ class RunRestServerCommand(Command):
     restdomain:startserver
     """
     def handle(self):
-        config = Core.config()
+        config = strongr.core.Core.config()
 
         host = config.restdomain.host
         port = int(config.restdomain.port)
@@ -17,10 +18,10 @@ class RunRestServerCommand(Command):
 
         self.info("Starting server on {}:{} using {}".format(host, port, backend))
 
-        wsgiQueryFactory = RestDomain.wsgiQueryFactory()
-        wsgiQueryBus = RestDomain.wsgiService().getQueryBus()
+        wsgi_query_factory = RestDomain.wsgiQueryFactory()
+        wsgi_query_bus = RestDomain.wsgiService().getQueryBus()
 
-        blueprints = wsgiQueryBus.handle(wsgiQueryFactory.newRetrieveBlueprints())
+        blueprints = wsgi_query_bus.handle(wsgi_query_factory.newRetrieveBlueprints())
 
 
         app = Flask(__name__)

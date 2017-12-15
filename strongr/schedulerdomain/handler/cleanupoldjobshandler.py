@@ -6,7 +6,7 @@ import strongr.core
 from strongr.schedulerdomain.model import Job, JobState
 
 
-class CleanupOldJobs(object):
+class CleanupOldJobsHandler(object):
     def __call__(self, command):
         """
         MySQL:

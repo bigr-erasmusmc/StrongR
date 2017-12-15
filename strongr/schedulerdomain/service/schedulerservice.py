@@ -1,20 +1,20 @@
 from strongr.core.abstracts.abstractservice import AbstractService
 
 from strongr.schedulerdomain.command import ScheduleJob, RunEnqueuedJobs,\
-                                            StartJobOnVm, CheckJobRunning, \
+                                            StartJobOnVm, CheckJobsRunning, \
                                             EnsureMinAmountOfNodes, ScaleOut, \
                                             JobFinished, VmCreated,\
                                             VmReady, VmDestroyed, VmNew, CheckScaling,\
                                             CleanupNodes, ScaleIn, LogStats, CleanupOldJobs
 
 from strongr.schedulerdomain.handler import ScheduleJobHandler, RunEnqueuedJobsHandler,\
-                                            StartJobOnVmHandler, CheckJobRunningHandler,\
+                                            StartJobOnVmHandler, CheckJobsRunningHandler,\
                                             EnsureMinAmountOfNodesHandler, ScaleOutHandler, \
                                             RequestFinishedJobsHandler, JobFinishedHandler,\
                                             VmDestroyedHandler, VmReadyHandler,\
                                             VmCreatedHandler, VmNewHandler, CheckScalingHandler,\
                                             CleanupNodesHandler, ScaleInHandler, LogStatsHandler,\
-                                            CleanupOldJobs
+                                            CleanupOldJobsHandler
 
 from strongr.schedulerdomain.query import RequestScheduledJobs, RequestJobInfo,\
                                             FindNodeWithAvailableResources, RequestFinishedJobs,\
@@ -38,7 +38,7 @@ class SchedulerService(AbstractService):
                         ScheduleJobHandler: ScheduleJob,
                         RunEnqueuedJobsHandler: RunEnqueuedJobs,
                         StartJobOnVmHandler: StartJobOnVm,
-                        CheckJobRunningHandler: CheckJobRunning,
+                        CheckJobsRunningHandler: CheckJobsRunning,
                         EnsureMinAmountOfNodesHandler: EnsureMinAmountOfNodes,
                         ScaleOutHandler: ScaleOut,
                         JobFinishedHandler: JobFinished,

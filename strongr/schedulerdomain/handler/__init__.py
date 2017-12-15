@@ -4,7 +4,7 @@ from .requestscheduledtaskshandler import RequestScheduledTasksHandler
 from .requesttaskinfohandler import RequestTaskInfoHandler
 from .findnodewithavailableresourceshandler import FindNodeWithAvailableResourcesHandler
 from .startjobonvmhandler import StartJobOnVmHandler
-from .checkjobrunninghandler import CheckJobRunningHandler
+from .checkjobsrunninghandler import CheckJobsRunningHandler
 from .ensureminamountofnodeshandler import EnsureMinAmountOfNodesHandler
 from .scaleouthandler import ScaleOutHandler
 from .requestfinishedjobshandler import RequestFinishedJobsHandler
@@ -19,4 +19,4 @@ from .cleanupnodeshandler import CleanupNodesHandler
 from .requestvmsbystatehandler import RequestVmsByStateHandler
 from .scaleinhandler import ScaleInHandler
 from .logstatshandler import LogStatsHandler
-from .cleanupoldjobs import CleanupOldJobs
+from .cleanupoldjobshandler import CleanupOldJobsHandler
