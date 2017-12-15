@@ -19,7 +19,6 @@ class CheckJobsRunningHandler:
         from pprint import pprint
 
         for job in session.query(Job).filter(and_(Job.state == JobState.RUNNING, Job.state_date < deadline)).all():
-            pprint(job)
             cloudQueryBus = strongr.core.domain.clouddomain.CloudDomain.cloudService().getQueryBus()
             cloudQueryFactory = strongr.core.domain.clouddomain.CloudDomain.queryFactory()
 
@@ -28,6 +27,8 @@ class CheckJobsRunningHandler:
             if status is None:
                 # job not finished yet
                 continue
+
+            pprint(status)
 
         exit(0)
 
