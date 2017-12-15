@@ -28,7 +28,13 @@ class CheckJobsRunningHandler:
                 # job not finished yet
                 continue
 
-            pprint(status[job.job_id])
+            print("\n\n\n\nDRAGONS BE HERE!\n\n\n")
+            print("\n\n\n\nDRAGONS BE HERE!\n\n\n")
+            print("\n\n\n\nDRAGONS BE HERE!\n\n\n")
+            pprint(status)
+            print("\n\n\n\nDRAGONS BE HERE!\n\n\n")
+            print("\n\n\n\nDRAGONS BE HERE!\n\n\n")
+            print("\n\n\n\nDRAGONS BE HERE!\n\n\n")
             exit(0)
 
         session.query().filter(Job.job_id==command.job_id).update({Job.state: JobState.FINISHED})
