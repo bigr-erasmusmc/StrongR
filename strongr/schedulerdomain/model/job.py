@@ -21,7 +21,7 @@ class Job(Base):
 
     return_code = Column(Integer)
 
-    _stdout = Column('stdout', LargeBinary) # we should update this to point to a file at some point as it will bloat the database pretty quickly
+    stdout = Column('stdout', LargeBinary) # we should update this to point to a file at some point as it will bloat the database pretty quickly
 
     _state = Column('state', Enum(JobState))
 
@@ -47,14 +47,14 @@ class Job(Base):
 
 
 
-    # use zlib / gzip compression for stdout
-    @property
-    def stdout(self):
-        return zlib.decompress(self._stdout)
-
-    @stdout.setter
-    def stdout(self, value):
-        self._stdout = zlib.compress(value, 9)
-
-    # create a synonym so that _stdout and stdout are considered the same field by the mapper
-    stdout = synonym('_stdout', descriptor=stdout)
+    # # use zlib / gzip compression for stdout
+    # @property
+    # def stdout(self):
+    #     return zlib.decompress(self._stdout)
+    #
+    # @stdout.setter
+    # def stdout(self, value):
+    #     self._stdout = zlib.compress(value, 9)
+    #
+    # # create a synonym so that _stdout and stdout are considered the same field by the mapper
+    # stdout = synonym('_stdout', descriptor=stdout)
