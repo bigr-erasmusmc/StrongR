@@ -26,9 +26,4 @@ class CheckJobsRunningHandler:
                 # job not finished yet
                 continue
 
-            session.add(job)
-            job.stdout = status[list(status.keys())[0]]
-            job.return_code = 0
-            job.state = JobState.FINISHED
-
-        session.commit()
+            session.query(Job).filter(Job.job_id == job.job_id).update({Job.stdout: status[list(status.keys())[0]], Job.return_code: 0, Job.state: JobState.FINISHED}, synchronize_session='evaluate')
