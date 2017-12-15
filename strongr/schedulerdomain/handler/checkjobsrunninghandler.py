@@ -16,8 +16,6 @@ class CheckJobsRunningHandler:
 
         deadline = datetime.utcnow() - timedelta(minutes=15)
 
-        from pprint import pprint
-
         for job in session.query(Job).filter(and_(Job.state == JobState.RUNNING, Job.state_date < deadline)).all():
             cloudQueryBus = strongr.core.domain.clouddomain.CloudDomain.cloudService().getQueryBus()
             cloudQueryFactory = strongr.core.domain.clouddomain.CloudDomain.queryFactory()
@@ -28,14 +26,7 @@ class CheckJobsRunningHandler:
                 # job not finished yet
                 continue
 
-            print("\n\n\n\nDRAGONS BE HERE!\n\n\n")
-            print("\n\n\n\nDRAGONS BE HERE!\n\n\n")
-            print("\n\n\n\nDRAGONS BE HERE!\n\n\n")
-            pprint(status[list(status.keys())[0]])
-            print("\n\n\n\nDRAGONS BE HERE!\n\n\n")
-            print("\n\n\n\nDRAGONS BE HERE!\n\n\n")
-            print("\n\n\n\nDRAGONS BE HERE!\n\n\n")
-            exit(0)
+            job.stdout = status[list(status.keys())[0]]
+            job.return_code = 0
+            job.state = JobState.FINISHED
 
-        session.query().filter(Job.job_id==command.job_id).update({Job.state: JobState.FINISHED})
-        session.commit()
