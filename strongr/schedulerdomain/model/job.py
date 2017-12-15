@@ -1,5 +1,7 @@
+import zlib
+
 import strongr.core.gateways as gateways
-from sqlalchemy import Column, ForeignKey, Integer, String, Enum, Text, DateTime, func
+from sqlalchemy import Column, ForeignKey, Integer, String, Enum, DateTime, func, LargeBinary, Text
 from sqlalchemy.orm import relationship, synonym
 
 from strongr.schedulerdomain.model import JobState
@@ -19,7 +21,7 @@ class Job(Base):
 
     return_code = Column(Integer)
 
-    stdout = Column(Text) # we should update this to point to a file at some point as it will bloat the database pretty quickly
+    _stdout = Column(LargeBinary) # we should update this to point to a file at some point as it will bloat the database pretty quickly
 
     _state = Column('state', Enum(JobState))
 
@@ -42,3 +44,17 @@ class Job(Base):
 
     # create a synonym so that _state and state are considered the same field by the mapper
     state = synonym('_state', descriptor=state)
+
+
+
+    # use zlib / gzip compression for stdout
+    @property
+    def stdout(self):
+        return zlib.decompress(self._stdout)
+
+    @stdout.setter
+    def stdout(self, value):
+        self._stdout = zlib.compress(value, 9)
+
+    # create a synonym so that _stdout and stdout are considered the same field by the mapper
+    stdout = synonym('_stdout', descriptor=stdout)
