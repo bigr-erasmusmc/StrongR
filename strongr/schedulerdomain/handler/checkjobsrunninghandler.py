@@ -31,7 +31,7 @@ class CheckJobsRunningHandler:
             print("\n\n\n\nDRAGONS BE HERE!\n\n\n")
             print("\n\n\n\nDRAGONS BE HERE!\n\n\n")
             print("\n\n\n\nDRAGONS BE HERE!\n\n\n")
-            pprint(status)
+            pprint(status[list(status.keys())[0]])
             print("\n\n\n\nDRAGONS BE HERE!\n\n\n")
             print("\n\n\n\nDRAGONS BE HERE!\n\n\n")
             print("\n\n\n\nDRAGONS BE HERE!\n\n\n")
