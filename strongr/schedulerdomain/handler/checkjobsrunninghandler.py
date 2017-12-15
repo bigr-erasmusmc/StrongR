@@ -29,8 +29,7 @@ class CheckJobsRunningHandler:
                 continue
 
             pprint(status)
-
-        exit(0)
+            exit(0)
 
         session.query().filter(Job.job_id==command.job_id).update({Job.state: JobState.FINISHED})
         session.commit()
