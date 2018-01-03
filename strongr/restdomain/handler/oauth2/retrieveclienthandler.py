@@ -1,3 +1,4 @@
 class RetrieveClientHandler:
     def __call__(self, query):
-        pass
+        from pprint import pprint
+        pprint(query.__dict__)

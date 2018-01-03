@@ -29,7 +29,7 @@ class SchedulerService(AbstractService):
     _query_bus = None
 
     def register_models(self):
-        import strongr.schedulerdomain.model as model
+        import strongr.schedulerdomain.model
         # importing alone is enough for registration
 
     def getCommandBus(self):

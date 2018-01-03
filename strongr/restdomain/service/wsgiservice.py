@@ -7,6 +7,9 @@ class WsgiService(AbstractService):
     _command_bus = None
     _query_bus = None
 
+    def register_models(self):
+        pass
+
     def getCommandBus(self):
         if self._command_bus is None:
             self._command_bus = self._make_default_commandbus({

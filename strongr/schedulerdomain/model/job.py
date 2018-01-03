@@ -1,5 +1,3 @@
-import zlib
-
 import strongr.core.gateways as gateways
 from sqlalchemy import Column, ForeignKey, Integer, String, Enum, DateTime, func, LargeBinary, Text
 from sqlalchemy.orm import relationship, synonym

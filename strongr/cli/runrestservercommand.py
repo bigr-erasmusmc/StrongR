@@ -12,11 +12,9 @@ class RunRestServerCommand(Command):
     def handle(self):
         config = strongr.core.Core.config()
 
-        host = config.restdomain.host
-        port = int(config.restdomain.port)
         backend = config.restdomain.backend.strip().lower()
 
-        self.info("Starting server on {}:{} using {}".format(host, port, backend))
+        self.info("Starting server using {}".format(backend))
 
         wsgi_query_factory = RestDomain.wsgiQueryFactory()
         wsgi_query_bus = RestDomain.wsgiService().getQueryBus()
