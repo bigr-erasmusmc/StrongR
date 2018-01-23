@@ -26,7 +26,7 @@ class DeploySingleCommand(Command):
         cloudProviderName = Core.config().clouddomain.driver
 
         profile = getattr(Core.config().clouddomain, cloudProviderName).default_profile
-        deployVmsCommand = commandFactory.newDeployVmsCommand(names=[name], profile=profile, cores=cores, ram = ram)
+        deployVmsCommand = commandFactory.newDeployVms(names=[name], profile=profile, cores=cores, ram = ram)
 
         commandBus = cloudService.getCommandBus()
 

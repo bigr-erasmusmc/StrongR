@@ -4,6 +4,8 @@ from strongr.schedulerdomain.model import Vm, VmState, Job, JobState
 from datetime import datetime, timedelta
 
 import strongr.core
+from strongr.schedulerdomain.model.scalingdrivers import ScalingDriver
+
 
 class CleanupNodesHandler(object):
     def __call__(self, command):
@@ -14,7 +16,7 @@ class CleanupNodesHandler(object):
         cloud_query_factory = strongr.core.domain.clouddomain.CloudDomain.queryFactory()
         cloud_query_bus = strongr.core.domain.clouddomain.CloudDomain.cloudService().getQueryBus()
 
-        vm_templates = strongr.core.Core.config().schedulerdomain.simplescaler.templates.as_dict()
+        vm_templates = ScalingDriver.scaling_driver().get_templates()
 
         deadline = datetime.utcnow() - timedelta(minutes=30) # give cloud domain time to provision a machine, if it isn't online by then it will probably never be
         session = strongr.core.gateways.Gateways.sqlalchemy_session()
@@ -66,5 +68,5 @@ class CleanupNodesHandler(object):
 
         # send vm destroy command to clouddomain
         if len(parallel_remove_list) > 0:
-            command = cloud_command_factory.newDestroyVmsCommand(parallel_remove_list)
+            command = cloud_command_factory.newDestroyVms(parallel_remove_list)
             cloud_command_bus.handle(command)

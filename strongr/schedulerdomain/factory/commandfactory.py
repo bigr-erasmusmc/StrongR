@@ -148,32 +148,43 @@ class CommandFactory:
         """
         return RunEnqueuedJobs()
 
-    def newScheduleJobCommand(self, job_id, cmd, cores, ram):
+    def newScheduleJobCommand(self, image, script, job_id, scratch, cores, memory):
         """ Generates a new ScheduleTask command
 
-        :param job_id: the jobs id (max 32 characters)
-        :param cmd: The shellcode to be run
-        :param cores: The amount of cores in the VM
-        :param ram: The amount of RAM in GiB in the VM
+        :param image: the docker image used for running the job
+        :type image: string
 
+        :param script: a list of strings with shellcode
+        :type script: list
+
+        :param job_id: the jobs id (max 32 characters)
         :type job_id: string
-        :type cmd: string
+
+        :param scratch: should a scratch volume be mounted?
+        :type scratch: bool
+
+        :param cores: The amount of cores in the VM
         :type cores: int
+
+        :param ram: The amount of RAM in GiB in the VM
         :type ram: int
 
-        :returns: A DeployVm command object
-        :rtype: DeployVm
+        :returns: A ScheduleJob command object
+        :rtype: ScheduleJob
         """
-        if not len(cmd) > 0:
-            raise InvalidParameterException('Cmd {0} is invalid'.format(cmd))
-        elif not cores > 0:
-            raise InvalidParameterException('Cores should be higher than 0')
-        elif not ram > 0:
-            raise InvalidParameterException('Ram should be higher than 0')
-        elif not len(job_id) > 0:
-            raise InvalidParameterException('Taskid invalid')
 
-        return ScheduleJob(job_id=job_id, cmd=cmd, cores=cores, ram=ram)
+        if not len(image) > 0:
+            raise InvalidParameterException('image is invalid')
+        elif not len(script) > 0:
+            raise InvalidParameterException('script is invalid')
+        elif not len(job_id) > 0:
+            raise InvalidParameterException('job_id is invalid')
+        elif cores <= 0:
+            raise InvalidParameterException('cores is invalid')
+        elif memory <= 0:
+            raise InvalidParameterException('memory is invalid')
+
+        return ScheduleJob(image=image, script=script, job_id=job_id, scratch=scratch, cores=cores, memory=memory)
 
     def newStartJobOnVm(self, vm_id, job_id):
         """ Generates a new StartJobOnVm command

@@ -17,7 +17,7 @@ class RunResourceManager(Command):
         schedulerService = SchedulerDomain.schedulerService()
         commandFactory = SchedulerDomain.commandFactory()
 
-        CloudDomain.cloudService().start_reactor() # enable salt reactor
+        #CloudDomain.cloudService().start_reactor() # enable salt reactor
 
         command_bus = schedulerService.getCommandBus()
         run_enqueued_jobs_command = commandFactory.newRunEnqueuedJobs()
@@ -26,14 +26,20 @@ class RunResourceManager(Command):
         cleanup_jobs = commandFactory.newCleanupOldJobs()
         log_stats = commandFactory.newLogStats()
 
+        CloudDomain.cloudService() # init clouddomain
+
         self.info('Running.')
 
-        celery = Celery('strongr', broker=strongr.core.Core.config().celery.broker, backend=strongr.core.Core.config().celery.backend)
 
-        remotable_commands = strongr.core.Core.config().celery.remotable_commands.as_dict()
-        for domain in remotable_commands:
-            for command in remotable_commands[domain]:
-                strongr.core.Core.command_router().enable_route_for_command(celery, '{}.{}'.format(domain, command))
+        if hasattr(strongr.core.Core.config(), 'celery'): # don't load celery if it's not configured
+            celery = Celery('strongr', broker=strongr.core.Core.config().celery.broker, backend=strongr.core.Core.config().celery.backend)
+
+            remotable_commands = strongr.core.Core.config().celery.remotable_commands.as_dict()
+            for domain in remotable_commands:
+                for command in remotable_commands[domain]:
+                    strongr.core.Core.command_router().enable_route_for_command(celery, '{}.{}'.format(domain, command))
+        else:
+            self.info('Celery not configured, skipping')
 
         schedule.every(1).seconds.do(command_bus.handle, run_enqueued_jobs_command)
         schedule.every(5).seconds.do(command_bus.handle, check_scaling_command)

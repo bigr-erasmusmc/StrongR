@@ -15,5 +15,5 @@ class StartJobOnVmHandler:
         cloudCommandBus = strongr.core.domain.clouddomain.CloudDomain.cloudService().getCommandBus()
         cloudCommandFactory = strongr.core.domain.clouddomain.CloudDomain.commandFactory()
 
-        cloudCommandBus.handle(cloudCommandFactory.newRunShellCodeCommand(job_id=job.job_id, sh=job.cmd, host=job.vm_id))
+        cloudCommandBus.handle(cloudCommandFactory.newRunJob(host=command.vm_id, image=job.image, script=job.script.splitlines(), job_id=job.job_id, scratch=job.scratch, cores=job.cores, memory=job.ram))
 

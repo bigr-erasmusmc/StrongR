@@ -1,5 +1,5 @@
 import strongr.core.gateways as gateways
-from sqlalchemy import Column, ForeignKey, Integer, String, Enum, DateTime, func, LargeBinary, Text
+from sqlalchemy import Column, ForeignKey, Integer, String, Enum, DateTime, func, LargeBinary, Text, Boolean
 from sqlalchemy.orm import relationship, synonym
 
 from strongr.schedulerdomain.model import JobState
@@ -12,7 +12,9 @@ class Job(Base):
     job_id = Column(String(64), primary_key=True)
     cores = Column(Integer)
     ram = Column(Integer)
-    cmd = Column(Text)
+    script = Column(Text)
+    image = Column(Text)
+    scratch = Column(Boolean)
 
     vm_id = Column(String(255), ForeignKey('vms.vm_id'))
     vm = relationship('Vm', back_populates='jobs')

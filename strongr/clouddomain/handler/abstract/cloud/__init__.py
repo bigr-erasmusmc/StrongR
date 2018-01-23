@@ -2,7 +2,7 @@ from .callablecommandhandler import CallableCommandHandler
 from .abstractdeployvmhandler import AbstractDeployVmHandler
 from .abstractdeployvmshandler import AbstractDeployVmsHandler
 from .abstractlistdeployedvmshandler import AbstractListDeployedVmsHandler
-from .abstractrunshellcodehandler import AbstractRunShellCodeHandler
+from .abstractrunjobhandler import AbstractRunJobHandler
 from .abstractrequestjidstatushandler import AbstractRequestJidStatusHandler
 from .abstractdestroyvmshandler import AbstractDestroyVmsHandler
 from .abstractjobfinishedhandler import AbstractJobFinishedHandler

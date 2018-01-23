@@ -50,7 +50,7 @@ class SchedulerService(AbstractService):
                         CleanupNodesHandler: CleanupNodes,
                         ScaleInHandler: ScaleIn,
                         LogStatsHandler: LogStats,
-                        CleanupNodesHandler: CleanupOldJobs
+                        CleanupOldJobsHandler: CleanupOldJobs
                     })
         return self._command_bus
 

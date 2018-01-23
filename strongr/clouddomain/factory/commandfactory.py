@@ -1,4 +1,4 @@
-from strongr.clouddomain.command import DeployVms, RunShellCode, DestroyVms, JobFinished
+from strongr.clouddomain.command import DeployVms, RunJob, DestroyVms, JobFinished
 
 from strongr.core.exception import InvalidParameterException
 
@@ -29,7 +29,7 @@ class CommandFactory:
 
         return JobFinished(job_id, ret, retcode)
 
-    def newDestroyVmsCommand(self, names):
+    def newDestroyVms(self, names):
         """ Generates a new DestroyVm command
 
         :param name: The name of the VM to be destroyed
@@ -43,7 +43,7 @@ class CommandFactory:
 
         return DestroyVms(names=names)
 
-    def newDeployVmsCommand(self, names, profile, cores, ram):
+    def newDeployVms(self, names, profile, cores, ram):
         """ Generates a new DeployVms command
 
         :param names: A list of names
@@ -76,22 +76,39 @@ class CommandFactory:
 
         return DeployVms(names, profile, cores, ram)
 
-    def newRunShellCodeCommand(self, job_id, sh, host):
+    def newRunJob(self, host, image, script, job_id, scratch, cores, memory):
         """ Generates a new RunShellCode command
 
-        :param sh: runShellCode
-        :type sh: string
-        :param host: The hostname where the shellcode should be executed or '*' to execute on all hosts
+        :param host: where host where te command should be ran
         :type host: string
+        :param image: the docker image the script should run under
+        :type image: string
+        :param script: array of strings, the shellcode to be ran in the docker container
+        :type script: list
+        :param job_id: the name of the job to be used
+        :type job_id: string
+        :param scratch: should a scratch be mounted?
+        :type scratch: bool
+        :param cores: how many cores for this job?
+        :type cores: int
+        :param memory: how much memory for this job?
+        :type memory: int
 
-        :returns: A new RunShellCode command object
-        :rtype: RunShellCodeCommand
+        :returns: A new RunJob command object
+        :rtype: RunJob
         """
+
         if not len(host) > 0:
-            raise InvalidParameterException('Host {0} is invalid'.format(host))
+            raise InvalidParameterException('host is invalid')
+        elif not len(image) > 0:
+            raise InvalidParameterException('image is invalid')
+        elif not len(script) > 0:
+            raise InvalidParameterException('script is invalid')
         elif not len(job_id) > 0:
             raise InvalidParameterException('job_id is invalid')
-        elif not len(sh) > 0:
-            raise InvalidParameterException('Shellcode {0} is invalid'.format(sh))
+        elif cores <= 0:
+            raise InvalidParameterException('cores is invalid')
+        elif memory <= 0:
+            raise InvalidParameterException('memory is invalid')
 
-        return RunShellCode(job_id=job_id, sh=sh, host=host)
+        return RunJob(host=host, image=image, script=script, job_id=job_id, scratch=scratch, cores=cores, memory=memory)

@@ -4,5 +4,5 @@ class AbstractScaleIn(object):
     __metaclass__ = ABCMeta
 
     @abstractmethod
-    def scalein(self):
+    def scalein(self, command):
         pass

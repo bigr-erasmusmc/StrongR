@@ -15,7 +15,7 @@ class DestroyManyCommand(Command):
 
         machines = self.argument('machines')
 
-        destroyVmsCommand = commandFactory.newDestroyVmsCommand(names=machines)
+        destroyVmsCommand = commandFactory.newDestroyVms(names=machines)
 
         commandBus = cloudService.getCommandBus()
 

@@ -1,5 +1,5 @@
 from strongr.clouddomain.handler.impl.cloud.opennebula import ListDeployedVmsHandler, \
-    RunShellCodeHandler, DeployVmsHandler, \
+    RunJobHandler, DeployVmsHandler, \
     RequestJidStatusHandler, DestroyVmsHandler, \
     JobFinishedHandler
 
@@ -20,8 +20,8 @@ class OpenNebula(AbstractCloudService):
             salt_event_translator.setDaemon(True)
             salt_event_translator.start()  # start event translator thread if it wasn't running
 
-    def getCommandHandlers(self):
-        return [RunShellCodeHandler, DeployVmsHandler, DestroyVmsHandler, JobFinishedHandler]
+    def get_command_handlers(self):
+        return [RunJobHandler, DeployVmsHandler, DestroyVmsHandler, JobFinishedHandler]
 
-    def getQueryHandlers(self):
+    def get_query_handlers(self):
         return [ListDeployedVmsHandler, RequestJidStatusHandler]

@@ -14,7 +14,7 @@ class DestroySingleCommand(Command):
         commandFactory = CloudDomain.commandFactory()
 
         machine = self.argument('machine')
-        destroyVmsCommand = commandFactory.newDestroyVmsCommand(names=[machine])
+        destroyVmsCommand = commandFactory.newDestroyVms(names=[machine])
 
         commandBus = cloudService.getCommandBus()
 

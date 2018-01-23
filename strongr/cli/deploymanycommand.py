@@ -31,7 +31,7 @@ class DeployManyCommand(Command):
         cloudProviderName = Core.config().clouddomain.driver
 
         profile = getattr(Core.config().clouddomain, cloudProviderName).default_profile
-        deployVms = commandFactory.newDeployVmsCommand(names=deployVmNameList, profile=profile, cores=cores, ram=ram)
+        deployVms = commandFactory.newDeployVms(names=deployVmNameList, profile=profile, cores=cores, ram=ram)
         commandBus = cloudService.getCommandBus()
 
         self.info('Deploying {0} VM\'s with cores={1} ram={2}GiB'.format(len(deployVmNameList), cores, ram))

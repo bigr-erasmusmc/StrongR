@@ -43,7 +43,7 @@ class EnsureMinAmountOfNodesHandler(object):
                 for i in range(0, machines_needed[machine]):
                     names.append(machine + '-' + str(uuid.uuid4()))
 
-                deployVmsCommand = commandFactory.newDeployVmsCommand(names=names, profile=profile, cores=templates[machine]['cores'], ram=templates[machine]['ram'])
+                deployVmsCommand = commandFactory.newDeployVms(names=names, profile=profile, cores=templates[machine]['cores'], ram=templates[machine]['ram'])
 
                 commandBus = cloudService.getCommandBus()
 

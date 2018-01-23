@@ -24,10 +24,10 @@ class Gateways(containers.DeclarativeContainer):
     cache = providers.Singleton(get_cache)
     lock = providers.Factory(get_lock)
 
-    redis = providers.Singleton(Redis.from_url, url=strongr.core.Core.config().redis.url)
+    redis = providers.Singleton(Redis.from_url, url=(strongr.core.Core.config().redis.url if hasattr(strongr.core.Core.config(),'redis') else ''))
 
     sqlalchemy_engine = providers.ThreadLocalSingleton(engine_from_config, configuration=strongr.core.Core.config().db.engine.as_dict(), prefix='') # construct engine from config
     sqlalchemy_session = providers.ThreadLocalSingleton(sessionmaker(bind=sqlalchemy_engine()))
     sqlalchemy_base = providers.Singleton(declarative_base)
 
-    stats = providers.Singleton(_stats_drivers()[strongr.core.Core.config().stats.driver], config=strongr.core.Core.config().stats.config.as_dict())
+    stats = providers.Singleton(_stats_drivers()[strongr.core.Core.config().stats.driver], config=(strongr.core.Core.config().stats.config.as_dict() if hasattr(strongr.core.Core.config().stats, 'config') else {}))

@@ -1,2 +1,0 @@
-class ScaleIn(object):
-    pass

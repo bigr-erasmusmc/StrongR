@@ -7,10 +7,10 @@ from cmndr.handlers.locators import LazyLoadingInMemoryLocator
 from cmndr.handlers.nameextractors import ClassNameExtractor
 
 from strongr.clouddomain.handler.abstract.cloud import AbstractDestroyVmsHandler, AbstractDeployVmsHandler, \
-                                                        AbstractListDeployedVmsHandler, AbstractRunShellCodeHandler,\
+                                                        AbstractListDeployedVmsHandler, AbstractRunJobHandler,\
                                                         AbstractRequestJidStatusHandler, AbstractJobFinishedHandler
 
-from strongr.clouddomain.command import DestroyVms, DeployVms, RunShellCode, JobFinished
+from strongr.clouddomain.command import DestroyVms, DeployVms, RunJob, JobFinished
 from strongr.clouddomain.query import ListDeployedVms, RequestJidStatus
 
 import strongr.clouddomain.model.gateways as gateways
@@ -24,7 +24,7 @@ class AbstractCloudService():
 
     _mappings = {
         AbstractListDeployedVmsHandler: ListDeployedVms.__name__,
-        AbstractRunShellCodeHandler: RunShellCode.__name__,
+        AbstractRunJobHandler: RunJob.__name__,
         AbstractDeployVmsHandler: DeployVms.__name__,
         AbstractRequestJidStatusHandler: RequestJidStatus.__name__,
         AbstractDestroyVmsHandler: DestroyVms.__name__,
@@ -33,10 +33,10 @@ class AbstractCloudService():
 
     def __init__(self):
         # map commands and handlers
-        for handler in self.getCommandHandlers():
+        for handler in self.get_command_handlers():
             command = self._getCommandForHandler(handler)
             self._commands[handler] = command
-        for handler in self.getQueryHandlers():
+        for handler in self.get_query_handlers():
             command = self._getCommandForHandler(handler)
             self._queries[handler] = command
 
@@ -56,11 +56,11 @@ class AbstractCloudService():
 
 
     @abstractmethod
-    def getCommandHandlers(self):
+    def get_command_handlers(self):
         return
 
     @abstractmethod
-    def getQueryHandlers(self):
+    def get_query_handlers(self):
         pass
 
     def _getCommandForHandler(self, handler):

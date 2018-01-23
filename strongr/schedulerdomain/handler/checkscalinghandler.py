@@ -10,12 +10,9 @@ class CheckScalingHandler(object):
 
         resources_required = query_bus.handle(query_factory.newRequestResourcesRequired())
 
-        from pprint import pprint
-        pprint(resources_required)
-
         if resources_required is None or (resources_required['cores'] == 0 and resources_required['ram'] == 0):
             # scalein
             command_bus.handle(command_factory.newScaleIn())
-        elif resources_required['cores'] > 0: # only scaleout if we are 16 cores or more short
+        elif resources_required['cores'] > 0:
             # scaleout
             command_bus.handle(command_factory.newScaleOut(resources_required['cores'], resources_required['ram']))

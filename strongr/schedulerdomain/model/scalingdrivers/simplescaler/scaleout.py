@@ -1,2 +1,0 @@
-class ScaleOut(object):
-    pass

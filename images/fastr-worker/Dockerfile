@@ -1,8 +1,9 @@
-FROM alpine:3.6
+FROM ubuntu:16.04
 MAINTAINER Thomas Phil <thomas@tphil.nl>
 
-RUN apk add --no-cache python2 python2-dev build-base
+ARG FASTRVERSION=develop
+ENV FASTRVERSION ${FASTRVERSION}
+RUN export DEBIAN_FRONTED=noninteractive
+RUN apt-get update && apt-get install -y python python-pip && pip install fastr==$FASTRVERSION
 
-RUN python2 -m ensurepip && pip install fastr
-
-RUN apk del unzip build-base python2-dev
+ENTRYPOINT '/bin/bash'
