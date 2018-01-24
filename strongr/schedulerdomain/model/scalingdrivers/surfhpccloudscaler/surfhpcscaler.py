@@ -26,7 +26,7 @@ class SurfHpcScaler(AbstractScaleIn, AbstractScaleOut, AbstractVmTemplateRetriev
         return deadline
 
     def get_templates(self):
-        return self._config.templates
+        return self._config['templates']
 
     def scalein(self, command):
         if strongr.core.gateways.Gateways.lock('scaleout-lock').exists():
@@ -89,7 +89,7 @@ class SurfHpcScaler(AbstractScaleIn, AbstractScaleOut, AbstractVmTemplateRetriev
             query_factory = strongr.core.domain.schedulerdomain.SchedulerDomain.queryFactory()
             query_bus = strongr.core.domain.schedulerdomain.SchedulerDomain.schedulerService().getQueryBus()
 
-            templates = dict(config.templates) # make a copy because we want to manipulate the list
+            templates = dict(config['templates']) # make a copy because we want to manipulate the list
 
             active_vms = query_bus.handle(query_factory.newRequestVms([VmState.NEW, VmState.PROVISION, VmState.READY]))
 
@@ -128,7 +128,7 @@ class SurfHpcScaler(AbstractScaleIn, AbstractScaleOut, AbstractVmTemplateRetriev
             # scaleout by one instance
             cloudService = strongr.core.domain.clouddomain.CloudDomain.cloudService()
             cloudCommandFactory = strongr.core.domain.clouddomain.CloudDomain.commandFactory()
-            profile = config.default_profile if 'profile' not in templates[template] else templates[template]['profile']
+            profile = config['default_profile'] if 'profile' not in templates[template] else templates[template]['profile']
             deployVmsCommand = cloudCommandFactory.newDeployVms(names=[template + '-' + str(uuid.uuid4())], profile=profile, cores=templates[template]['cores'], ram=templates[template]['ram'])
 
             cloudCommandBus = cloudService.getCommandBus()
