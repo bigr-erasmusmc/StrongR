@@ -26,7 +26,7 @@ class SurfHpcScaler(AbstractScaleIn, AbstractScaleOut, AbstractVmTemplateRetriev
         return deadline
 
     def get_templates(self):
-        return self._config.schedulerdomain.surfhpcscaler.templates.as_dict()
+        return self._config.templates.as_dict()
 
     def scalein(self, command):
         if strongr.core.gateways.Gateways.lock('scaleout-lock').exists():
@@ -89,7 +89,7 @@ class SurfHpcScaler(AbstractScaleIn, AbstractScaleOut, AbstractVmTemplateRetriev
             query_factory = strongr.core.domain.schedulerdomain.SchedulerDomain.queryFactory()
             query_bus = strongr.core.domain.schedulerdomain.SchedulerDomain.schedulerService().getQueryBus()
 
-            templates = dict(config.schedulerdomain.simplescaler.templates.as_dict()) # make a copy because we want to manipulate the list
+            templates = dict(config.templates.as_dict()) # make a copy because we want to manipulate the list
 
             active_vms = query_bus.handle(query_factory.newRequestVms([VmState.NEW, VmState.PROVISION, VmState.READY]))
 
@@ -102,12 +102,6 @@ class SurfHpcScaler(AbstractScaleIn, AbstractScaleOut, AbstractVmTemplateRetriev
 
             if provision_counter >= 2:
                 # don't provision more than 2 VM's at the same time
-                return
-
-            if cores <= 0 or cores < config.schedulerdomain.surfhpcscaler.scaleoutmincoresneeded:
-                return
-
-            if ram <= 0 or ram < config.schedulerdomain.surfhpcscaler.scaleoutminramneeded:
                 return
 
             for template in templates:
@@ -134,8 +128,7 @@ class SurfHpcScaler(AbstractScaleIn, AbstractScaleOut, AbstractVmTemplateRetriev
             # scaleout by one instance
             cloudService = strongr.core.domain.clouddomain.CloudDomain.cloudService()
             cloudCommandFactory = strongr.core.domain.clouddomain.CloudDomain.commandFactory()
-            cloudProviderName = config.clouddomain.driver
-            profile = getattr(config.clouddomain, cloudProviderName).default_profile if 'profile' not in templates[template] else templates[template]['profile']
+            profile = config.default_profile if 'profile' not in templates[template] else templates[template]['profile']
             deployVmsCommand = cloudCommandFactory.newDeployVms(names=[template + '-' + str(uuid.uuid4())], profile=profile, cores=templates[template]['cores'], ram=templates[template]['ram'])
 
             cloudCommandBus = cloudService.getCommandBus()
