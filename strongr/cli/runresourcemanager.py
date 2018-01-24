@@ -17,8 +17,6 @@ class RunResourceManager(Command):
         schedulerService = SchedulerDomain.schedulerService()
         commandFactory = SchedulerDomain.commandFactory()
 
-        #CloudDomain.cloudService().start_reactor() # enable salt reactor
-
         command_bus = schedulerService.getCommandBus()
         run_enqueued_jobs_command = commandFactory.newRunEnqueuedJobs()
         check_scaling_command = commandFactory.newCheckScaling()
@@ -32,6 +30,8 @@ class RunResourceManager(Command):
 
 
         if hasattr(strongr.core.Core.config(), 'celery'): # don't load celery if it's not configured
+            CloudDomain.cloudService().start_reactor() # salt reactor really shouldn't be initialised here, it's not coupled to celery being configured or not
+
             celery = Celery('strongr', broker=strongr.core.Core.config().celery.broker, backend=strongr.core.Core.config().celery.backend)
 
             remotable_commands = strongr.core.Core.config().celery.remotable_commands.as_dict()
