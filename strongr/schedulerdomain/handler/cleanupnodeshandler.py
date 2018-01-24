@@ -18,7 +18,7 @@ class CleanupNodesHandler(object):
 
         vm_templates = ScalingDriver.scaling_driver().get_templates()
 
-        deadline = datetime.utcnow() - timedelta(minutes=30) # give cloud domain time to provision a machine, if it isn't online by then it will probably never be
+        deadline = datetime.utcnow() + timedelta(minutes=-30) # give cloud domain time to provision a machine, if it isn't online by then it will probably never be
         session = strongr.core.gateways.Gateways.sqlalchemy_session()
         unprovisioned_vms_in_db = session.query(Vm).filter(and_(Vm.state.in_([VmState.NEW, VmState.PROVISION]), deadline > Vm.state_date)).all()
         vms_in_cloud = cloud_query_bus.handle(cloud_query_factory.newListDeployedVms())
@@ -46,7 +46,7 @@ class CleanupNodesHandler(object):
                     parallel_remove_list.append(vm)
 
         # check for VM's marked for death without jobs
-        deadline = datetime.utcnow() + timedelta(minutes=-5) # vm's need to be marked for death for at least 5 mins before we clean them up else we run into race conditions
+        deadline = datetime.utcnow() + timedelta(seconds=-10) # vm's need to be marked for death for at least 10 secs before we clean them up else we run into race conditions
         subquery = session.query(Job.vm_id,
                                  func.count(Job.job_id).label('jobs'))\
                                 .filter(
@@ -61,7 +61,8 @@ class CleanupNodesHandler(object):
             parallel_remove_list.append(vm.vm_id)
 
         # check for expired VM's
-        expired_vms = session.query(Vm).filter(and_(func.now() > Vm.deadline, Vm.state.in_([VmState.NEW, VmState.PROVISION, VmState.READY]))).all()
+        timenow = datetime.utcnow()
+        expired_vms = session.query(Vm).filter(and_(timenow > Vm.deadline, Vm.state.in_([VmState.NEW, VmState.PROVISION, VmState.READY]))).all()
         for vm in expired_vms:
             vm.state = VmState.MARKED_FOR_DEATH
         session.commit()

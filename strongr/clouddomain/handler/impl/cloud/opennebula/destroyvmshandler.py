@@ -14,14 +14,16 @@ class DestroyVmsHandler(AbstractDestroyVmsHandler):
         logger = logging.getLogger(self.__class__.__name__)
 
         ret = []
-        for chunked_names in self._chunk_list(command.names, 1):
+
+        # we are using _chunk_list generator because at some point we might want to remove more than 1 at a time
+        for chunked_names in self._chunk_list(command.names, 1): # remove one by one, we are offloading this to amqp anyway
             try:
                 ret.append(client.destroy(names=chunked_names))
             except SaltSystemExit as e:
-                # an exception occured within salt, normally below event would be published trough salt event system
-                # assume VM is no longer there and broadcast vm destroyed event from here
-                # if it turns out the vm still there but error was triggered due to api rate limiting or flaky connection
-                # the cleanup script will remove the vm at a later time but this cleanup script will not trigger below event
+                # An exception occured within salt. Normally vmdestroyed event would be published trough salt event system.
+                # Assume VM is no longer there and broadcast vm destroyed event from here.
+                # If it turns out the vm is still there but the error was triggered due to api rate limiting or flaky connection
+                # the cleanup should remove the vm at a later time.
                 inter_domain_event_factory = strongr.clouddomain.model.gateways.Gateways.inter_domain_event_factory()
                 vmdestroyed_event = inter_domain_event_factory.newVmDestroyedEvent(chunked_names[0])
                 strongr.core.Core.inter_domain_events_publisher().publish(vmdestroyed_event)

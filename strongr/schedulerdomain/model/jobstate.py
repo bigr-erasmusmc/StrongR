@@ -6,3 +6,4 @@ class JobState(Enum):
     ASSIGNED = 20
     RUNNING = 30
     FINISHED = 40
+    ON_HOLD = 50
