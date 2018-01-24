@@ -16,4 +16,4 @@ class ScalingDriver(containers.DeclarativeContainer):
         'surfsarahpccloud': SurfHpcScaler
     })
 
-    scaling_driver = providers.Singleton(_scalingdrivers()[strongr.core.Core.config().schedulerdomain.scalingdriver.lower()], config=dict(strongr.core.Core.config().schedulerdomain.as_dict()[strongr.core.Core.config().schedulerdomain.scalingdriver]) if strongr.core.Core.config().schedulerdomain.scalingdriver in strongr.core.Core.config().schedulerdomain.as_dict() else {})
+    scaling_driver = providers.Singleton(_scalingdrivers()[strongr.core.Core.config().schedulerdomain.scalingdriver.lower()], config=dict(strongr.core.Core.config().schedulerdomain.as_dict()[strongr.core.Core.config().schedulerdomain.scalingdriver]) if strongr.core.Core.config().schedulerdomain.scalingdriver in strongr.core.Core.config().schedulerdomain.as_dict().keys() else {})
