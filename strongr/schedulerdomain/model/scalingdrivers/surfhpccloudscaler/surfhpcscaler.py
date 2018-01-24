@@ -26,7 +26,7 @@ class SurfHpcScaler(AbstractScaleIn, AbstractScaleOut, AbstractVmTemplateRetriev
         return deadline
 
     def get_templates(self):
-        return self._config.templates.as_dict()
+        return self._config.templates
 
     def scalein(self, command):
         if strongr.core.gateways.Gateways.lock('scaleout-lock').exists():
@@ -89,7 +89,7 @@ class SurfHpcScaler(AbstractScaleIn, AbstractScaleOut, AbstractVmTemplateRetriev
             query_factory = strongr.core.domain.schedulerdomain.SchedulerDomain.queryFactory()
             query_bus = strongr.core.domain.schedulerdomain.SchedulerDomain.schedulerService().getQueryBus()
 
-            templates = dict(config.templates.as_dict()) # make a copy because we want to manipulate the list
+            templates = dict(config.templates) # make a copy because we want to manipulate the list
 
             active_vms = query_bus.handle(query_factory.newRequestVms([VmState.NEW, VmState.PROVISION, VmState.READY]))
 
