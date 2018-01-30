@@ -21,7 +21,7 @@ class Job(Base):
 
     return_code = Column(Integer)
 
-    stdout = Column('stdout', LargeBinary) # we should update this to point to a file at some point as it will bloat the database pretty quickly
+    stdout = Column('stdout', LargeBinary(length=52428800)) # we should update this to point to a file at some point as it will bloat the database pretty quickly
 
     _state = Column('state', Enum(JobState))
 

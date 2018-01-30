@@ -20,6 +20,7 @@ class Tasks(Resource):
     @ns.response(200, 'OK')
     @ns.param('task_id')
     def get(self):
+        """Requests task status"""
         schedulerService = strongr.core.getCore().domains().schedulerDomain().schedulerService()
         queryFactory = strongr.core.getCore().domains().schedulerDomain().queryFactory()
 
