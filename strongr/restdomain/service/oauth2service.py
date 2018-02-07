@@ -14,7 +14,7 @@ class Oauth2Service(AbstractService):
     _query_bus = None
 
     def register_models(self):
-        import strongr.restdomain.model
+        import strongr.restdomain.model.oauth2
         # importing alone is enough for registration
 
     def getCommandBus(self):

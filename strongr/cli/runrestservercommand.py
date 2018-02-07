@@ -8,4 +8,4 @@ class RunRestServerCommand(Command):
     restdomain:startserver
     """
     def handle(self):
-        Gateways.app().run()
+        Gateways.flask_app().run()

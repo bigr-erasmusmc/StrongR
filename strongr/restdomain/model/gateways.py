@@ -2,15 +2,23 @@ import dependency_injector.containers as containers
 import dependency_injector.providers as providers
 from flask import Flask
 
-from authlib.flask.oauth2 import AuthorizationServer
+from werkzeug.security import generate_password_hash, check_password_hash
+
+from authlib.flask.oauth2 import AuthorizationServer, ResourceProtector
 from strongr.restdomain.api.apiv1 import blueprint as apiv1
+from strongr.restdomain.model.oauth2 import Token
+
+from strongr.restdomain.model.oauth2.client import Client
 
 import strongr.core
+from strongr.restdomain.model.oauth2.endpoints.revocationendpoint import RevocationEndpoint
+from strongr.restdomain.model.oauth2.grants.authorizationcodegrant import AuthorizationCode
+from strongr.restdomain.model.oauth2.grants.clientcredentialsgrant import ClientCredentialsGrant
+from strongr.restdomain.model.oauth2.grants.passwordgrant import PasswordGrant
+
 
 class Gateways(containers.DeclarativeContainer):
     """IoC container of gateway objects."""
-    _backends = providers.Object({
-    })
     _blueprints = providers.Object([apiv1])
 
     def _factor_app(name, blueprints):
@@ -31,7 +39,15 @@ class Gateways(containers.DeclarativeContainer):
         for blueprint in blueprints:
             app.register_blueprint(blueprint)
 
-        server = AuthorizationServer(Client, app)
+        auth_server = AuthorizationServer(Client, app)
+
+        auth_server.register_grant_endpoint(AuthorizationCode)
+        auth_server.register_grant_endpoint(PasswordGrant)
+        auth_server.register_grant_endpoint(ClientCredentialsGrant)
+
+        auth_server.register_revoke_token_endpoint(RevocationEndpoint)
+
+        Gateways.auth_server.override(auth_server)
 
         if backend == 'flask':
             flask_config = config.restdomain.flask.as_dict() if hasattr(config, 'restdomain') and hasattr(config.restdomain, 'flask') else {}
@@ -58,5 +74,21 @@ class Gateways(containers.DeclarativeContainer):
 
             return WSGIServer(app)
 
+    @classmethod
+    def _query_token(self, access_token):
+        from authlib.flask.oauth2 import current_token
+        import strongr.core.gateways
 
-    app = providers.Singleton(_factor_app, 'StrongRRestServer', _blueprints())
+        return strongr.core.gateways.Gateways.sqlalchemy_session().query(Token).filter_by(access_token=access_token).first()
+
+
+    def _factor_require_oauth():
+        return ResourceProtector(Gateways._query_token)
+
+    flask_app = providers.Singleton(_factor_app, 'StrongRRestServer', _blueprints())
+    auth_server = providers.Configuration('auth_server') # initialized by _factor_app factory
+    #current_user = providers.Factory(_factor_current_user)
+    require_oauth = providers.Factory(_factor_require_oauth)
+
+    generate_password_hash = providers.Factory(generate_password_hash, method='pbkdf2:sha256:80000', salt_length=8)
+    check_password_hash = providers.Factory(check_password_hash)

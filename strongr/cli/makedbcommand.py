@@ -1,5 +1,6 @@
 from strongr.core.gateways import Gateways
 from strongr.core.domain.schedulerdomain import SchedulerDomain
+from strongr.core.domain.restdomain import RestDomain
 
 from .wrapper import Command
 
@@ -11,7 +12,8 @@ class MakeDbCommand(Command):
     """
     def handle(self):
         services = [
-            SchedulerDomain.schedulerService()
+            SchedulerDomain.schedulerService(),
+            RestDomain.oauth2Service()
         ]
 
         for service in services:

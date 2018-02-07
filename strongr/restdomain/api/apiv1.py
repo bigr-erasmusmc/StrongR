@@ -2,6 +2,7 @@ from flask import Blueprint
 from flask_restplus import Api
 
 from strongr.restdomain.api.v1.scheduler import ns as scheduler_namespace
+from strongr.restdomain.api.v1.oauth2 import ns as oauth2_namespace
 
 blueprint = Blueprint('api_v1', __name__, url_prefix='/v1')
 api = Api(blueprint,
@@ -11,3 +12,4 @@ api = Api(blueprint,
 )
 
 api.add_namespace(scheduler_namespace)
+api.add_namespace(oauth2_namespace)

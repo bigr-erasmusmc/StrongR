@@ -1,11 +1,13 @@
 from flask_restplus import Namespace, Resource, fields, reqparse
 from flask import request
 
-from strongr.restdomain.api.utils import blueprint_require_oauth
-
 import strongr.core
 import time
 import uuid
+
+import strongr.restdomain.model.gateways
+from strongr.core.domain.schedulerdomain import SchedulerDomain
+from strongr.restdomain.api.utils import namespace_require_oauth
 
 ns = Namespace('scheduler', description='Operations related to the schedulerdomain')
 
@@ -17,12 +19,16 @@ post_task = ns.model('post-task', {
 
 @ns.route('/task')
 class Tasks(Resource):
+    def __init__(self, *args, **kwargs):
+        super(Tasks, self).__init__(*args, **kwargs)
+
     @ns.response(200, 'OK')
+    @namespace_require_oauth('task')
     @ns.param('task_id')
     def get(self):
         """Requests task status"""
-        schedulerService = strongr.core.getCore().domains().schedulerDomain().schedulerService()
-        queryFactory = strongr.core.getCore().domains().schedulerDomain().queryFactory()
+        schedulerService = SchedulerDomain.schedulerService()
+        queryFactory = SchedulerDomain.queryFactory()
 
         query = queryFactory.newRequestScheduledJobs()
 
@@ -30,12 +36,12 @@ class Tasks(Resource):
         return result, 200
 
     @ns.response(201, 'Task successfully created.')
-    @blueprint_require_oauth('task')
+    @namespace_require_oauth('task')
     @ns.expect(post_task, validate=True)
     def post(self):
         """Creates a new task."""
-        schedulerService = strongr.core.getCore().domains().schedulerDomain().schedulerService()
-        commandFactory = strongr.core.getCore().domains().schedulerDomain().commandFactory()
+        schedulerService = SchedulerDomain.schedulerService()
+        commandFactory = SchedulerDomain.commandFactory()
 
         cmd = request.json['cmd']
         cores = int(request.json['cores'])
