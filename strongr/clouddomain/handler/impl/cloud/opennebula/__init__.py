@@ -1,4 +1,3 @@
-from .runjobhandler import RunJobHandler
 from .listdeployedvmshandler import ListDeployedVmsHandler
 from .deployvmshandler import DeployVmsHandler
 from .requestjidstatushandler import RequestJidStatusHandler

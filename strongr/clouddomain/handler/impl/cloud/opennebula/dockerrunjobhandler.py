@@ -12,7 +12,7 @@ else:
     from pipes import quote
 
 
-class RunJobHandler(AbstractRunJobHandler):
+class DockerRunJobHandler(AbstractRunJobHandler):
     def __call__(self, command):
         volumes = ''
         env = ''
