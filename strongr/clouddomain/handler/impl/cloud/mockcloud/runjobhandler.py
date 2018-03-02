@@ -26,13 +26,16 @@ class RunJobHandler(AbstractRunJobHandler):
         inter_domain_event_factory = Gateways.inter_domain_event_factory()
         inter_domain_events_publisher = strongr.core.Core.inter_domain_events_publisher()
 
+        config = strongr.core.Core.config()
+        scratch_path = config.clouddomain.MockCloud.scratch
+
         volumes = ''
         env = ''
         if command.scratch:
-            if not os.path.isdir('/tmp/strongr_scratch'):
-                os.mkdir('/tmp/strongr_scratch', 0700)
+            if not os.path.isdir(scratch_path):
+                os.mkdir(scratch_path, 0700)
 
-            volumes = '--volume=/tmp/strongr_scratch:/scratch'
+            volumes = '--volume={}:/scratch'.format(scratch_path)
             env = "-e SCRATCH_DIR='/scratch'"
 
 
@@ -65,7 +68,6 @@ class RunJobHandler(AbstractRunJobHandler):
 
         if ret_code != 0:
             raise Exception('Something went wrong while stopping docker image: {}'.format(cmd))
-
 
 
         job_finished_event = inter_domain_event_factory.newJobFinishedEvent(command.job_id, stdout, 0)

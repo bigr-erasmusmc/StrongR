@@ -28,6 +28,9 @@ class DefaultsLoader:
                 'driver': 'MockCloud',
                 'OpenNebula': {
                     'salt_config': '/etc/salt'
+                },
+                'MockCloud': {
+                    'scratch': '/tmp/strongr_mockcloud_scratch'
                 }
             },
             'restdomain': {
