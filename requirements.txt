@@ -12,3 +12,9 @@ gunicorn==19.7.1
 SQLAlchemy==1.1.14
 PyYAML==3.12
 psutil==5.4.3
+celery
+redis
+statsd
+enum34
+schedule
+authlib

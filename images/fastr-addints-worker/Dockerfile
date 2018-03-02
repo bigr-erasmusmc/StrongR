@@ -1,4 +1,4 @@
-FROM bigr/fastr_strong-subcortical_worker
+FROM bigr/fastr_worker
 
 MAINTAINER T. Phil <thomas@tphil.nl>
 
