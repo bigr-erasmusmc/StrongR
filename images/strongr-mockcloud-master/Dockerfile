@@ -17,4 +17,4 @@ RUN cd /opt/strongr && python app.py d:create
 
 
 WORKDIR /opt/strongr
-CMD ['python', 'app.py', 'r:r']
+CMD ["python", "app.py", "r:r"]

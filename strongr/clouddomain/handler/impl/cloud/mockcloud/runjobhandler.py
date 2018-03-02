@@ -42,6 +42,8 @@ class RunJobHandler(AbstractRunJobHandler):
         cmd = 'docker run --rm {} {} -di --name {} -m {}g --cpus={} --entrypoint /bin/sh {}'.format(volumes, env, command.job_id, command.memory, command.cores, quote(command.image))
         ret_code = subprocess.call(cmd, shell=True) # start docker container
 
+        print(cmd)
+
         if ret_code != 0:
             raise Exception('Something went wrong while initializing docker image: {}'.format(cmd))
 
