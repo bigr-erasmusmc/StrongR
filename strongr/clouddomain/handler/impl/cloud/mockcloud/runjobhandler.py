@@ -18,9 +18,9 @@ import strongr.core
 
 class RunJobHandler(AbstractRunJobHandler):
     def __call__(self, command):
-        thread = threading.Thread(target=self._run, args=(command,)) # run in separate thread so it doesn't block strongr
-        thread.start()
-        #self._run(command)
+        #thread = threading.Thread(target=self._run, args=(command,)) # run in separate thread so it doesn't block strongr
+        #thread.start()
+        self._run(command)
 
     def _run(self, command):
         inter_domain_event_factory = Gateways.inter_domain_event_factory()
