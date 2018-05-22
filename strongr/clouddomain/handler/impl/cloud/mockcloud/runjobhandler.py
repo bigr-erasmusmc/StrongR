@@ -15,6 +15,7 @@ import tempfile
 
 import threading
 import strongr.core
+import time
 
 class RunJobHandler(AbstractRunJobHandler):
     def __call__(self, command):
@@ -47,6 +48,8 @@ class RunJobHandler(AbstractRunJobHandler):
         if ret_code != 0:
             raise Exception('Something went wrong while initializing docker image: {}'.format(cmd))
 
+        time.sleep(1)
+
         tmpfile = tempfile.mkstemp()[1]
         fh = open(tmpfile, 'w')
         fh.write("\n".join(command.script))
@@ -64,6 +67,7 @@ class RunJobHandler(AbstractRunJobHandler):
 
         os.remove(tmpfile)
 
+        time.sleep(1)
 
         cmd = 'docker stop {}'.format(command.job_id)
         ret_code = subprocess.call(cmd, shell=True)
@@ -71,6 +75,7 @@ class RunJobHandler(AbstractRunJobHandler):
         if ret_code != 0:
             raise Exception('Something went wrong while stopping docker image: {}'.format(cmd))
 
+        time.sleep(1)
 
         job_finished_event = inter_domain_event_factory.newJobFinishedEvent(command.job_id, stdout, 0)
         inter_domain_events_publisher.publish(job_finished_event)

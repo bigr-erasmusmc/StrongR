@@ -39,13 +39,13 @@ class RunResourceManager(Command):
                 for command in remotable_commands[domain]:
                     strongr.core.Core.command_router().enable_route_for_command(celery, '{}.{}'.format(domain, command))
         else:
-            self.info('Celery not configured, skipping')
+            self.warning('Celery not configured, skipping')
 
         schedule.every(1).seconds.do(command_bus.handle, run_enqueued_jobs_command)
         schedule.every(5).seconds.do(command_bus.handle, check_scaling_command)
         schedule.every(10).seconds.do(command_bus.handle, log_stats)
         schedule.every(1).minutes.do(command_bus.handle, cleanup_nodes)
-        schedule.every(30).minutes.do(command_bus.handle, cleanup_jobs)
+        #schedule.every(30).minutes.do(command_bus.handle, cleanup_jobs)
 
         while True:
             schedule.run_pending()
