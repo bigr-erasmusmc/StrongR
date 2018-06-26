@@ -18,3 +18,5 @@ statsd
 enum34
 schedule
 authlib
+mysqlclient
+tornado==4.5.2

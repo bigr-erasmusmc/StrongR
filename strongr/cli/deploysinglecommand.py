@@ -23,9 +23,9 @@ class DeploySingleCommand(Command):
             self.error('Invalid input')
             return
 
-        cloudProviderName = Core.config().clouddomain.driver
+        scaling_driver = Core.config().schedulerdomain.scalingdriver
 
-        profile = getattr(Core.config().clouddomain, cloudProviderName).default_profile
+        profile = getattr(Core.config().schedulerdomain, scaling_driver).default_profile
         deployVmsCommand = commandFactory.newDeployVms(names=[name], profile=profile, cores=cores, ram = ram)
 
         commandBus = cloudService.getCommandBus()
