@@ -30,7 +30,7 @@ class DeployManyCommand(Command):
 
         scaling_driver = Core.config().schedulerdomain.scalingdriver
 
-        profile = getattr(Core.config().schedulerdomain, scalingdriver).default_profile
+        profile = getattr(Core.config().schedulerdomain, scaling_driver).default_profile
         deployVms = commandFactory.newDeployVms(names=deployVmNameList, profile=profile, cores=cores, ram=ram)
         commandBus = cloudService.getCommandBus()
 
