@@ -28,7 +28,9 @@ class DeploySingleCommand(Command):
         print(scaling_driver)
         from pprint import pprint
         pprint(Core.config().schedulerdomain)
-        profile = getattr(Core.config().schedulerdomain, scaling_driver).default_profile
+        driver_config = getattr(Core.config().schedulerdomain, scaling_driver)
+        pprint(driver_config)
+        profile = driver_config.default_profile
         deployVmsCommand = commandFactory.newDeployVms(names=[name], profile=profile, cores=cores, ram = ram)
 
         commandBus = cloudService.getCommandBus()
