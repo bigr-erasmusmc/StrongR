@@ -31,6 +31,9 @@ class SaltEventTranslator(threading.Thread):
             try:
                 if fnmatch.fnmatch(ret['tag'], 'salt/job/*/ret/*'):
                     data = ret['data']
+                    from pprint import pprint
+                    pprint('-------------DRAGONS---------')
+                    pprint(data)
                     if 'jid' in data and 'return' in data and 'retcode' in data:
                         job_finished_event = inter_domain_event_factory.newJobFinishedEvent(data['jid'], data['return'], data['retcode'])
                         strongr.core.Core.inter_domain_events_publisher().publish(job_finished_event)
