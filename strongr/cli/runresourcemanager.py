@@ -28,10 +28,10 @@ class RunResourceManager(Command):
 
         self.info('Running.')
 
+        if hasattr(CloudDomain.cloudService(), 'start_reactor'): # ugly way for instantiating salt reactor
+            CloudDomain.cloudService().start_reactor()  # salt reactor really shouldn't be initialised here
 
         if hasattr(strongr.core.Core.config(), 'celery'): # don't load celery if it's not configured
-            CloudDomain.cloudService().start_reactor() # salt reactor really shouldn't be initialised here, it's not coupled to celery being configured or not
-
             celery = Celery('strongr', broker=strongr.core.Core.config().celery.broker, backend=strongr.core.Core.config().celery.backend)
 
             remotable_commands = strongr.core.Core.config().celery.remotable_commands.as_dict()
