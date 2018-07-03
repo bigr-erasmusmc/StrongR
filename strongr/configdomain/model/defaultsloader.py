@@ -24,6 +24,9 @@ class DefaultsLoader:
                     'url': 'sqlite://'
                 }
             },
+            'stats': {
+                'driver': "null"
+            },
             'clouddomain': {
                 'driver': 'MockCloud',
                 'OpenNebula': {
@@ -46,7 +49,7 @@ class DefaultsLoader:
                 }
             },
             'schedulerdomain': {
-                'driver': 'simplescaler',
+                'scalingdriver': 'simplescaler',
                 'simplescaler': {
                     'scaleoutmincoresneeded': 1,
                     'scaleoutminramneeded': 1

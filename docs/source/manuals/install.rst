@@ -42,17 +42,11 @@ Now copy over the config below to ~/.strongr/config.json.
           "url": "sqlite:////tmp/strongr.db"
         }
       },
-      "stats": {
-        "driver": "null"
-      },
       "clouddomain": {
         "driver": "MockCloud",
         "MockCloud": {
           "scratch": "/scratch"
         }
-      },
-      "schedulerdomain": {
-        "scalingdriver": "surfsarahpccloud"
       },
       "logger": {
         "handlers": {
