@@ -3,6 +3,8 @@ from strongr.schedulerdomain.query import RequestScheduledJobs, RequestFinishedJ
 
 from strongr.core.exception import InvalidParameterException
 
+import re
+
 class QueryFactory:
     """ This factory instantiates query objects to be sent to a scheduler querybus. """
 
@@ -48,13 +50,31 @@ class QueryFactory:
         """
         return RequestScheduledJobs()
 
-    def newRequestFinishedJobs(self):
+    def newRequestFinishedJobs(self, jobs=None):
         """ Generates a new RequestFinishedJobs query
+
+        :param jobs: a list of job id's
 
         :returns: A RequestFinishedJobs query object
         :rtype: RequestFinishedJobs
         """
-        return RequestFinishedJobs()
+        jobs_sanitized = [re.sub('[^a-zA-Z0-9-]', '', x) for x in jobs] # sanitize inputs
+
+
+        return RequestFinishedJobs(jobs_sanitized)
+
+    def newRequestJobInfo(self, jobs=None):
+        """ Generates a new RequestFinishedJobs query
+
+        :param jobs: a list of job id's
+
+        :returns: A RequestFinishedJobs query object
+        :rtype: RequestFinishedJobs
+        """
+        jobs_sanitized = [re.sub('[^a-zA-Z0-9-]', '', x) for x in jobs] # sanitize inputs
+
+
+        return RequestJobInfo(jobs_sanitized)
 
     def newRequestTaskInfo(self, taskid):
         """ Generates a new RequestTaskInfo query

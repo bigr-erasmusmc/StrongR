@@ -1,54 +1,90 @@
-from flask_restplus import Namespace, Resource, fields, reqparse
-from flask import request
+from flask_restplus import Namespace, Resource, fields
+from flask import request, jsonify
 
-import strongr.core
 import time
 import uuid
 
-import strongr.restdomain.model.gateways
 from strongr.core.domain.schedulerdomain import SchedulerDomain
 from strongr.restdomain.api.utils import namespace_require_oauth
+
 
 ns = Namespace('scheduler', description='Operations related to the schedulerdomain')
 
 post_task = ns.model('post-task', {
-    'cmd': fields.String(required=True, min_length=1, description='The shellcode to be executed'),
+    'image': fields.String(required=True, min_length=1, description='The docker image where the script is executed'),
+    'script': fields.String(required=True, min_length=1, description='The shellcode to be executed'),
+    'scratch': fields.String(required=True, min_length=1, description='Does the job need a scratch dir?'),
     'cores': fields.Integer(required=True, min=1, description='The amount of cores needed to peform the task'),
-    'ram': fields.Integer(required=True, min=1, description="The amount of ram in GiB needed to peform the task")
+    'memory': fields.Integer(required=True, min=1, description="The amount of ram in GiB needed to peform the task")
 })
+
+@ns.route('/tasks/status/<string:tasks>')
+class TaskStatusQuery(Resource):
+    def __init__(self, *args, **kwargs):
+        super(TaskStatusQuery, self).__init__(*args, **kwargs)
+
+    @ns.response(200, 'OK')
+    #@namespace_require_oauth('task')
+    def get(self, tasks):
+        tasks = [x.strip() for x in tasks.split(',') if len(x.strip()) > 0] # convert to array
+
+        if tasks is None or len(tasks) == 0:
+            return None, 400
+
+        schedulerService = SchedulerDomain.schedulerService()
+        queryFactory = SchedulerDomain.queryFactory()
+
+        query = queryFactory.newRequestJobInfo(tasks)
+        result = schedulerService.getQueryBus().handle(query)
+
+        output = {}
+        for job in result:
+            output[job.job_id] = {
+                'state': str(job.state).split('.')[-1],
+                'stdout': job.stdout
+            }
+
+        return output, 200
+
+
+#@ns.route('/task/<string:task_id>')
+#class GetTask(Resource):
+#    def __init__(self, *args, **kwargs):
+#        super(GetTask, self).__init__(*args, **kwargs)
+#
+#    @ns.response(200, 'OK')
+#    #@namespace_require_oauth('task')
+#    def get(self, task_id):
+#        """Requests task status"""
+#        schedulerService = SchedulerDomain.schedulerService()
+#        queryFactory = SchedulerDomain.queryFactory()
+#
+#        query = queryFactory.newRequestScheduledJobs([task_id])
+#
+#        result = schedulerService.getQueryBus().handle(query)
+#        return result, 200
 
 @ns.route('/task')
 class Tasks(Resource):
     def __init__(self, *args, **kwargs):
         super(Tasks, self).__init__(*args, **kwargs)
 
-    @ns.response(200, 'OK')
-    @namespace_require_oauth('task')
-    @ns.param('task_id')
-    def get(self):
-        """Requests task status"""
-        schedulerService = SchedulerDomain.schedulerService()
-        queryFactory = SchedulerDomain.queryFactory()
-
-        query = queryFactory.newRequestScheduledJobs()
-
-        result = schedulerService.getQueryBus().handle(query)
-        return result, 200
-
     @ns.response(201, 'Task successfully created.')
-    @namespace_require_oauth('task')
+    #@namespace_require_oauth('task')
     @ns.expect(post_task, validate=True)
     def post(self):
         """Creates a new task."""
         schedulerService = SchedulerDomain.schedulerService()
         commandFactory = SchedulerDomain.commandFactory()
 
-        cmd = request.json['cmd']
+        image = request.json['image']
+        script = request.json['script'].splitlines()
+        scratch = request.json['scratch']
         cores = int(request.json['cores'])
-        ram = int(request.json['ram'])
-        taskid = str(int(time.time())) + '-' + str(uuid.uuid4())
+        memory = int(request.json['memory'])
+        job_id = str(int(time.time())) + '-' + str(uuid.uuid4())
 
-        command = commandFactory.newScheduleJobCommand(taskid, cmd, cores, ram)
+        command = commandFactory.newScheduleJobCommand(image, script, job_id, scratch, cores, memory)
 
         schedulerService.getCommandBus().handle(command)
-        return {'taskid': taskid}, 201
+        return {'job_id': job_id}, 201

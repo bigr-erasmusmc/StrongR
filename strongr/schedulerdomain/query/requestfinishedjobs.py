@@ -1,2 +1,3 @@
 class RequestFinishedJobs:
-    pass
+    def __init__(self, jobs):
+        self.jobs = jobs

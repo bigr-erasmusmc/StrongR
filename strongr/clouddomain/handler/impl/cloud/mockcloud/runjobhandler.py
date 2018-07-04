@@ -19,9 +19,9 @@ import time
 
 class RunJobHandler(AbstractRunJobHandler):
     def __call__(self, command):
-        #thread = threading.Thread(target=self._run, args=(command,)) # run in separate thread so it doesn't block strongr
-        #thread.start()
-        self._run(command)
+        thread = threading.Thread(target=self._run, args=(command,)) # run in separate thread so it doesn't block strongr
+        thread.start()
+        #self._run(command)
 
     def _run(self, command):
         inter_domain_event_factory = Gateways.inter_domain_event_factory()
@@ -40,7 +40,7 @@ class RunJobHandler(AbstractRunJobHandler):
             env = "-e SCRATCH_DIR='/scratch'"
 
 
-        cmd = 'docker run --rm {} {} -di --name {} -m {}g --cpus={} --entrypoint /bin/sh {}'.format(volumes, env, command.job_id, command.memory, command.cores, quote(command.image))
+        cmd = 'docker run {} {} -di --name {} -m {}g --cpus={} --entrypoint /bin/sh {}'.format(volumes, env, command.job_id, command.memory, command.cores, quote(command.image))
         ret_code = subprocess.call(cmd, shell=True) # start docker container
 
         print(cmd)
@@ -76,6 +76,14 @@ class RunJobHandler(AbstractRunJobHandler):
             raise Exception('Something went wrong while stopping docker image: {}'.format(cmd))
 
         time.sleep(1)
+
+        cmd = 'docker rm {}'.format(command.job_id)
+        try:
+            subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
+        except subprocess.CalledProcessError as err:
+            if ret_code != 0:
+                Exception('Something went wrong while executing script in docker image: {}'.format(cmd))
+            stdout = err.output
 
         job_finished_event = inter_domain_event_factory.newJobFinishedEvent(command.job_id, stdout, 0)
         inter_domain_events_publisher.publish(job_finished_event)

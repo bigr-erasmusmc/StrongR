@@ -7,6 +7,10 @@ from strongr.restdomain.model.oauth2 import Token
 
 
 class ClientCredentialsGrant(_ClientCredentialsGrant):
+    TOKEN_ENDPOINT_AUTH_METHODS = [
+        'client_secret_basic', 'client_secret_post'
+    ]
+
     def create_access_token(self, token, client):
         item = Token(
             client_id=client.client_id,

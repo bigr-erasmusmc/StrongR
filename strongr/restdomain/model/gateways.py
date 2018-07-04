@@ -16,7 +16,6 @@ from strongr.restdomain.model.oauth2.grants.authorizationcodegrant import Author
 from strongr.restdomain.model.oauth2.grants.clientcredentialsgrant import ClientCredentialsGrant
 from strongr.restdomain.model.oauth2.grants.passwordgrant import PasswordGrant
 
-
 class Gateways(containers.DeclarativeContainer):
     """IoC container of gateway objects."""
     _blueprints = providers.Object([apiv1])

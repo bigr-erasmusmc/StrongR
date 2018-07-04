@@ -49,7 +49,7 @@ class DefaultsLoader:
                 }
             },
             'schedulerdomain': {
-                'scalingdriver': 'simplescaler',
+                'scalingdriver': 'nullscaler',
                 'simplescaler': {
                     'scaleoutmincoresneeded': 1,
                     'scaleoutminramneeded': 1

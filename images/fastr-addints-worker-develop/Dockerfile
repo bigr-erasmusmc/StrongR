@@ -1,4 +1,4 @@
-FROM bigr/fastr_worker
+FROM bigr/fastr_worker_develop
 
 MAINTAINER T. Phil <thomas@tphil.nl>
 

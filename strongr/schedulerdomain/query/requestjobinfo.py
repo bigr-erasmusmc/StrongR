@@ -1,3 +1,3 @@
 class RequestJobInfo:
-    def __init__(self, job_id):
-        self.job_id = job_id
+    def __init__(self, jobs):
+        self.jobs = jobs
