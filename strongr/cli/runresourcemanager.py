@@ -30,6 +30,7 @@ class RunResourceManager(Command):
 
         if hasattr(CloudDomain.cloudService(), 'start_reactor'): # ugly way for instantiating salt reactor
             CloudDomain.cloudService().start_reactor()  # salt reactor really shouldn't be initialised here
+            self.info('Salt reactor started!')
         else:
             self.warning('No reactor, this is ok if you are running the mockcloud.')
 
