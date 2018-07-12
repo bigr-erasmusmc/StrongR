@@ -30,6 +30,8 @@ class RunResourceManager(Command):
 
         if hasattr(CloudDomain.cloudService(), 'start_reactor'): # ugly way for instantiating salt reactor
             CloudDomain.cloudService().start_reactor()  # salt reactor really shouldn't be initialised here
+        else:
+            self.warning('No reactor, this is ok if you are running the mockcloud.')
 
         if hasattr(strongr.core.Core.config(), 'celery'): # don't load celery if it's not configured
             celery = Celery('strongr', broker=strongr.core.Core.config().celery.broker, backend=strongr.core.Core.config().celery.backend)
