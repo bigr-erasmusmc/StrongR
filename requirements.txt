@@ -17,6 +17,6 @@ redis
 statsd
 enum34
 schedule
-authlib
+authlib==0.4.1
 mysqlclient
 tornado==4.5.2
