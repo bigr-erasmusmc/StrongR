@@ -38,15 +38,15 @@ class Gateways(containers.DeclarativeContainer):
         for blueprint in blueprints:
             app.register_blueprint(blueprint)
 
-        auth_server = AuthorizationServer(Client, app)
+        #auth_server = AuthorizationServer(Client, app)
 
-        auth_server.register_grant_endpoint(AuthorizationCode)
-        auth_server.register_grant_endpoint(PasswordGrant)
-        auth_server.register_grant_endpoint(ClientCredentialsGrant)
+        #auth_server.register_grant_endpoint(AuthorizationCode)
+        #auth_server.register_grant_endpoint(PasswordGrant)
+        #auth_server.register_grant_endpoint(ClientCredentialsGrant)
 
-        auth_server.register_revoke_token_endpoint(RevocationEndpoint)
+        #auth_server.register_revoke_token_endpoint(RevocationEndpoint)
 
-        Gateways.auth_server.override(auth_server)
+        #Gateways.auth_server.override(auth_server)
 
         if backend == 'flask':
             flask_config = config.restdomain.flask.as_dict() if hasattr(config, 'restdomain') and hasattr(config.restdomain, 'flask') else {}
