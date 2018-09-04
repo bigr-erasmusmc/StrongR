@@ -1,120 +1,214 @@
-from strongr.schedulerdomain.command import ScheduleTask, DoDelayedTasks,\
-                                            ClaimResourcesOnNode, ReleaseResourcesOnNode,\
-                                            StartTaskOnNode, CheckTaskRunning
+from strongr.schedulerdomain.command import ScheduleJob, RunEnqueuedJobs,\
+                                            StartJobOnVm, CheckJobsRunning,\
+                                            EnsureMinAmountOfNodes, ScaleOut,\
+                                            JobFinished, VmDestroyed,\
+                                            VmReady, VmCreated, VmNew, CheckScaling,\
+                                            CleanupNodes, ScaleIn, LogStats, CleanupOldJobs
 
 from strongr.core.exception import InvalidParameterException
 
+# try-except for py 2 / 3 compatibility
+try:
+    basestring
+except NameError:
+    basestring = str
+
 class CommandFactory:
     """ This factory instantiates command objects to be sent to a scheduler commandbus. """
-    def newDoDelayedTasks(self):
-        """ Generates a new DoDelayedTasks command
 
-        :returns: A DoDelayedTasks command object
-        :rtype: DoDelayedTasks
+    def newCleanupOldJobs(self):
+        return CleanupOldJobs()
+
+    def newLogStats(self):
+        """Generates a new LogStats command"""
+        return LogStats()
+
+    def newCleanupNodes(self):
+        """ Generates a new Cleanupnodes command
+
+        :return: A CleanupNodes command object
+        :rtype: CleanupNodes
         """
-        return DoDelayedTasks()
+        return CleanupNodes()
 
-    def newScheduleTaskCommand(self, taskid, cmd, cores, ram):
+    def newCheckScaling(self):
+        """ Generates a new CheckScaling command
+
+        :returns: A CheckScaling command object
+        :rtype: CheckScaling
+        """
+        return CheckScaling()
+
+    def newVmNew(self, vm_id, cores, ram):
+        """ Generates a new VmNew command
+
+        :param vm_id: An identifier token for the job
+        :type vm_id: string
+
+        :param cores: the amount of cores assigned to the vm
+        :type cores: int
+
+        :param ram: the amount of ram in GiB assigned to the vm
+        :type ram: int
+
+        :returns: A VmNew command object
+        :rtype: VmNew
+        """
+        if not isinstance(vm_id, basestring) or len(vm_id.strip()) == 0:
+            raise InvalidParameterException('vm_id is invalid')
+        elif not isinstance(cores, int) or cores <= 0:
+            raise InvalidParameterException('cores is invalid')
+        elif not isinstance(ram, int) or ram <= 0:
+            raise InvalidParameterException('ram is invalid')
+
+        return VmNew(vm_id, cores, ram)
+
+    def newVmReady(self, vm_id):
+        """ Generates a new VmReady command
+
+        :param vm_id: An identifier token for the job
+        :type job_id: string
+
+        :returns: A VmReady command object
+        :rtype: VmReady
+        """
+        if not isinstance(vm_id, basestring) or len(vm_id.strip()) == 0:
+            raise InvalidParameterException('job_id is invalid')
+        return VmReady(vm_id)
+
+    def newVmDestroyed(self, vm_id):
+        """ Generates a new VmDestroyed command
+
+        :param vm_id: An identifier token for the job
+        :type vm_id: string
+
+        :returns: A VmDestroyed command object
+        :rtype: VmDestroyed
+        """
+        if not isinstance(vm_id, basestring) or len(vm_id.strip()) == 0:
+            raise InvalidParameterException('vm_id is invalid')
+        return VmDestroyed(vm_id)
+
+    def newVmCreated(self, vm_id):
+        """ Generates a new VmCreated command
+
+        :param vm_id: An identifier token for the job
+        :type vm_id: string
+
+        :returns: A VmCreated command object
+        :rtype: VmCreated
+        """
+        if not isinstance(vm_id, basestring) or len(vm_id.strip()) == 0:
+            raise InvalidParameterException('vm_id is invalid')
+        return VmCreated(vm_id)
+
+    def newJobFinished(self, job_id, ret, retcode):
+        """ Generates a new JobFinished command
+
+        :param job_id: An identifier token for the job
+        :type job_id: string
+
+        :param ret: Usually the stdout of the job
+        :type ret: string
+
+        :param retcode: The exit code of the job
+        :type ret: int
+
+        :returns: A JobFinished command object
+        :rtype: JobFinished
+        """
+        if not isinstance(job_id, basestring) or len(job_id.strip()) == 0:
+            raise InvalidParameterException('jid is invalid')
+        elif not isinstance(ret, basestring) or len(ret.strip()) == 0:
+            raise InvalidParameterException('ret is invalid')
+        elif not isinstance(retcode, int):
+            raise InvalidParameterException('retcode is invalid')
+
+        return JobFinished(job_id, ret, retcode)
+
+    def newScaleIn(self):
+        return ScaleIn()
+
+    def newScaleOut(self, cores, ram):
+        if not cores > 0:
+            raise InvalidParameterException('Cores should be higher than 0')
+        elif not ram > 0:
+            raise InvalidParameterException('Ram should be higher than 0')
+
+        return ScaleOut(cores, ram)
+
+    def newEnsureMinAmountOfNodes(self):
+        return EnsureMinAmountOfNodes()
+
+    def newRunEnqueuedJobs(self):
+        """ Generates a new RunEnqueuedJobs command
+
+        :returns: A RunEnqueuedJobs command object
+        :rtype: RunEnqueuedJobs
+        """
+        return RunEnqueuedJobs()
+
+    def newScheduleJobCommand(self, image, script, job_id, scratch, cores, memory):
         """ Generates a new ScheduleTask command
 
-        :param taskid: the taskid
-        :param cmd: The shellcode to be run
+        :param image: the docker image used for running the job
+        :type image: string
+
+        :param script: a list of strings with shellcode
+        :type script: list
+
+        :param job_id: the jobs id (max 32 characters)
+        :type job_id: string
+
+        :param scratch: should a scratch volume be mounted?
+        :type scratch: bool
+
         :param cores: The amount of cores in the VM
+        :type cores: int
+
         :param ram: The amount of RAM in GiB in the VM
-
-        :type taskid: string
-        :type cmd: string
-        :type cores: int
         :type ram: int
 
-        :returns: A DeployVm command object
-        :rtype: DeployVm
+        :returns: A ScheduleJob command object
+        :rtype: ScheduleJob
         """
-        if not len(cmd) > 0:
-            raise InvalidParameterException('Cmd {0} is invalid'.format(cmd))
-        elif not cores > 0:
-            raise InvalidParameterException('Cores should be higher than 0')
-        elif not ram > 0:
-            raise InvalidParameterException('Ram should be higher than 0')
-        elif not len(taskid) > 0:
-            raise InvalidParameterException('Taskid invalid')
 
-        return ScheduleTask(taskid=taskid, cmd=cmd, cores=cores, ram=ram)
+        if not len(image) > 0:
+            raise InvalidParameterException('image is invalid')
+        elif not len(script) > 0:
+            raise InvalidParameterException('script is invalid')
+        elif not len(job_id) > 0:
+            raise InvalidParameterException('job_id is invalid')
+        elif cores <= 0:
+            raise InvalidParameterException('cores is invalid')
+        elif memory <= 0:
+            raise InvalidParameterException('memory is invalid')
 
-    def newClaimResourcesOnNode(self, node, cores, ram):
-        """ Generates a new ClaimResourcesOnNode command
+        return ScheduleJob(image=image, script=script, job_id=job_id, scratch=scratch, cores=cores, memory=memory)
 
-        :param node: the node name
-        :type node: string
-        :param cores: the amount of cores claimed
-        :type cores: int
-        :param ram: the amount of ram claimed
-        :type ram: int
+    def newStartJobOnVm(self, vm_id, job_id):
+        """ Generates a new StartJobOnVm command
 
-        :returns: A ClaimResourcesOnNode command object
-        :rtype: ClaimResourcesOnNode
+        :param vm_id: the node name
+        :type vm_id: string
+        :param job_id: the taskid to be started
+        :type job_id: string
+
+        :returns: A StartJobOnVm command object
+        :rtype: StartJobOnVm
         """
-        if not len(node) > 0:
-            raise InvalidParameterException('Node is invalid')
-        elif not cores > 0:
-            raise InvalidParameterException('Cores should be higher than 0')
-        elif not ram > 0:
-            raise InvalidParameterException('Ram should be higher than 0')
-
-        return ClaimResourcesOnNode(node=node,cores=cores, ram=ram)
-
-    def newReleaseResourcesOnNode(self, node, cores, ram):
-        """ Generates a new ReleaseResourcesOnNode command
-
-        :param node: the node name
-        :type node: string
-        :param cores: the amount of cores claimed
-        :type cores: int
-        :param ram: the amount of ram claimed
-        :type ram: int
-
-        :returns: A ReleaseResourcesOnNode command object
-        :rtype: ReleaseResourcesOnNode
-        """
-        if not len(node) > 0:
-            raise InvalidParameterException('Node is invalid')
-        elif not cores > 0:
-            raise InvalidParameterException('Cores should be higher than 0')
-        elif not ram > 0:
-            raise InvalidParameterException('Ram should be higher than 0')
-
-        return ReleaseResourcesOnNode(node=node,cores=cores, ram=ram)
-
-    def newStartTaskOnNode(self, node, taskid):
-        """ Generates a new StartTaskOnNode command
-
-        :param node: the node name
-        :type node: string
-        :param taskid: the taskid to be started
-        :type taskid: string
-
-        :returns: A StartTaskOnNode command object
-        :rtype: StartTaskOnNode
-        """
-        if not len(node) > 0:
+        if not len(vm_id) > 0:
             raise InvalidParameterException('node is invalid')
-        elif not len(taskid) > 0:
+        elif not len(job_id) > 0:
             raise InvalidParameterException('taskid is invalid')
 
-        return StartTaskOnNode(node=node, taskid=taskid)
+        return StartJobOnVm(vm_id=vm_id, job_id=job_id)
 
-    def newCheckTaskRunning(self, taskid):
-        """ Generates a new CheckTaskRunning command
+    def newCheckJobsRunning(self):
+        """ Generates a new CheckJobsRunning command
 
-        :param node: the node name
-        :type node: string
-        :param taskid: the taskid to be started
-        :type taskid: string
-
-        :returns: A CheckTaskRunning command object
-        :rtype: CheckTaskRunning
+        :returns: A CheckJobRunning command object
+        :rtype: CheckJobsRunning
         """
-        if not len(taskid) > 0:
-            raise InvalidParameterException('taskid is invalid')
 
-        return CheckTaskRunning(taskid=taskid)
+        return CheckJobsRunning()

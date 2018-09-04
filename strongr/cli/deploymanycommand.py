@@ -1,3 +1,5 @@
+from strongr.core import Core
+from strongr.core.domain.clouddomain import CloudDomain
 from .wrapper import Command
 
 import uuid
@@ -9,8 +11,8 @@ class DeployManyCommand(Command):
     deploy:many
     """
     def handle(self):
-        cloudServices = self.getDomains().cloudDomain().cloudService()
-        commandFactory = self.getDomains().cloudDomain().commandFactory()
+        cloudService = CloudDomain.cloudService()
+        commandFactory = CloudDomain.commandFactory()
 
         cores = int(self.ask('How many processing cores should the VM\'s have? (default 1): ', 1))
         ram = int(self.ask('How much memory in GiB should the VM\'s have? (default 4): ', 4))
@@ -21,18 +23,17 @@ class DeployManyCommand(Command):
             self.error('Invalid input')
             return
 
-        deployVmList = []
+        deployVmNameList = []
         while amount > 0:
-            deployVmCommand = commandFactory.newDeployVmCommand(name='worker-' + str(uuid.uuid4()), cores=cores, ram=ram)
-            deployVmList.append(deployVmCommand)
+            deployVmNameList.append('worker-' + str(uuid.uuid4()))
             amount -= 1
-        deployVms = commandFactory.newDeployVmsCommand(deployVmList)
 
-        cloudProviderName = self.getContainer().config().clouddomain.driver
+        scaling_driver = Core.config().schedulerdomain.scalingdriver
 
-        cloudService = cloudServices.getCloudServiceByName(cloudProviderName)
+        profile = getattr(Core.config().schedulerdomain, scaling_driver).default_profile
+        deployVms = commandFactory.newDeployVms(names=deployVmNameList, profile=profile, cores=cores, ram=ram)
         commandBus = cloudService.getCommandBus()
 
-        self.info('Deploying {0} VM\'s with cores={1} ram={2}GiB'.format(len(deployVms), cores, ram))
+        self.info('Deploying {0} VM\'s with cores={1} ram={2}GiB'.format(len(deployVmNameList), cores, ram))
 
         commandBus.handle(deployVms)

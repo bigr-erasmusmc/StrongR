@@ -10,40 +10,70 @@ import strongr.core
 
 from strongr.core.middlewares.celery.celerymiddleware import CeleryMiddleware
 from strongr.core.middlewares.logging.loggingmiddleware import LoggingMiddleware
+from strongr.core.middlewares.stats.statsmiddleware import StatsMiddleware
 
 class AbstractService():
     __metaclass__ = ABCMeta
 
-    def _default_middlewares(self, will_return_values):
-        return [
-                LoggingMiddleware(),
-                CeleryMiddleware(will_return_values)
-            ]
+    def __init__(self, inter_domain_event_bindings=None):
+        if inter_domain_event_bindings is not None:
+            for event in inter_domain_event_bindings:
+                if 'command' in inter_domain_event_bindings[event]:
+                    for command_generator in inter_domain_event_bindings[event]['command']:
+                        strongr.core.Core.inter_domain_events_publisher().subscribe(event, (
+                        lambda event, command_generator=command_generator: self.getCommandBus().handle(command_generator(event))))
+                if 'query' in inter_domain_event_bindings[event]:
+                    for query_generator in inter_domain_event_bindings[event]['query']:
+                        strongr.core.Core.inter_domain_events_publisher().subscribe(event, (
+                        lambda event, command_generator=command_generator: self.getQueryBus().handle(query_generator(event))))
 
-    def _make_default_querybus(self, mappings, middlewares=None):
-        return self._make_default_bus(mappings, middlewares, True)
+    @abstractmethod
+    def register_models(self):
+        """
+        Every service should register its models with sqlalchemy
+        :return:
+        """
+        pass
 
-    def _make_default_commandbus(self, mappings, middlewares=None):
-        return self._make_default_bus(mappings, middlewares, False)
+    def _default_middlewares(self, will_return_values, enable_stats=True):
+        middlewares = [
+            LoggingMiddleware(),
+            CeleryMiddleware(will_return_values)
+        ]
 
-    def _make_default_bus(self, mappings, middlewares, will_return_values):
+        if enable_stats:
+            import strongr.core.gateways
+            middlewares.append(StatsMiddleware(strongr.core.gateways.Gateways.stats()))
+
+            import strongr.core.middlewares.transaction.transactionmiddleware
+            middlewares.append(strongr.core.middlewares.transaction.transactionmiddleware.TransactionMiddleware())
+
+        return middlewares
+
+    def _make_default_querybus(self, mappings, middlewares=None, enable_stats=True):
+        return self._make_default_bus(mappings, middlewares, True, enable_stats)
+
+    def _make_default_commandbus(self, mappings, middlewares=None, enable_stats=True):
+        return self._make_default_bus(mappings, middlewares, False, enable_stats)
+
+    def _make_default_bus(self, mappings, middlewares, will_return_values, enable_stats=True):
         handlers = {}
         remotable_mappings = []
         for key in mappings.keys():
             handlers[key] = mappings[key].__name__
-            remotable_mappings.append(mappings[key].__module__ + '.' + mappings[key].__name__)
+            remotable_mappings.append(mappings[key].__module__.split('.')[1] + '.' + mappings[key].__name__.lower())
 
         extractor = ClassNameExtractor()
         locator = LazyLoadingInMemoryLocator(handlers)
         inflector = CallableInflector()
         handler = CommandHandler(extractor, locator, inflector)
-        if middlewares != None:
-            bus = CommandBus(middlewares + self._default_middlewares(will_return_values) + [handler])
+        if middlewares is not None:
+            bus = CommandBus(middlewares + self._default_middlewares(will_return_values, enable_stats) + [handler])
         else:
-            bus = CommandBus(self._default_middlewares(will_return_values) + [handler])
+            bus = CommandBus(self._default_middlewares(will_return_values, enable_stats) + [handler])
 
         # this is needed to get remotable (celery) commands working
         # it takes care of routing celery tasks to the appropriate command bus
-        strongr.core.getCore().commandRouter().append_route(remotable_mappings, bus)
+        strongr.core.Core.command_router().append_route(remotable_mappings, bus)
 
         return bus

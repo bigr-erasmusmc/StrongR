@@ -1,4 +1,4 @@
-from .deployvm import DeployVm
-from .runshellcode import RunShellCode
+from .runjob import RunJob
 from .deployvms import DeployVms
-from .destroyvm import DestroyVm
+from .destroyvms import DestroyVms
+from .jobfinished import JobFinished

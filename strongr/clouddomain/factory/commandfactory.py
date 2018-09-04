@@ -1,11 +1,35 @@
-from strongr.clouddomain.command import DeployVm, DeployVms, RunShellCode, DestroyVm
+from strongr.clouddomain.command import DeployVms, RunJob, DestroyVms, JobFinished
 
 from strongr.core.exception import InvalidParameterException
 
 class CommandFactory:
     """ This factory instantiates command objects to be sent to a cloud commandbus. """
 
-    def newDestroyVmCommand(self, name):
+    def newJobFinishedCommand(self, job_id, ret, retcode):
+        """ Generates a new JobFinished command
+
+        :param job_id: An identifier token for the job
+        :type job_id: string
+
+        :param ret: Usually the stdout of the job
+        :type ret: string
+
+        :param retcode: The exit code of the job
+        :type ret: int
+
+        :returns: A JobFinished command object
+        :rtype: JobFinished
+        """
+        if not isinstance(job_id, basestring) or len(job_id.strip()) == 0:
+            raise InvalidParameterException('jid is invalid')
+        elif not isinstance(ret, basestring) or len(ret.strip()) == 0:
+            raise InvalidParameterException('ret is invalid')
+        elif not isinstance(retcode, int):
+            raise InvalidParameterException('retcode is invalid')
+
+        return JobFinished(job_id, ret, retcode)
+
+    def newDestroyVms(self, names):
         """ Generates a new DestroyVm command
 
         :param name: The name of the VM to be destroyed
@@ -14,63 +38,77 @@ class CommandFactory:
         :returns: A DestroyVm command object
         :rtype: DestroyVm
         """
-        if not len(name) > 0:
-            raise InvalidParameterException('Name {0} is invalid'.format(name))
+        if not isinstance(names, list) or len(names) <= 0:
+            raise InvalidParameterException('names is invalid')
 
-        return DestroyVm(name=name)
+        return DestroyVms(names=names)
 
-    def newDeployVmCommand(self, name, cores, ram):
-        """ Generates a new DeployVm command
-
-        :param name: The name of the VM to be deployed
-        :param cores: The amount of cores in the VM
-        :param ram: The amount of RAM in GiB in the VM
-
-        :type name: string
-        :type cores: int
-        :type ram: int
-
-        :returns: A DeployVm command object
-        :rtype: DeployVm
-        """
-        if not len(name) > 0:
-            raise InvalidParameterException('Name {0} is invalid'.format(name))
-        elif not cores > 0:
-            raise InvalidParameterException('Cores should be higher than 0')
-        elif not ram > 0:
-            raise InvalidParameterException('Ram should be higher than 0')
-
-        return DeployVm(name=name, cores=cores, ram=ram)
-
-    def newDeployVmsCommand(self, deployVmCommands):
+    def newDeployVms(self, names, profile, cores, ram):
         """ Generates a new DeployVms command
 
-        :param deployVmCommands: A list of deployVm commands
+        :param names: A list of names
+        :type names: list
 
-        :type name: list
+        :param profile: the vm profile to be used
+        :type profile: string
+
+        :param cores: the number of cores per vm
+        :type cores: int
+
+        :param ram: the amount of ram per vm in GiB
+        :type ram: int
 
         :returns: A DeployVms command object
         :rtype: DeployVms
         """
-        for deployCommand in deployVmCommands:
-            if not isinstance(deployCommand, DeployVm):
-                raise InvalidParameterException('Object {0} should be instance of DeployVm'.format(deployCommand))
-        return DeployVms(deployVmCommands)
 
-    def newRunShellCodeCommand(self, sh, host):
+        if not isinstance(names, list) or len(names) <= 0:
+            raise InvalidParameterException('names is inavlid')
+
+        if not isinstance(cores, int) or cores <= 0:
+            raise InvalidParameterException('cores is inavlid')
+
+        if not isinstance(ram, int) or ram <= 0:
+            raise InvalidParameterException('ram is invalid')
+
+        if len(profile) <= 0:
+            raise InvalidParameterException('profile is invalid')
+
+        return DeployVms(names, profile, cores, ram)
+
+    def newRunJob(self, host, image, script, job_id, scratch, cores, memory):
         """ Generates a new RunShellCode command
 
-        :param sh: runShellCode
-        :type sh: string
-        :param host: The hostname where the shellcode should be executed or '*' to execute on all hosts
+        :param host: where host where te command should be ran
         :type host: string
+        :param image: the docker image the script should run under
+        :type image: string
+        :param script: array of strings, the shellcode to be ran in the docker container
+        :type script: list
+        :param job_id: the name of the job to be used
+        :type job_id: string
+        :param scratch: should a scratch be mounted?
+        :type scratch: bool
+        :param cores: how many cores for this job?
+        :type cores: int
+        :param memory: how much memory for this job?
+        :type memory: int
 
-        :returns: A new RunShellCode command object
-        :rtype: RunShellCodeCommand
+        :returns: A new RunJob command object
+        :rtype: RunJob
         """
-        if not len(host) > 0:
-            raise InvalidParameterException('Host {0} is invalid'.format(host))
-        elif not len(sh) > 0:
-            raise InvalidParameterException('Shellcode {0} is invalid'.format(sh))
 
-        return RunShellCode(sh=sh, host=host)
+        if not len(host) > 0:
+            raise InvalidParameterException('host is invalid')
+        elif not len(image) > 0:
+            raise InvalidParameterException('image is invalid')
+        elif not len(script) > 0:
+            raise InvalidParameterException('script is invalid')
+        elif not len(job_id) > 0:
+            raise InvalidParameterException('job_id is invalid')
+        elif cores <= 0:
+            raise InvalidParameterException('cores is invalid')
+        elif memory <= 0:
+            raise InvalidParameterException('memory is invalid')
+
+        return RunJob(host=host, image=image, script=script, job_id=job_id, scratch=scratch, cores=cores, memory=memory)

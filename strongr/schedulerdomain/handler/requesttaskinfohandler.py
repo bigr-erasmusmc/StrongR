@@ -1,16 +1,8 @@
-import os
-import jsonpickle
-import filelock
+from strongr.schedulerdomain.model import Job
+import strongr.core.gateways
 
 class RequestTaskInfoHandler:
     def __call__(self, query):
-        lock = filelock.FileLock("strongr-tasks-lock")
-        with lock.acquire(timeout = 10):
-            if not os.path.isfile('/tmp/strongr/' + query.taskid):
-                return None # do nothing for now TODO: throw a propper exception
-
-            with open("/tmp/strongr/{}".format(query.taskid), "r") as file:
-                scheduledTask = jsonpickle.decode(file.read())
-
-        return scheduledTask.__dict__
-
+        session = strongr.core.gateways.Gateways.sqlalchemy_session()
+        result = session.query(Job).filter(Job.job_id.in_(query.jobs)).all()
+        return result

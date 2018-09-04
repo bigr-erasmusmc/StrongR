@@ -1,0 +1,3 @@
+#!/bin/bash
+cd /opt/strongr
+python app.py j:f | tail -n1

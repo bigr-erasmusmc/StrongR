@@ -1,3 +1,4 @@
+from strongr.core.domain.authdomain import AuthDomain
 from .wrapper import Command
 
 import json
@@ -11,8 +12,8 @@ class IsValidUserCommand(Command):
         {password : The password to be checked}
     """
     def handle(self):
-        authService = self.getDomains().authDomain().authService()
-        queryFactory = self.getDomains().authDomain().queryFactory()
+        authService = AuthDomain.authService()
+        queryFactory = AuthDomain.queryFactory()
 
         query = queryFactory.newIsValidUserQuery(self.argument('username'), self.argument('password'))
         result = authService.getQueryBus().handle(query)

@@ -1,3 +1,4 @@
+from strongr.core import Core
 from .wrapper import Command
 import json
 
@@ -8,6 +9,6 @@ class PrintConfig(Command):
     print:config
     """
     def handle(self):
-        config = self.getContainer().config().as_dict()
+        config = Core.config().as_dict()
         del config['internal']
-        print(json.dumps(config, indent=2, sort_keys=True))
+        print(json.dumps(config, sort_keys=True))

@@ -4,10 +4,36 @@ class DefaultsLoader:
             'internal': {
                 'configloaderorder': ['IniLoader', 'JsonLoader', 'YamlLoader']
             },
+            'cache': {
+                'driver': 'local',
+                'namespace': 'strongr-cache-'
+            },
+            'lock': {
+                'driver': 'local',
+                'redis': {
+                    'timeout': 10,
+                    'namespace': 'strongr-redislock-'
+                },
+                'file': {
+                    'timeout': 10,
+                    'path': '/var/lock/strongr'
+                }
+            },
+            'db': {
+                'engine': {
+                    'url': 'sqlite://'
+                }
+            },
+            'stats': {
+                'driver': "null"
+            },
             'clouddomain': {
                 'driver': 'MockCloud',
                 'OpenNebula': {
                     'salt_config': '/etc/salt'
+                },
+                'MockCloud': {
+                    'scratch': '/tmp/strongr_mockcloud_scratch'
                 }
             },
             'restdomain': {
@@ -20,6 +46,13 @@ class DefaultsLoader:
                 "gunicorn": {
                     "bind": "0.0.0.0:8080",
                     "worker_class": "sync"
+                }
+            },
+            'schedulerdomain': {
+                'scalingdriver': 'nullscaler',
+                'simplescaler': {
+                    'scaleoutmincoresneeded': 1,
+                    'scaleoutminramneeded': 1
                 }
             },
             'logger': {

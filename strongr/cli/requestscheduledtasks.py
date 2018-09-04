@@ -1,16 +1,19 @@
+import json
+
+from strongr.core.domain.schedulerdomain import SchedulerDomain
 from .wrapper import Command
 
 class RequestScheduledTasks(Command):
     """
     Shows the task queue.
 
-    task:list
+    job:list
     """
     def handle(self):
-        schedulerService = self.getDomains().schedulerDomain().schedulerService()
-        queryFactory = self.getDomains().schedulerDomain().schedulerQueryFactory()
+        schedulerService = SchedulerDomain.schedulerService()
+        queryFactory = SchedulerDomain.schedulerQueryFactory()
 
-        query = commandFactory.newRequestScheduledTasks()
+        query = queryFactory.newRequestScheduledJobs()
         result = schedulerService.getQueryBus().handle(query)
         print(json.dumps(result))
 

@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='strongr',
@@ -8,5 +8,7 @@ setup(
     author_email='thomas@tphil.nl',
     packages=find_packages(),  #same as name
     install_requires=[], #external packages as dependencies
-    scripts=[]
+    scripts=[
+        'bin/strongr'
+    ]
 )

@@ -1,6 +1,5 @@
 from cmndr import Middleware
 
-import strongr.core
 import logging
 
 class LoggingMiddleware(Middleware):
@@ -11,6 +10,6 @@ class LoggingMiddleware(Middleware):
         splitted_module = command.__module__.split('.')
         domain = splitted_module[1]
         log_string = '{} {}'.format(' '.join(splitted_module[-2:]), cmd_dict if cmd_dict else '')
-        logging.getLogger(domain).debug(log_string)
+        logging.getLogger(domain).info(log_string)
         ret = next_callable(command)
         return ret

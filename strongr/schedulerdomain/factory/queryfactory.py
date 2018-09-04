@@ -1,9 +1,34 @@
-from strongr.schedulerdomain.query import RequestScheduledTasks, RequestTaskInfo, FindNodeWithAvailableResources
+from strongr.schedulerdomain.model import VmState
+from strongr.schedulerdomain.query import RequestScheduledJobs, RequestFinishedJobs, RequestJobInfo, FindNodeWithAvailableResources, RequestResourcesRequired, RequestVmsByState
 
 from strongr.core.exception import InvalidParameterException
 
+import re
+
 class QueryFactory:
     """ This factory instantiates query objects to be sent to a scheduler querybus. """
+
+    def newRequestVms(self, states):
+        """ Generates a new RequestVms query
+        :returns: A RequestVms query object
+        :rtype: RequestVmsByState
+        """
+        if not isinstance(states, list):
+            raise InvalidParameterException("states invalid")
+
+        for state in states:
+            if state not in VmState:
+                raise InvalidParameterException("{} is not a valid VmState".format(state))
+
+        return RequestVmsByState(states)
+
+    def newRequestResourcesRequired(self):
+        """ Generates a new RequestResourcesRequired query
+        :returns: A RequestResourcesRequired query object
+        :rtype: RequestResourcesRequired
+        """
+        return RequestResourcesRequired()
+
     def newFindNodeWithAvailableResources(self, cores, ram):
         """ Generates a new FindNodeWithAvailableResources query
 
@@ -17,13 +42,39 @@ class QueryFactory:
         """
         return FindNodeWithAvailableResources(cores=cores, ram=ram)
 
-    def newRequestScheduledTasks(self):
-        """ Generates a new RequestScheduledTasks query
+    def newRequestScheduledJobs(self):
+        """ Generates a new RequestScheduledJobs query
 
-        :returns: A RequestScheduledTasks query object
-        :rtype: RequestScheduledTasks
+        :returns: A RequestScheduledJobs query object
+        :rtype: RequestScheduledJobs
         """
-        return RequestScheduledTasks()
+        return RequestScheduledJobs()
+
+    def newRequestFinishedJobs(self, jobs=None):
+        """ Generates a new RequestFinishedJobs query
+
+        :param jobs: a list of job id's
+
+        :returns: A RequestFinishedJobs query object
+        :rtype: RequestFinishedJobs
+        """
+        jobs_sanitized = [re.sub('[^a-zA-Z0-9-]', '', x) for x in jobs] # sanitize inputs
+
+
+        return RequestFinishedJobs(jobs_sanitized)
+
+    def newRequestJobInfo(self, jobs=None):
+        """ Generates a new RequestFinishedJobs query
+
+        :param jobs: a list of job id's
+
+        :returns: A RequestFinishedJobs query object
+        :rtype: RequestFinishedJobs
+        """
+        jobs_sanitized = [re.sub('[^a-zA-Z0-9-]', '', x) for x in jobs] # sanitize inputs
+
+
+        return RequestJobInfo(jobs_sanitized)
 
     def newRequestTaskInfo(self, taskid):
         """ Generates a new RequestTaskInfo query
@@ -32,6 +83,6 @@ class QueryFactory:
         :type taskid: string
 
         :returns: A RequestTaskInfo query object
-        :rtype: RequestTaskInfo
+        :rtype: RequestJobInfo
         """
-        return RequestTaskInfo(taskid)
+        return RequestJobInfo(taskid)

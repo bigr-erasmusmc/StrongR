@@ -1,63 +1,44 @@
 import strongr.core
-#import json
 
-import time
+import strongr.core.domain.clouddomain
+import strongr.core.gateways
+
+from strongr.schedulerdomain.model import Job, Vm, VmState, JobState
+
+from sqlalchemy.sql import func
+from sqlalchemy import and_, or_
 
 class FindNodeWithAvailableResourcesHandler:
-    _machines = {}
-    _query_timer = 0
+    _timeout = 0
 
     def __call__(self, query):
-        #core = strongr.core.getCore()
-        #cache = core.cache()
-        #if not cache.exists('nodes'):
-        #    with open("/tmp/strongr-nodes", "r") as file:
-        #        nodes = json.loads(file.read())
-        #    for node in nodes:
-        #        nodes[node]["ram_available"] = nodes[node]["ram"]
-        #        nodes[node]["cores_available"] = nodes[node]["cores"]
-        #    cache.set("nodes", nodes, 3600)
-        #    print(nodes)
-        #else:
-        #    nodes = cache.get('nodes')
-        #
+        db = strongr.core.gateways.Gateways.sqlalchemy_session()
 
-        if time.time() > self._query_timer:
-            core = strongr.core.getCore()
-            cache = core.cache()
-            cloudQueryBus = core.domains().cloudDomain().cloudService().getCloudServiceByName(core.config().clouddomain.driver).getQueryBus()
-            cloudQueryFactory = core.domains().cloudDomain().queryFactory()
+        # subquery to see whats already running on vm
+        subquery = db.query(Job.vm_id, func.sum(Job.cores).label('cores'), func.sum(Job.ram).label('ram')).filter(Job.state.in_([JobState.RUNNING])).group_by(Job.vm_id).subquery('j')
 
-            machines = cloudQueryBus.handle(cloudQueryFactory.newListDeployedVms())
-            if machines is not None:
-                for machine in machines:
-                    if machine.startswith('worker-') and machine not in self._machines:
-                        # add new machines
-                        self._machines[machine] = machines[machine]
-                        self._machines[machine]["ram_available"] = self._machines[machine]["ram"]
-                        self._machines[machine]["cores_available"] = self._machines[machine]["cores"]
+        query = db.query(Vm.vm_id)\
+            .outerjoin(subquery, subquery.c.vm_id == Vm.vm_id)\
+            .filter(
+                and_(
+                    or_(
+                        and_( # case 1 - vm with jobs, check if vm has enough availabale resources to run the job
+                            Vm.cores - subquery.c.cores >= query.cores,
+                            Vm.ram - subquery.c.ram >= query.ram
+                        ),
+                        and_( # case 2 - vm with no jobs, check if vm has enough available resources to run the job
+                            subquery.c.cores == None,
+                            subquery.c.ram == None,
+                            Vm.cores >= query.cores,
+                            Vm.ram >= query.ram
+                        )
+                    ),
+                    Vm.state.in_([VmState.READY]) # vm should be in state ready before we push jobs to it
+                )
+            ).order_by(Vm.ram - subquery.c.ram)
 
-                for machine in list(self._machines):
-                    if machine not in machines:
-                        del self._machines[machine] # delete machines that are no longer up
+        results = query.all()
 
-                if cache.exists('nodes'):
-                    cached_nodes = cache.get('nodes')
-                    for machine in cached_nodes:
-                        if machine in self._machines:
-                            # sync with cache
-                            self._machines[machine]["ram_available"] = cached_nodes[machine]["ram_available"]
-                            self._machines[machine]["cores_available"] = cached_nodes[machine]["cores_available"]
-
-                # push back in cache, other commands need this data
-                cache.set('nodes', self._machines, 3600)
-                self._query_timer = time.time() + 120 # refresh machine list once every 2 minutes
-
-        ordered = sorted(self._machines, key=lambda key: self._machines[key]["ram_available"])
-
-        for machine in ordered:
-            if self._machines[machine]["ram_available"] - query.ram >= 0 and self._machines[machine]["cores_available"] - query.cores >= 0:
-                return machine
-
-
-        return None # TODO: throw exception instead of returning None
+        if len(results) == 0:
+            return None
+        return results[0].vm_id

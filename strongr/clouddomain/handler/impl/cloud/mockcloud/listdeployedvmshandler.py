@@ -2,4 +2,4 @@ from strongr.clouddomain.handler.abstract.cloud import AbstractListDeployedVmsHa
 
 class ListDeployedVmsHandler(AbstractListDeployedVmsHandler):
     def __call__(self, command):
-        pass
+        return {'up': ['localhost'], 'down': []}

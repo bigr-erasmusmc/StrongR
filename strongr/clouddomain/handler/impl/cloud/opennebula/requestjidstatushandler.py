@@ -1,19 +1,17 @@
 from strongr.clouddomain.handler.abstract.cloud import AbstractRequestJidStatusHandler
 
-import strongr.core
 import salt.runner
 
 import strongr.core
+import strongr.core.gateways
 
 class RequestJidStatusHandler(AbstractRequestJidStatusHandler):
     def __call__(self, query):
-        core = strongr.core.getCore()
-        opts = salt.config.master_config(core.config().clouddomain.OpenNebula.salt_config + '/master')
+        opts = salt.config.master_config(strongr.core.Core.config().clouddomain.OpenNebula.salt_config + '/master')
         opts['quiet'] = True
         runner = salt.runner.RunnerClient(opts)
 
-        core = strongr.core.getCore()
-        cache = core.cache()
+        cache = strongr.core.gateways.Gateways.cache()
 
         if not cache.exists('clouddomain.jobs.running'):
             cache.set('clouddomain.jobs.running', runner.cmd('jobs.active'), 1)
