@@ -18,7 +18,7 @@ class DeployVmsHandler(AbstractDeployVmsHandler):
         client = salt.cloud.CloudClient(strongr.core.Core.config().clouddomain.OpenNebula.salt_config + '/cloud')
 
         ret = []
-        for chunked_names in self._chunk_list(command.names, 2):
+        for chunked_names in self._chunk_list(command.names, 50):
             for name in chunked_names:
                 vmnew_event = strongr.clouddomain.model.gateways.Gateways.inter_domain_event_factory().newVmNewEvent(name, command.cores, command.ram)
                 strongr.core.Core.inter_domain_events_publisher().publish(vmnew_event)

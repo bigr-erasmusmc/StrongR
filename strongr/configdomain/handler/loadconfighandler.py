@@ -5,6 +5,7 @@ import strongr.core
 class LoadConfigHandler():
     def __call__(self, command):
         config_dict = DefaultsLoader().getConfig()
+        strongr.core.getCore().config.update(ConfigStruct(**config_dict))
 
         loaders = {
             IniLoader.__name__: IniLoader(),

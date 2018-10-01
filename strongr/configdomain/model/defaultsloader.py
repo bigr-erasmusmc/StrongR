@@ -21,7 +21,8 @@ class DefaultsLoader:
             },
             'db': {
                 'engine': {
-                    'url': 'sqlite://'
+                    'url': 'sqlite:////tmp/strongr.db',
+                    'echo': True
                 }
             },
             'stats': {

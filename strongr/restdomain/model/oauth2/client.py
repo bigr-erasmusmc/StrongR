@@ -5,7 +5,7 @@ from sqlalchemy import Column, ForeignKey, Integer, String
 
 from authlib.flask.oauth2.sqla import OAuth2ClientMixin
 
-from strongr.core.sqlalchemydatatypes.uuid import UUID
+from strongr.core.sqlalchemydatatypes.uuidtype import UUIDType
 
 Base = gateways.Gateways.sqlalchemy_base()
 

@@ -11,6 +11,7 @@ import strongr.core
 from strongr.core.middlewares.celery.celerymiddleware import CeleryMiddleware
 from strongr.core.middlewares.logging.loggingmiddleware import LoggingMiddleware
 from strongr.core.middlewares.stats.statsmiddleware import StatsMiddleware
+from strongr.core.middlewares.transaction.transactionmiddleware import TransactionMiddleware
 
 class AbstractService():
     __metaclass__ = ABCMeta
@@ -37,6 +38,7 @@ class AbstractService():
 
     def _default_middlewares(self, will_return_values, enable_stats=True):
         middlewares = [
+            TransactionMiddleware(),
             LoggingMiddleware(),
             CeleryMiddleware(will_return_values)
         ]
@@ -44,9 +46,6 @@ class AbstractService():
         if enable_stats:
             import strongr.core.gateways
             middlewares.append(StatsMiddleware(strongr.core.gateways.Gateways.stats()))
-
-            import strongr.core.middlewares.transaction.transactionmiddleware
-            middlewares.append(strongr.core.middlewares.transaction.transactionmiddleware.TransactionMiddleware())
 
         return middlewares
 

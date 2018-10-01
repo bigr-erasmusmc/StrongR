@@ -3,7 +3,7 @@ from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 from authlib.flask.oauth2.sqla import OAuth2TokenMixin
 
-from strongr.core.sqlalchemydatatypes.uuid import UUID
+from strongr.core.sqlalchemydatatypes.uuidtype import UUIDType
 
 Base = gateways.Gateways.sqlalchemy_base()
 

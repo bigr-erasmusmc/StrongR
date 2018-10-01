@@ -5,7 +5,7 @@ from sqlalchemy.orm import synonym
 import strongr.core.gateways as gateways
 from sqlalchemy import Column, String
 
-from strongr.core.sqlalchemydatatypes.uuid import UUID
+from strongr.core.sqlalchemydatatypes.uuidtype import UUIDType
 import strongr.restdomain.model.gateways
 
 Base = gateways.Gateways.sqlalchemy_base()
