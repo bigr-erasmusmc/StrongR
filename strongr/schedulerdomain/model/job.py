@@ -16,6 +16,8 @@ class Job(Base):
     image = Column(Text)
     scratch = Column(Boolean)
 
+    _secrets = Column(Text)
+
     vm_id = Column(String(255), ForeignKey('vms.vm_id'))
     vm = relationship('Vm', back_populates='jobs')
 
@@ -24,6 +26,18 @@ class Job(Base):
     stdout = Column('stdout', LargeBinary(length=52428800)) # we should update this to point to a file at some point as it will bloat the database pretty quickly
 
     _state = Column('state', Enum(JobState))
+
+    @property
+    def secrets(self):
+        return self._secrets.split('\n')
+
+    # update state_date-field as well when we update state-field
+    @secrets.setter
+    def secrets(self, array_of_secrets):
+        self._secrets = '\n'.join(array_of_secrets)
+
+    # create a synonym so that _state and state are considered the same field by the mapper
+    secrets = synonym('_secrets', descriptor=secrets)
 
     # In classical SQL we would put a trigger to update this field with NOW() if the state-field is updated.
     # SQLAlchemy has no way to write triggers without writing platform-dependent SQL at the time of writing.

@@ -24,8 +24,8 @@ class RunWorkerCommand(Command):
         celery = Celery('strongr', broker=broker, backend=backend)
 
         scheduler = SchedulerDomain.schedulerService()
-        scheduler.getCommandBus() # we need to initiate this so that celery knows where to send its commands
-        scheduler.getQueryBus() # we need to initiate this so that celery knows where to send its commands
+        scheduler.getCommandBus() # we need to initiate this as it self-registers it's commands to celery
+        scheduler.getQueryBus() # we need to initiate this as it self-registers it's queries to celery
 
         domains = getattr(config.celery.workers, self.option('profile')).as_dict()
 

@@ -1,7 +1,6 @@
 from .deploysinglecommand import DeploySingleCommand
 from .listdeployedvmscommand import ListDeployedVmsCommand
 from .deploymanycommand import DeployManyCommand
-from .addjobcommand import AddJobCommand
 from .getfinishedjobscommand import GetFinishedJobsCommand
 from .runresourcemanager import RunResourceManager
 from .printconfig import PrintConfig

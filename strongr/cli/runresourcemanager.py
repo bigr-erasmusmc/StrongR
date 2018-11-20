@@ -48,7 +48,7 @@ class RunResourceManager(Command):
         schedule.every(5).seconds.do(command_bus.handle, check_scaling_command)
         schedule.every(10).seconds.do(command_bus.handle, log_stats)
         schedule.every(1).minutes.do(command_bus.handle, cleanup_nodes)
-        #schedule.every(30).minutes.do(command_bus.handle, cleanup_jobs)
+        schedule.every(30).minutes.do(command_bus.handle, cleanup_jobs)
 
         while True:
             schedule.run_pending()

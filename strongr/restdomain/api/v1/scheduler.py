@@ -15,7 +15,8 @@ post_task = ns.model('post-task', {
     'script': fields.String(required=True, min_length=1, description='The shellcode to be executed'),
     'scratch': fields.String(required=True, min_length=1, description='Does the job need a scratch dir?'),
     'cores': fields.Integer(required=True, min=1, description='The amount of cores needed to peform the task'),
-    'memory': fields.Integer(required=True, min=1, description="The amount of ram in GiB needed to peform the task")
+    'memory': fields.Integer(required=True, min=1, description="The amount of ram in GiB needed to peform the task"),
+    'secrets': fields.List(fields.String, required=False, description='A list of keys of secrets to be injected into the process')
 })
 
 @ns.route('/tasks/status/<string:tasks>')
@@ -84,7 +85,12 @@ class Tasks(Resource):
         memory = int(request.json['memory'])
         job_id = str(int(time.time())) + '-' + str(uuid.uuid4())
 
-        command = commandFactory.newScheduleJobCommand(image, script, job_id, scratch, cores, memory)
+        if 'secrets' in request.json:
+            secrets = request.json['secrets']
+        else:
+            secrets = []
+
+        command = commandFactory.newScheduleJobCommand(image, script, job_id, scratch, cores, memory, secrets)
 
         schedulerService.getCommandBus().handle(command)
         return {'job_id': job_id}, 201

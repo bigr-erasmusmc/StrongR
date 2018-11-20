@@ -3,7 +3,6 @@ from datetime import datetime, timedelta
 from strongr.schedulerdomain.model.scalingdrivers.abstract import AbstractScaleOut, AbstractScaleIn, \
     AbstractVmTemplateRetriever
 
-import sys
 
 # The null-scaler ignores scalein and scaleout signals.
 

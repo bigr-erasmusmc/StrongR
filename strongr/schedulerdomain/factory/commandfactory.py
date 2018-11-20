@@ -148,7 +148,7 @@ class CommandFactory:
         """
         return RunEnqueuedJobs()
 
-    def newScheduleJobCommand(self, image, script, job_id, scratch, cores, memory):
+    def newScheduleJobCommand(self, image, script, job_id, scratch, cores, memory, secrets):
         """ Generates a new ScheduleTask command
 
         :param image: the docker image used for running the job
@@ -169,6 +169,9 @@ class CommandFactory:
         :param ram: The amount of RAM in GiB in the VM
         :type ram: int
 
+        :param secrets: List of keys of secrets that should be injected into the process
+        :type secrets: list
+
         :returns: A ScheduleJob command object
         :rtype: ScheduleJob
         """
@@ -183,8 +186,10 @@ class CommandFactory:
             raise InvalidParameterException('cores is invalid')
         elif memory <= 0:
             raise InvalidParameterException('memory is invalid')
+        elif not isinstance(secrets, list):
+            raise InvalidParameterException('List of secrets is invalid')
 
-        return ScheduleJob(image=image, script=script, job_id=job_id, scratch=scratch, cores=cores, memory=memory)
+        return ScheduleJob(image=image, script=script, job_id=job_id, scratch=scratch, cores=cores, memory=memory, secrets=secrets)
 
     def newStartJobOnVm(self, vm_id, job_id):
         """ Generates a new StartJobOnVm command

@@ -27,7 +27,7 @@ logging.config.dictConfig(core.config().logger.as_dict())
 
 from strongr.cli import DeploySingleCommand, ListDeployedVmsCommand,\
         DeployManyCommand,\
-        AddJobCommand, GetFinishedJobsCommand,\
+        GetFinishedJobsCommand,\
         RunResourceManager, PrintConfig,\
         IsValidUserCommand, RunRestServerCommand,\
         RunWorkerCommand, DestroySingleCommand,\
@@ -41,7 +41,6 @@ application = Application()
 application.add(DeploySingleCommand())
 application.add(ListDeployedVmsCommand())
 application.add(DeployManyCommand())
-application.add(AddJobCommand())
 application.add(GetFinishedJobsCommand())
 application.add(RunResourceManager())
 application.add(PrintConfig())
